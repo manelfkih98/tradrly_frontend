@@ -14,6 +14,9 @@ import {
   InputLabel,
   FormControl,
   FormHelperText,
+  Grid,
+  Typography,
+  Box,
 } from "@mui/material";
 import { useForm } from "react-hook-form";
 
@@ -33,7 +36,7 @@ const AddOffreStage = ({ open, handleClose }) => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (!open) reset(); // Reset form on close
+    if (!open) reset();
   }, [open, reset]);
 
   const onSubmit = (data) => {
@@ -48,66 +51,88 @@ const AddOffreStage = ({ open, handleClose }) => {
   };
 
   return (
-    <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>Nouvelle offre de stage</DialogTitle>
-      <DialogContent>
-        <TextField
-          label="Titre"
-          fullWidth
-          margin="dense"
-          {...register("titre", { required: "Le titre est requis" })}
-          error={!!errors.titre}
-          helperText={errors.titre?.message}
-        />
-        <TextField
-          label="Description"
-          fullWidth
-          margin="dense"
-          {...register("description", { required: "La description est requise" })}
-          error={!!errors.description}
-          helperText={errors.description?.message}
-        />
-        <TextField
-          label="Date de clôture"
-          type="date"
-          fullWidth
-          margin="dense"
-          InputLabelProps={{ shrink: true }}
-          {...register("date_limite", { required: "La date de clôture est requise" })}
-          error={!!errors.date_limite}
-          helperText={errors.date_limite?.message}
-        />
-        <FormControl
-          fullWidth
-          margin="dense"
-          error={!!errors.departement_name}
-        >
-          <InputLabel>Département</InputLabel>
-          <Select
-            defaultValue=""
-            {...register("departement_name", { required: "Le département est requis" })}
-          >
-            {departments.length > 0 ? (
-              departments.map((dep) => (
-                <MenuItem key={dep._id} value={dep.NameDep}>
-                  {dep.NameDep}
-                </MenuItem>
-              ))
-            ) : (
-              <MenuItem disabled>Aucun département disponible</MenuItem>
-            )}
-          </Select>
-          <FormHelperText>{errors.departement_name?.message}</FormHelperText>
-        </FormControl>
+    <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
+      <DialogTitle sx={{ fontWeight: "bold", textAlign: "center" }}>
+        Ajouter une nouvelle offre de stage
+      </DialogTitle>
+      <DialogContent dividers>
+        <Box component="form" noValidate autoComplete="off">
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <TextField
+                label="Titre de l'offre"
+                fullWidth
+                {...register("titre", { required: "Le titre est requis" })}
+                error={!!errors.titre}
+                helperText={errors.titre?.message}
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <TextField
+                label="Description"
+                multiline
+                rows={4}
+                fullWidth
+                {...register("description", { required: "La description est requise" })}
+                error={!!errors.description}
+                helperText={errors.description?.message}
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Date de clôture"
+                type="date"
+                fullWidth
+                InputLabelProps={{ shrink: true }}
+                {...register("date_limite", { required: "La date de clôture est requise" })}
+                error={!!errors.date_limite}
+                helperText={errors.date_limite?.message}
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={6}>
+              <FormControl
+                fullWidth
+                error={!!errors.departement_name}
+              >
+                <InputLabel>Département</InputLabel>
+                <Select
+                  defaultValue=""
+                  {...register("departement_name", {
+                    required: "Le département est requis",
+                  })}
+                >
+                  {departments.length > 0 ? (
+                    departments.map((dep) => (
+                      <MenuItem key={dep._id} value={dep.NameDep}>
+                        {dep.NameDep}
+                      </MenuItem>
+                    ))
+                  ) : (
+                    <MenuItem disabled>Aucun département</MenuItem>
+                  )}
+                </Select>
+                <FormHelperText>
+                  {errors.departement_name?.message}
+                </FormHelperText>
+              </FormControl>
+            </Grid>
+          </Grid>
+        </Box>
       </DialogContent>
-      <DialogActions>
-        <Button onClick={handleClose}>Annuler</Button>
+
+      <DialogActions sx={{ px: 3, pb: 2 }}>
+        <Button onClick={handleClose} color="inherit">
+          Annuler
+        </Button>
         <Button
           onClick={handleSubmit(onSubmit)}
           variant="contained"
           color="primary"
         >
-          Ajouter
+          Enregistrer
         </Button>
       </DialogActions>
     </Dialog>

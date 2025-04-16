@@ -31,7 +31,12 @@ POST:{
    DEMANDE:`${BASE_URL}/post/postWithoutOffre`,
    REFUSER_DEMANDE:`${BASE_URL}/post/refuserDemande`,
    ACCEPTER_DEMANDE:`${BASE_URL}/post/accepterDemande`,
-   LOGIN_CANDIDAT:`${BASE_URL}/post/connecter`
+   LOGIN_CANDIDAT:`${BASE_URL}/post/connecter`,
+   MARK_COMPLETED:`${BASE_URL}/post/mark-completed`,
+   VERIFIER:`${BASE_URL}/post/verifier`,
+   
+
+
 
 },
 QUESTION:{
@@ -53,7 +58,11 @@ TEAM:{
   ADD_TEAM:`${BASE_URL}/team/add`,
   DELETE_TEAM:`${BASE_URL}/team/deleteTeam`,
   UPDATE_TEAM:`${BASE_URL}/team/updateTeam`
-}
+},
+CONTACT:{
+  ADD_CONTACT:`${BASE_URL}/contact/addContact`,
+  GET_CONTACT:`${BASE_URL}/contact/allContact`,
+  DELETE_CONTACT:`${BASE_URL}/contact/deleteContact`
 
-}
+}}
 export default PATHS

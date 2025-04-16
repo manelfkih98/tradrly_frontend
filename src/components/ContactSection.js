@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Box, Typography, TextField, Button, IconButton } from '@mui/material';
 import { Email, Phone, LocationOn } from '@mui/icons-material';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
+import { useDispatch } from 'react-redux';
+import { createContact } from '../store/services/contactService';
 
-// Style pour la carte Google Maps
 const mapContainerStyle = {
   width: '100%',
   height: '100%',
@@ -15,19 +16,65 @@ const center = {
 };
 
 const ContactSection = () => {
+  const dispatch = useDispatch();
+
+  const [formData, setFormData] = useState({
+    email: '',
+    object: '',
+    subject: '',
+  });
+
+  const [formErrors, setFormErrors] = useState({});
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const validateForm = () => {
+    const errors = {};
+
+    if (!formData.email) {
+      errors.email = 'Email is required';
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      errors.email = 'Email is invalid';
+    }
+
+    if (!formData.object) {
+      errors.object = 'Object is required';
+    }
+
+    if (!formData.subject) {
+      errors.subject = 'Subject is required';
+    }
+
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (validateForm()) {
+      dispatch(createContact(formData));
+      setFormData({ email: '', object: '', subject: '' });
+      setFormErrors({});
+    }
+  };
+
   return (
     <Box
       sx={{
         display: 'flex',
         flexDirection: { xs: 'column', md: 'row' },
-        width: '100%',
-        minHeight: '500px',
+        width: '90%',
+        minHeight: '100px',
         gap: { xs: 2, md: 4 },
         p: { xs: 2, md: 4 },
       }}
     >
       {/* Formulaire de contact */}
       <Box
+        component="form"
+        onSubmit={handleSubmit}
         sx={{
           flex: 1,
           backgroundColor: '#fff',
@@ -44,7 +91,7 @@ const ContactSection = () => {
           Needs help?
         </Typography>
 
-        {/* Informations de contact */}
+        {/* Contact info icons */}
         <Box
           sx={{
             display: 'flex',
@@ -63,9 +110,7 @@ const ContactSection = () => {
                 borderRadius: '50%',
                 width: '40px',
                 height: '40px',
-                '&:hover': {
-                  backgroundColor: '#e0e0e0',
-                },
+                '&:hover': { backgroundColor: '#e0e0e0' },
               }}
             >
               <Email />
@@ -81,9 +126,7 @@ const ContactSection = () => {
                 borderRadius: '50%',
                 width: '40px',
                 height: '40px',
-                '&:hover': {
-                  backgroundColor: '#e0e0e0',
-                },
+                '&:hover': { backgroundColor: '#e0e0e0' },
               }}
             >
               <Phone />
@@ -99,9 +142,7 @@ const ContactSection = () => {
                 borderRadius: '50%',
                 width: '40px',
                 height: '40px',
-                '&:hover': {
-                  backgroundColor: '#e0e0e0',
-                },
+                '&:hover': { backgroundColor: '#e0e0e0' },
               }}
             >
               <LocationOn />
@@ -110,50 +151,44 @@ const ContactSection = () => {
           </Box>
         </Box>
 
-        {/* Formulaire */}
+        {/* Champs du formulaire */}
         <TextField
+          name="email"
           label="Email"
-          variant="outlined"
-          placeholder="msi@sirnmple.com"
+          value={formData.email}
+          onChange={handleChange}
+          error={!!formErrors.email}
+          helperText={formErrors.email}
           fullWidth
-          sx={{
-            backgroundColor: '#f9f9f9',
-            borderRadius: '8px',
-            fontSize: { xs: '0.9rem', sm: '1rem' },
-            '& .MuiInputBase-input': {
-              py: { xs: 1, sm: 1.5 },
-            },
-          }}
+          sx={{ backgroundColor: '#f9f9f9', borderRadius: '8px' }}
         />
+
         <TextField
+          name="object"
           label="Object"
-          variant="outlined"
+          value={formData.object}
+          onChange={handleChange}
+          error={!!formErrors.object}
+          helperText={formErrors.object}
           fullWidth
-          sx={{
-            backgroundColor: '#f9f9f9',
-            borderRadius: '8px',
-            fontSize: { xs: '0.9rem', sm: '1rem' },
-            '& .MuiInputBase-input': {
-              py: { xs: 1, sm: 1.5 },
-            },
-          }}
+          sx={{ backgroundColor: '#f9f9f9', borderRadius: '8px' }}
         />
+
         <TextField
+          name="subject"
           label="Subject"
-          variant="outlined"
+          value={formData.subject}
+          onChange={handleChange}
           multiline
           rows={4}
+          error={!!formErrors.subject}
+          helperText={formErrors.subject}
           fullWidth
-          sx={{
-            backgroundColor: '#f9f9f9',
-            borderRadius: '8px',
-            fontSize: { xs: '0.9rem', sm: '1rem' },
-            '& .MuiInputBase-input': {
-              py: { xs: 1, sm: 1.5 },
-            },
-          }}
+          sx={{ backgroundColor: '#f9f9f9', borderRadius: '8px' }}
         />
+
         <Button
+          type="submit"
           variant="contained"
           fullWidth
           sx={{
@@ -173,7 +208,7 @@ const ContactSection = () => {
         </Button>
       </Box>
 
-      {/* Section Carte */}
+      {/* Carte Google Map */}
       <Box
         sx={{
           flex: 1,

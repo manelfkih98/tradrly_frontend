@@ -7,20 +7,27 @@ import {
   ListItemText,
   Box,
   Collapse,
+  Typography,
+  Divider,
 } from "@mui/material";
 import {
   Dashboard,
   TableChart,
-  Receipt,
-  Notifications,
-  AccountCircle,
+  ReceiptLong,
+  NotificationsNone,
   ExpandLess,
   ExpandMore,
-  Work,
-  School,
+  WorkOutline,
+  SchoolOutlined,
   HelpOutline,
+  Groups2,
+  ContactMailOutlined,
+  FactCheckOutlined,
+  SendTimeExtension,
+  PersonOutline,
 } from "@mui/icons-material";
 import { Link } from "react-router-dom";
+import logo from "../image/image 4.png";
 
 const Sidebar = () => {
   const [openOffre, setOpenOffre] = useState(false);
@@ -30,48 +37,52 @@ const Sidebar = () => {
     <Drawer
       variant="permanent"
       sx={{
-        width: 250,
+        width: 260,
         flexShrink: 0,
         "& .MuiDrawer-paper": {
-          width: 250,
+          width: 260,
           boxSizing: "border-box",
-          background: "linear-gradient(to bottom, rgb(65, 29, 167), #111)",
+          backgroundColor: "#121212",
           color: "#fff",
+          borderRight: "none",
         },
       }}
     >
-      <Box sx={{ textAlign: "center", p: 2, fontSize: 18, fontWeight: "bold" }}>
-        Tradrly
+      <Box sx={{ p: 3, textAlign: "center"}}>
+      <img src={logo} alt="Logo" style={{ width: "80%", marginBottom: "8px" }} />
+     
       </Box>
+
+   
 
       <List>
         <ListItemButton component={Link} to="/dashboard">
           <ListItemIcon>
-            <Dashboard sx={{ color: "#fff" }} />
+            <Dashboard sx={{ color: "#64b5f6" }} />
           </ListItemIcon>
-          <ListItemText primary="Dashboard" sx={{ color: "#fff" }} />
+          <ListItemText primary="Dashboard" />
         </ListItemButton>
 
         <ListItemButton component={Link} to="/departement">
           <ListItemIcon>
-            <TableChart sx={{ color: "#fff" }} />
+            <TableChart sx={{ color: "#64b5f6" }} />
           </ListItemIcon>
-          <ListItemText primary="Département" sx={{ color: "#fff" }} />
+          <ListItemText primary="Départements" />
         </ListItemButton>
 
         <ListItemButton component={Link} to="/solution">
           <ListItemIcon>
-            <Receipt sx={{ color: "#fff" }} />
+            <ReceiptLong sx={{ color: "#64b5f6" }} />
           </ListItemIcon>
-          <ListItemText primary="Projets" sx={{ color: "#fff" }} />
+          <ListItemText primary="Projets" />
         </ListItemButton>
 
-        {/* === Offres Dropdown === */}
+        {/* --- Offres --- */}
         <ListItemButton onClick={() => setOpenOffre(!openOffre)}>
           <ListItemIcon>
-            <Notifications sx={{ color: "#fff" }} />
+            <NotificationsNone sx={{ color: "#64b5f6" }} />
           </ListItemIcon>
-          <ListItemText primary="Offres" sx={{ color: "#fff" }} />
+          <ListItemText primary="Offres" />
           {openOffre ? <ExpandLess /> : <ExpandMore />}
         </ListItemButton>
 
@@ -79,26 +90,25 @@ const Sidebar = () => {
           <List component="div" disablePadding>
             <ListItemButton component={Link} to="/offre/stage" sx={{ pl: 4 }}>
               <ListItemIcon>
-                <School sx={{ color: "#fff" }} />
+                <SchoolOutlined sx={{ color: "#64b5f6" }} />
               </ListItemIcon>
-              <ListItemText primary="Stage" sx={{ color: "#fff" }} />
+              <ListItemText primary="Stages" />
             </ListItemButton>
-
             <ListItemButton component={Link} to="/offre/emploi" sx={{ pl: 4 }}>
               <ListItemIcon>
-                <Work sx={{ color: "#fff" }} />
+                <WorkOutline sx={{ color: "#64b5f6" }} />
               </ListItemIcon>
-              <ListItemText primary="Emploi" sx={{ color: "#fff" }} />
+              <ListItemText primary="Emplois" />
             </ListItemButton>
           </List>
         </Collapse>
 
-        {/* === Posts Dropdown === */}
+        {/* --- Postulations --- */}
         <ListItemButton onClick={() => setOpenPost(!openPost)}>
           <ListItemIcon>
-            <AccountCircle sx={{ color: "#fff" }} />
+            <PersonOutline sx={{ color: "#64b5f6" }} />
           </ListItemIcon>
-          <ListItemText primary="Post" sx={{ color: "#fff" }} />
+          <ListItemText primary="Postulations" />
           {openPost ? <ExpandLess /> : <ExpandMore />}
         </ListItemButton>
 
@@ -106,45 +116,53 @@ const Sidebar = () => {
           <List component="div" disablePadding>
             <ListItemButton component={Link} to="/post/stage" sx={{ pl: 4 }}>
               <ListItemIcon>
-                <School sx={{ color: "#fff" }} />
+                <SchoolOutlined sx={{ color: "#64b5f6" }} />
               </ListItemIcon>
-              <ListItemText primary="Stage" sx={{ color: "#fff" }} />
+              <ListItemText primary="Stages" />
             </ListItemButton>
-
             <ListItemButton component={Link} to="/post/emploi" sx={{ pl: 4 }}>
               <ListItemIcon>
-                <Work sx={{ color: "#fff" }} />
+                <WorkOutline sx={{ color: "#64b5f6" }} />
               </ListItemIcon>
-              <ListItemText primary="Emploi" sx={{ color: "#fff" }} />
+              <ListItemText primary="Emplois" />
             </ListItemButton>
           </List>
         </Collapse>
 
-        <ListItemButton component={Link} to="/question">
-          <ListItemIcon>
-            <HelpOutline sx={{ color: "#fff" }} />
-          </ListItemIcon>
-          <ListItemText primary="Questions" sx={{ color: "#fff" }} />
-        </ListItemButton>
-
+        {/* --- Autres liens --- */}
         <ListItemButton component={Link} to="/PostWithoutOffre">
           <ListItemIcon>
-            <AccountCircle sx={{ color: "#fff" }} />
+            <SendTimeExtension sx={{ color: "#64b5f6" }} />
           </ListItemIcon>
-          <ListItemText primary="Demande d'offre" sx={{ color: "#fff" }} />
+          <ListItemText primary="Demandes spontanées" />
+        </ListItemButton>
+
+        <ListItemButton component={Link} to="/question">
+          <ListItemIcon>
+            <HelpOutline sx={{ color: "#64b5f6" }} />
+          </ListItemIcon>
+          <ListItemText primary="Questions fréquentes" />
         </ListItemButton>
 
         <ListItemButton component={Link} to="/Qcm">
           <ListItemIcon>
-            <AccountCircle sx={{ color: "#fff" }} />
+            <FactCheckOutlined sx={{ color: "#64b5f6" }} />
           </ListItemIcon>
-          <ListItemText primary="Test" sx={{ color: "#fff" }} />
+          <ListItemText primary="Tests / QCM" />
         </ListItemButton>
+
         <ListItemButton component={Link} to="/team">
           <ListItemIcon>
-            <AccountCircle sx={{ color: "#fff" }} />
+            <Groups2 sx={{ color: "#64b5f6" }} />
           </ListItemIcon>
-          <ListItemText primary="Team" sx={{ color: "#fff" }} />
+          <ListItemText primary="Équipe" />
+        </ListItemButton>
+
+        <ListItemButton component={Link} to="/contact">
+          <ListItemIcon>
+            <ContactMailOutlined sx={{ color: "#64b5f6" }} />
+          </ListItemIcon>
+          <ListItemText primary="Contacts" />
         </ListItemButton>
       </List>
     </Drawer>

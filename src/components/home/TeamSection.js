@@ -9,6 +9,7 @@ import {
   Card,
   CardMedia,
   CardContent,
+  TableCell,
 } from "@mui/material";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
@@ -133,7 +134,34 @@ const TeamSection = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <LinkedInIcon fontSize="small" sx={{ color: "#0a66c2" }} />
+                    <TableCell>
+                      {member.linkedin ? (
+                        <a
+                          href={
+                            member.linkedin.startsWith("http")
+                              ? member.linkedin
+                              : `https://${member.linkedin}`
+                          }
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            textDecoration: "none",
+                            color: "#0a66c2",
+                            gap: "6px",
+                          }}
+                        >
+                          <LinkedInIcon
+                            fontSize="small"
+                            sx={{ color: "#0a66c2" }}
+                          />
+                         
+                        </a>
+                      ) : (
+                        "—"
+                      )}
+                    </TableCell>{" "}
                   </a>
                 </Box>
               </CardContent>

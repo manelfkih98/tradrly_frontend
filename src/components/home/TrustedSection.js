@@ -21,7 +21,7 @@ const logos = [
 
 const TrustedSection = () => {
   return (
-    <Box sx={{ textAlign: 'center', py: 28, backgroundColor: '#fff' }}>
+    <Box sx={{ textAlign: 'center', py: 5, backgroundColor: '#fff' }}>
       <Typography variant="h4" fontWeight="bold" gutterBottom color="text.primary">
         They placed their trust in us
       </Typography>

@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   fetchOffresEmploi,
   deactivateOffreEmploi,
-  activateOffreEmploi
+  activateOffreEmploi,
 } from "../../../store/services/offreService";
 import {
   Table,
@@ -18,9 +18,15 @@ import {
   Card,
   IconButton,
   Button,
-  TextField
+  TextField,
+  Chip,
+  Stack,
+  Box,
+  TablePagination,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
+import AddIcon from "@mui/icons-material/Add";
+import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew";
 import AddOffreJob from "./addOffreJob";
 import UpdateOffreEmploi from "./updateOffreEmploi";
 
@@ -32,6 +38,10 @@ function AllEmploi() {
   const [editOpen, setEditOpen] = useState(false);
   const [selectedOffre, setSelectedOffre] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+  
+  // Pagination state
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
   useEffect(() => {
     dispatch(fetchOffresEmploi());
@@ -52,22 +62,40 @@ function AllEmploi() {
     offre.titre.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  // Paginate the filtered offers
+  const paginatedOffres = filteredOffres.slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage
+  );
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0); // Reset to the first page when rows per page is changed
+  };
+
   return (
-    <Card sx={{ p: 8 }}>
-      <Button
-        variant="contained"
-        color="primary"
-        sx={{ marginBottom: 2 }}
-        onClick={() => setOpen(true)}
-      >
-        Ajouter une offre d'emploi
-      </Button>
+    <Card sx={{ p: 4 }}>
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
       
+        <Button
+          variant="contained"
+          color="primary"
+          startIcon={<AddIcon />}
+          onClick={() => setOpen(true)}
+        >
+          Ajouter une offre
+        </Button>
+      </Box>
+
       <TextField
         label="Rechercher par titre"
         variant="outlined"
         fullWidth
-        sx={{ marginBottom: 2 }}
+        sx={{ mb: 3 }}
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
       />
@@ -80,12 +108,8 @@ function AllEmploi() {
       />
 
       <TableContainer component={Paper}>
-        <Typography variant="h6" sx={{ marginBottom: 2, textAlign: "center" }}>
-          Liste des offres d'emploi
-        </Typography>
-
         {loading ? (
-          <CircularProgress sx={{ display: "block", margin: "auto" }} />
+          <CircularProgress sx={{ display: "block", margin: "auto", my: 5 }} />
         ) : error ? (
           <Typography color="error" align="center">
             Erreur: {error}
@@ -94,66 +118,57 @@ function AllEmploi() {
           <Table>
             <TableHead>
               <TableRow sx={{ backgroundColor: "#f5f5f5" }}>
-                <TableCell>
-                  <strong>Titre</strong>
-                </TableCell>
-                <TableCell>
-                  <strong>Description</strong>
-                </TableCell>
-                <TableCell>
-                  <strong>Statut</strong>
-                </TableCell>
-                <TableCell>
-                  <strong>Date de publication</strong>
-                </TableCell>
-                <TableCell>
-                  <strong>Date de clôture</strong>
-                </TableCell>
-                <TableCell>
-                  <strong>Département</strong>
-                </TableCell>
-                <TableCell>
-                  <strong>Actions</strong>
-                </TableCell>
+                <TableCell><strong>Titre</strong></TableCell>
+                <TableCell><strong>Description</strong></TableCell>
+                <TableCell><strong>Statut</strong></TableCell>
+                <TableCell><strong>Date publication</strong></TableCell>
+                <TableCell><strong>Date clôture</strong></TableCell>
+                <TableCell><strong>Département</strong></TableCell>
+                <TableCell><strong>Actions</strong></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {filteredOffres.length > 0 ? (
-                filteredOffres.map((offre) => (
+              {paginatedOffres.length > 0 ? (
+                paginatedOffres.map((offre) => (
                   <TableRow key={offre._id}>
                     <TableCell>{offre.titre}</TableCell>
                     <TableCell>{offre.description}</TableCell>
                     <TableCell>
-                      {offre.status === true ? "Déactiver" : "Activer"}
+                      <Chip
+                        label={offre.status ? "Active" : "Inactive"}
+                        color={offre.status ? "success" : "default"}
+                        size="small"
+                      />
                     </TableCell>
                     <TableCell>{formatDate(offre.date_publi)}</TableCell>
                     <TableCell>{formatDate(offre.date_limite)}</TableCell>
+                    <TableCell>{offre.departement?.NameDep || "Non défini"}</TableCell>
                     <TableCell>
-                      {offre.departement?.NameDep || "Non défini"}
-                    </TableCell>
-                    <TableCell>
-                      <IconButton
-                        color="primary"
-                        onClick={() => {
-                          setSelectedOffre(offre);
-                          setEditOpen(true);
-                        }}
-                      >
-                         <EditIcon />
-                      </IconButton>
-                      <Button
-                        variant="contained"
-                        color={offre.status === true ? "success" : "secondary"}
-                        onClick={() => {
-                          if (offre.status === true) {
-                            dispatch(deactivateOffreEmploi(offre._id));
-                          } else {
-                            dispatch(activateOffreEmploi(offre._id));
-                          }
-                        }}
-                      >
-                        {offre.status === true ? "Activer" : "Déactiver"}
-                      </Button>
+                      <Stack direction="row" spacing={1}>
+                        <IconButton
+                          color="primary"
+                          onClick={() => {
+                            setSelectedOffre(offre);
+                            setEditOpen(true);
+                          }}
+                        >
+                          <EditIcon />
+                        </IconButton>
+                        <Button
+                          size="small"
+                          variant="outlined"
+                          color={offre.status ? "error" : "success"}
+                          onClick={() => {
+                            if (offre.status) {
+                              dispatch(deactivateOffreEmploi(offre._id));
+                            } else {
+                              dispatch(activateOffreEmploi(offre._id));
+                            }
+                          }}
+                        >
+                          {offre.status ? "Désactiver" : "Activer"}
+                        </Button>
+                      </Stack>
                     </TableCell>
                   </TableRow>
                 ))
@@ -168,8 +183,19 @@ function AllEmploi() {
           </Table>
         )}
       </TableContainer>
+
+     
+      <TablePagination
+        rowsPerPageOptions={[5, 10, 25]}
+        component="div"
+        count={filteredOffres.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
     </Card>
   );
-};
+}
 
 export default AllEmploi;

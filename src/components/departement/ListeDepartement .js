@@ -6,27 +6,46 @@ import {
   createDepartment,
   updateDepartment,
 } from "../../store/services/departService";
+
 import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  CircularProgress,
+  Divider,
+  IconButton,
+  Paper,
   Table,
-  TableHead,
   TableBody,
-  TableRow,
   TableCell,
   TableContainer,
-  Paper,
-  CircularProgress,
-  Typography,
-  Card,
-  IconButton,
-  Button,
+  TableHead,
+  TableRow,
   TextField,
+  Tooltip,
+  Typography,
 } from "@mui/material";
+
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import AddIcon from "@mui/icons-material/Add";
+import SearchIcon from "@mui/icons-material/Search";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+
 import Swal from "sweetalert2";
 import AddDepartement from "./AddDepartement";
+import { styled } from "@mui/material/styles";
 
-function ListesDepartement() {
+// Définir le bouton animé avec une transition
+const AnimatedIconButton = styled(IconButton)(({ theme }) => ({
+  transition: "transform 0.2s ease-in-out",
+  "&:hover": {
+    transform: "scale(1.2)",
+  },
+}));
+
+const ListesDepartement = () => {
   const dispatch = useDispatch();
   const { departments, loading, error } = useSelector(
     (state) => state.departments
@@ -42,24 +61,18 @@ function ListesDepartement() {
 
   const handleDelete = (id) => {
     Swal.fire({
-      title: "Êtes-vous sûr ?",
-      text: "Cette action est irréversible !",
+      title: "Supprimer ce département ?",
+      text: "Cette action est irréversible.",
       icon: "warning",
       showCancelButton: true,
+      confirmButtonText: "Supprimer",
+      cancelButtonText: "Annuler",
       confirmButtonColor: "#d33",
       cancelButtonColor: "#3085d6",
-      confirmButtonText: "Oui, supprimer !",
-      cancelButtonText: "Annuler",
     }).then((result) => {
       if (result.isConfirmed) {
         dispatch(deleteDepartments(id));
-        Swal.fire({
-          position: "top-end",
-          icon: "success",
-          title: "Département supprimé avec succès",
-          showConfirmButton: false,
-          timer: 1000,
-        });
+        Swal.fire("Supprimé", "Le département a été supprimé.", "success");
       }
     });
   };
@@ -77,101 +90,104 @@ function ListesDepartement() {
   const handleClose = () => {
     setOpen(false);
     setEditingDepartment(null);
-    setEditingDepartment(null);
   };
 
-  const handleAddOrUpdateDepartment = (departmentData) => {
-    if (editingDepartment) {
-      dispatch(updateDepartment(editingDepartment._id, departmentData));
-    } else {
-      dispatch(createDepartment(departmentData));
-    }
+  const handleAddOrUpdateDepartment = (data) => {
+    editingDepartment
+      ? dispatch(updateDepartment(editingDepartment._id, data))
+      : dispatch(createDepartment(data));
     setOpen(false);
   };
 
-  const filteredDepartments = departments.filter(
-    (dep) =>
-      dep.NameDep.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      dep.DescrpDetp.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredDepartments = departments.filter((dep) =>
+    `${dep.NameDep} ${dep.DescrpDetp}`
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase())
   );
 
   return (
-    <Card sx={{ p: 8 }}>
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={handleOpen}
-        sx={{ marginBottom: 2 }}
-      >
-        Ajouter un Département
-      </Button>
-      <TextField
-        label="Rechercher un département"
-        variant="outlined"
-        fullWidth
-        sx={{ marginBottom: 2 }}
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-      />
-      <TableContainer component={Paper}>
-        <Typography variant="h6" sx={{ marginBottom: 2, textAlign: "center" }}>
-          Liste des Départements
-        </Typography>
+    < Box elevation={3} sx={{ p: 4, borderRadius: 3 }}>
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>
+        <Button
+          variant="contained"
+          startIcon={<AddIcon />}
+          onClick={handleOpen}
+          sx={{ borderRadius: 2 }}
+        >
+          Nouveau Département
+        </Button>
+      </Box>
 
-        {loading ? (
-          <CircularProgress sx={{ display: "block", margin: "auto" }} />
-        ) : error ? (
-          <Typography color="error" align="center">
-            Erreur: {error}
-          </Typography>
-        ) : (
+      <Box display="flex" gap={2} alignItems="center" mb={3}>
+        <SearchIcon color="action" />
+        <TextField
+          variant="outlined"
+          size="small"
+          fullWidth
+          placeholder="Rechercher par nom ou description..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </Box>
+
+      <Divider sx={{ mb: 2 }} />
+
+      {loading ? (
+        <CircularProgress sx={{ display: "block", mx: "auto", mt: 4 }} />
+      ) : error ? (
+        <Typography color="error" align="center">
+          Erreur : {error}
+        </Typography>
+      ) : (
+        <TableContainer component={Paper} sx={{ borderRadius: 2 }}>
           <Table>
             <TableHead>
-              <TableRow sx={{ backgroundColor: "#f5f5f5" }}>
-                <TableCell>
-                  <strong>Nom Département</strong>
-                </TableCell>
-                <TableCell>
-                  <strong>Description</strong>
-                </TableCell>
-                <TableCell>
-                  <strong>Actions</strong>
-                </TableCell>
+              <TableRow sx={{ backgroundColor: "#f4f6f8" }}>
+                <TableCell><strong>Nom</strong></TableCell>
+                <TableCell><strong>Description</strong></TableCell>
+                <TableCell align="center"><strong>Actions</strong></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {filteredDepartments.length > 0 ? (
                 filteredDepartments.map((dep) => (
-                  <TableRow key={dep._id}>
+                  <TableRow key={dep._id} hover>
                     <TableCell>{dep.NameDep}</TableCell>
                     <TableCell>{dep.DescrpDetp}</TableCell>
-                    <TableCell>
-                      <IconButton
-                        onClick={() => handleEdit(dep)}
-                        color="primary"
-                      >
-                        <EditIcon />
-                      </IconButton>
-                      <IconButton
-                        onClick={() => handleDelete(dep._id)}
-                        color="error"
-                      >
-                        <DeleteIcon />
-                      </IconButton>
+                    <TableCell align="center">
+                      <Tooltip title="Modifier">
+                        <AnimatedIconButton
+                          color="primary"
+                          onClick={() => handleEdit(dep)}
+                        >
+                          <EditIcon />
+                        </AnimatedIconButton>
+                      </Tooltip>
+                      <Tooltip title="Supprimer">
+                        <AnimatedIconButton
+                          color="error"
+                          onClick={() => handleDelete(dep._id)}
+                        >
+                          <DeleteIcon />
+                        </AnimatedIconButton>
+                      </Tooltip>
                     </TableCell>
                   </TableRow>
                 ))
               ) : (
                 <TableRow>
                   <TableCell colSpan={3} align="center">
-                    Aucun département trouvé.
+                    <Box display="flex" alignItems="center" justifyContent="center" py={4} gap={1}>
+                      <InfoOutlinedIcon color="disabled" />
+                      <Typography>Aucun département trouvé.</Typography>
+                    </Box>
                   </TableCell>
                 </TableRow>
               )}
             </TableBody>
           </Table>
-        )}
-      </TableContainer>
+        </TableContainer>
+      )}
 
       <AddDepartement
         open={open}
@@ -179,8 +195,8 @@ function ListesDepartement() {
         handleSubmit={handleAddOrUpdateDepartment}
         editingDepartment={editingDepartment}
       />
-    </Card>
+    </Box>
   );
-}
+};
 
 export default ListesDepartement;

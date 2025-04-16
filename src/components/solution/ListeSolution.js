@@ -1,29 +1,36 @@
 import React, { useEffect, useState } from "react";
+import {
+  Box,
+  Grid,
+  Typography,
+  Card,
+  CardContent,
+  IconButton,
+  Button,
+  TextField,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Avatar,
+  Tooltip,
+  CircularProgress,
+  Chip,
+} from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import AddIcon from "@mui/icons-material/Add";
+import Swal from "sweetalert2";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchSolutions,
   deleteSolutions,
   createSolution,
-  updateSolution
+  updateSolution,
 } from "../../store/services/solutionService";
-import {
-  Table,
-  TableHead,
-  TableBody,
-  TableRow,
-  TableCell,
-  TableContainer,
-  Paper,
-  CircularProgress,
-  Typography,
-  Card,
-  IconButton,
-  Button,
-  TextField,
-} from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
-import Swal from "sweetalert2";
 import AddSolution from "./AddSolution";
 
 function ListesSolution() {
@@ -86,104 +93,120 @@ function ListesSolution() {
     setEditingProject(null);
   };
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return `${date.getDate().toString().padStart(2, "0")}/${(date.getMonth() + 1)
+      .toString()
+      .padStart(2, "0")}/${date.getFullYear()}`;
+  };
+
   const filteredProjects = projects.filter(
     (project) =>
       (project.name_project &&
-        project.name_project
-          .toLowerCase()
-          .includes(searchTerm.toLowerCase())) ||
+        project.name_project.toLowerCase().includes(searchTerm.toLowerCase())) ||
       (project.description_project &&
-        project.description_project
-          .toLowerCase()
-          .includes(searchTerm.toLowerCase()))
+        project.description_project.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   return (
-    <Card sx={{ p: 8 }}>
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={handleOpen}
-        sx={{ marginBottom: 2 }}
-      >
-        Ajouter un projet
-      </Button>
+    <Box sx={{ padding: 4 }}>
+      <Grid container justifyContent="space-between" alignItems="center" mb={3}>
+        <Grid item>
+         
+        </Grid>
+        <Grid item>
+          <Button
+            variant="contained"
+            color="primary"
+            startIcon={<AddIcon />}
+            onClick={handleOpen}
+          >
+            Ajouter un Projet
+          </Button>
+        </Grid>
+      </Grid>
+
       <TextField
-        label="Rechercher projet"
-        variant="outlined"
         fullWidth
-        sx={{ marginBottom: 2 }}
+        variant="outlined"
+        placeholder="Rechercher un projet..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
+        sx={{ mb: 3 }}
       />
-      <TableContainer component={Paper}>
-        <Typography variant="h6" sx={{ marginBottom: 2, textAlign: "center" }}>
-          Liste des projets
-        </Typography>
 
-        {loading ? (
-          <CircularProgress sx={{ display: "block", margin: "auto" }} />
-        ) : error ? (
-          <Typography color="error" align="center">
-            Erreur: {error}
-          </Typography>
-        ) : (
-          <Table>
-            <TableHead>
-              <TableRow sx={{ backgroundColor: "#f5f5f5" }}>
-                <TableCell>
-                  <strong>Nom du Projet</strong>
-                </TableCell>
-                <TableCell>
-                  <strong>Description du Projet</strong>
-                </TableCell>
-                <TableCell>
-                  <strong>department</strong>
-                </TableCell>
-                <TableCell>
-                  <strong>Actions</strong>
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {filteredProjects.length > 0 ? (
-                filteredProjects.map((project) => (
-                  <TableRow key={project._id}>
-                    <TableCell>{project.name_project}</TableCell>
-                    <TableCell>{project.description_project}</TableCell>
-                    <TableCell>
-                      {project.departementId
-                        ? project.departementId.NameDep
-                        : "Département non disponible"}
-                    </TableCell>
-
-                    <TableCell>
-                      <IconButton
-                        onClick={() => handleEdit(project)}
-                        color="primary"
-                      >
-                         <EditIcon />
-                      </IconButton>
-                      <IconButton
-                        onClick={() => handleDelete(project._id)}
-                        color="error"
-                      >
-                         <DeleteIcon />
-                      </IconButton>
-                    </TableCell>
+      
+        <CardContent>
+          {loading ? (
+            <CircularProgress sx={{ display: "block", mx: "auto" }} />
+          ) : error ? (
+            <Typography color="error" align="center">
+              Erreur: {error}
+            </Typography>
+          ) : (
+            <TableContainer component={Paper}>
+              <Table>
+                <TableHead sx={{ backgroundColor: "#f8f8f8" }}>
+                  <TableRow>
+                    <TableCell><strong>Projet</strong></TableCell>
+                    <TableCell><strong>Date</strong></TableCell>
+                    <TableCell><strong>Image</strong></TableCell>
+                    <TableCell><strong>Département</strong></TableCell>
+                    <TableCell align="center"><strong>Actions</strong></TableCell>
                   </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={3} align="center">
-                    Aucun projet trouvé.
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        )}
-      </TableContainer>
+                </TableHead>
+                <TableBody>
+                  {filteredProjects.length > 0 ? (
+                    filteredProjects.map((project) => (
+                      <TableRow key={project._id}>
+                        <TableCell>{project.name_project}</TableCell>
+                        <TableCell>{formatDate(project.date_creation)}</TableCell>
+                        <TableCell>
+                          <Avatar
+                            variant="rounded"
+                            src={project.image}
+                            alt={project.name_project}
+                            sx={{ width: 60, height: 60 }}
+                          />
+                        </TableCell>
+                        <TableCell>
+                          {project.departementId ? (
+                            <Chip
+                              label={project.departementId.NameDep}
+                              color="info"
+                              variant="outlined"
+                            />
+                          ) : (
+                            <Chip label="Non défini" variant="outlined" color="warning" />
+                          )}
+                        </TableCell>
+                        <TableCell align="center">
+                          <Tooltip title="Modifier" arrow>
+                            <IconButton color="primary" onClick={() => handleEdit(project)}>
+                              <EditIcon />
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip title="Supprimer" arrow>
+                            <IconButton color="error" onClick={() => handleDelete(project._id)}>
+                              <DeleteIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={5} align="center">
+                        Aucun projet trouvé.
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          )}
+        </CardContent>
+    
 
       <AddSolution
         open={open}
@@ -191,7 +214,7 @@ function ListesSolution() {
         onSubmitSolution={handleFormSubmit}
         editingSolution={editingProject}
       />
-    </Card>
+    </Box>
   );
 }
 

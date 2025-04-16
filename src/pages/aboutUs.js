@@ -13,15 +13,15 @@ import { Box } from '@mui/material';
 
 const UboutUs = () => {
   return (
-    <Box sx={{ width: '100%', minHeight: '100vh', overflowX: 'hidden' }}>
-      <Navbar />
+    <Box sx={{ width: '100%', minHeight: '100vh', px: 0 }}>
+    <Navbar />
       <WhoAreWe />
       <OurValues />
       <HowWeHelp />
       <Purpose />
       <TradlyInNumbers />
       <WhatMakesUsDifferent />
-      <ContactSection />
+      
       <Careers />
       <Footer />
     </Box>

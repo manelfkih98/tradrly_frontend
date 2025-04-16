@@ -36,7 +36,7 @@ const cards = [
 
 const WhoAreWe = () => {
   return (
-    <Box sx={{ px: 4, py: 10, backgroundColor: "#fff" }}>
+    <Box sx={{ px: 4, py: 15, backgroundColor: "#fff" }}>
       <Typography variant="h4" fontWeight="bold" textAlign="center" gutterBottom>
         Who are we ?
       </Typography>

@@ -5,11 +5,18 @@ import { Facebook, Twitter, LinkedIn, Instagram, ArrowForward } from '@mui/icons
 const Footer = () => {
   return (
     <AppBar
-    position="static"
+   
     sx={{
-      backgroundColor: '#0a0a0a',
-      boxShadow: 'none',
-      width: '100%',
+      position: "relative",
+      display: "flex",
+      color: "#ffffff",
+      boxSizing: "border-box",
+     backgroundColor: "#0a0a0a",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+      overflow: " hidden",
+    
     }}
   >
       <Toolbar

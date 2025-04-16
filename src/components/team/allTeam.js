@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchTeam, deleteTeam } from "../../store/services/teamService";
+import LinkedInIcon from "@mui/icons-material/LinkedIn";
+
 import {
   Table,
   TableHead,
@@ -24,13 +26,14 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import Swal from "sweetalert2";
 import AddTeamMember from "./AddTeamMember"; // ✅ Formulaire
+import EditTeamMember from "./EditTeamMember"; // importer le nouveau composant
 
 function AllTeam() {
   const dispatch = useDispatch();
   const { teams, loading } = useSelector((state) => state.teams);
   const [editMode, setEditMode] = useState(false);
   const [selectedTeam, setSelectedTeam] = useState(null);
-  const [openDialog, setOpenDialog] = useState(false); // ✅ Contrôle du popup
+  const [openDialog, setOpenDialog] = useState(false);
 
   useEffect(() => {
     dispatch(fetchTeam());
@@ -76,7 +79,12 @@ function AllTeam() {
       </Button>
 
       {/* ✅ Modal Dialog contenant AddTeamMember */}
-      <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="sm" fullWidth>
+      <Dialog
+        open={openDialog}
+        onClose={handleCloseDialog}
+        maxWidth="sm"
+        fullWidth
+      >
         <DialogTitle>Ajouter un membre de l'équipe</DialogTitle>
         <DialogContent dividers>
           <AddTeamMember
@@ -105,6 +113,7 @@ function AllTeam() {
                   <TableCell>Nom</TableCell>
                   <TableCell>Poste</TableCell>
                   <TableCell>Citation</TableCell>
+                  <TableCell>LinkedIn</TableCell>
                   <TableCell>Image</TableCell>
                   <TableCell>Actions</TableCell>
                 </TableRow>
@@ -115,6 +124,32 @@ function AllTeam() {
                     <TableCell>{team.name}</TableCell>
                     <TableCell>{team.title}</TableCell>
                     <TableCell>{team.quote}</TableCell>
+                    <TableCell>
+                      {team.linkedin ? (
+                        <a
+                          href={
+                            team.linkedin.startsWith("http")
+                              ? team.linkedin
+                              : `https://${team.linkedin}`
+                          }
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          style={{
+                            textDecoration: "none",
+                            color: "#0a66c2",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "5px",
+                          }}
+                        >
+                          <LinkedInIcon />
+                          LinkedIn
+                        </a>
+                      ) : (
+                        "—"
+                      )}
+                    </TableCell>
+
                     <TableCell>
                       <img
                         src={team.image}
@@ -142,6 +177,21 @@ function AllTeam() {
           </TableContainer>
         )}
       </Card>
+      {/* Modal pour modification */}
+<Dialog open={editMode} onClose={handleCancelEdit} maxWidth="sm" fullWidth>
+  <DialogTitle>Modifier un membre</DialogTitle>
+  <DialogContent dividers>
+    <EditTeamMember
+      selectedTeam={selectedTeam}
+      onCancel={handleCancelEdit}
+      onMemberUpdated={() => {
+        dispatch(fetchTeam());
+        handleCancelEdit();
+      }}
+    />
+  </DialogContent>
+</Dialog>
+
     </Box>
   );
 }

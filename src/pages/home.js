@@ -18,16 +18,20 @@ const Home = () => {
   };
 
   return (
-    <div>
-      <Navbar scrollToWorkShowcase={scrollToWorkShowcase} />
+    <div
+    style={{  padding: 0, margin: 0, width: '100%' }}
+    >
+      <Navbar />
       <HeroSection />
       <TrustedSection />
       <WhoAreWe />
-      <WorkShowcase ref={workShowcaseRef} />
       <TeamSection />
+      <box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
       <CareerOpportunities />
+      </box>
       <TestimonialsSection />
-      <ContactSection />
+      <WorkShowcase ref={workShowcaseRef} />
+     <ContactSection/>
       <Footer />
     </div>
   );

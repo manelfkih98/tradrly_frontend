@@ -33,8 +33,9 @@ const OpportunityCard = () => (
   <Paper
     elevation={3}
     sx={{
+      display: "relative",
       borderRadius: 5,
-      p: 2,
+      px:3,
       backgroundColor: "#fff",
       width: "100%",
     }}

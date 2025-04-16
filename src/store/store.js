@@ -7,6 +7,7 @@ import postsSlice from "./slices/postsSlice"
 import QcmSlice from "./slices/QcmSlice"
 import testsSlice from "./slices/testSlice"
 import teamsSlice from "./slices/teamSlice"
+import contactSlice from "./slices/contactSlice";
 const store = configureStore({
   reducer: {
     departments: departmentsReducer,
@@ -17,6 +18,8 @@ const store = configureStore({
     Qcms:QcmSlice,
     tests:testsSlice,
     teams:teamsSlice,
+    contacts: contactSlice,
+    
     
    
   },

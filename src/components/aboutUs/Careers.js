@@ -8,6 +8,7 @@ import personImage from '../../image/person.png';
 // Style personnalisé pour le conteneur
 const CareersSection = styled(Box)(({ theme }) => ({
   padding: theme.spacing(2), // Réduit de 4 à 2 pour moins de padding
+  py: 5,
   backgroundColor: '#F3EBFF', // Fond violet clair
   borderRadius: theme.spacing(2),
   display: 'flex',

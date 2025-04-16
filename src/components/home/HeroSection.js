@@ -1,92 +1,95 @@
 import React from "react";
 import { Box, Typography, Button, Stack } from "@mui/material";
-import backgroundImage from "../../image/home.gif"; // Your cube image
-import tradifyLogo from "../../image/image 4.png"; // Replace with the actual path to your Tradify logo image
+import backgroundImage from "../../image/home.gif"; // Assurez-vous que le chemin est correct
+import tradifyLogo from "../../image/image 4.png"; // Assurez-vous que le chemin est correct
 
 const HeroSection = () => {
   return (
     <Box
       sx={{
-        backgroundColor: "#000000",
-        height: "75vh",
-        width: "100vw",
-        position: "relative",
-        top: 0,
-        left: 0,
-        margin: 0,
-        padding: "20px",
+        
+        position: "relative", // Corrigé "flex" en "relative" (valeur non valide pour position)
+        display: "flex",
         color: "#ffffff",
         boxSizing: "border-box",
-        display: "flex",
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
+        minHeight: "100vh", // Hauteur pleine page pour une section héroïque
         overflow: "hidden",
-        top: "13vh",
       }}
     >
-      {/* Background Image */}
+      {/* Image de fond */}
       <Box
         component="img"
         src={backgroundImage}
-        alt="AI Cube"
+        alt="AI Cube Background"
         sx={{
           position: "absolute",
-          height: "100vh",
-          width: "100vw",
+          width: "100%",
+          height: "100%",
           objectFit: "cover",
           zIndex: 0,
-          opacity: 0.8,
+        
           animation: "float 3s ease-in-out infinite",
+          "@keyframes float": {
+            "0%": { transform: "translateY(0)" },
+            "50%": { transform: "translateY(-10px)" },
+            "100%": { transform: "translateY(0)" },
+          },
         }}
       />
 
-      {/* Tradify Logo Centered at the Top */}
+      {/* Logo */}
       <Box
         component="img"
         src={tradifyLogo}
         alt="Tradify Logo"
         sx={{
           position: "absolute",
-          top: "20px",
+          top: { xs: "15px", md: "20px" }, // Ajustement responsif
           left: "50%",
-          transform: "translateX(-50%)", // Center the logo horizontally
-          width: "150px", // Adjust the width as needed
+          transform: "translateX(-50%)",
+          width: { xs: "120px", md: "150px" }, // Taille responsif
           zIndex: 2,
         }}
       />
 
-      {/* Main Content */}
+      {/* Contenu principal */}
       <Box
         sx={{
           position: "relative",
           zIndex: 1,
           textAlign: "center",
+          px: { xs: 2, md: 4 }, // Padding responsif
+          maxWidth: "800px", // Limite la largeur du contenu
         }}
       >
-        {/* Main Headline */}
+        {/* Titre principal */}
         <Typography
           variant="h1"
           sx={{
-            fontSize: { xs: "2.5rem", md: "4rem" },
-            fontWeight: "bold",
+            fontSize: { xs: "2rem", sm: "3rem", md: "4rem" }, // Taille responsif
+            fontWeight: 700,
             lineHeight: 1.2,
             mb: 2,
+            textShadow: "0 2px 4px rgba(0, 0, 0, 0.3)", // Ombre légère pour lisibilité
           }}
         >
           Beyond Code, Into the Future
         </Typography>
 
-        {/* Subheading */}
+        {/* Sous-titre */}
         <Typography
           variant="h6"
           sx={{
-            fontSize: { xs: "1rem", md: "1.25rem" },
-            fontWeight: "light",
+            fontSize: { xs: "0.875rem", md: "1.25rem" },
+            fontWeight: 300,
             maxWidth: "600px",
             mx: "auto",
-            mb: 4,
+            mb: { xs: 3, md: 4 },
             color: "#d3d3d3",
+            lineHeight: 1.5,
           }}
         >
           Blending innovation with intuitive design to create web and mobile
@@ -94,63 +97,59 @@ const HeroSection = () => {
         </Typography>
       </Box>
 
-      {/* Buttons Positioned at Bottom-Right, Stacked Vertically */}
+      {/* Boutons */}
       <Stack
-        direction="column" // Changed from "row" to "column" for vertical stacking
+        direction={{ xs: "column", sm: "row" }} // Colonne sur mobile, ligne sur desktop
         spacing={2}
         sx={{
-          position: "absolute",
-          bottom: "20px",
-          right: "20px",
+          position: { xs: "relative", sm: "absolute" }, // Relatif sur mobile pour éviter le chevauchement
+          bottom: { sm: "20px" },
+          right: { sm: "20px" },
           zIndex: 2,
-          alignItems: "flex-end", // Align buttons to the right within the stack
+          alignItems: { xs: "center", sm: "flex-end" },
+          mt: { xs: 2, sm: 0 }, // Marge sur mobile
         }}
       >
         <Button
           variant="outlined"
+          href="#about" // Ajout d'un lien pour la navigation
           sx={{
             borderColor: "#ffffff",
             color: "#ffffff",
             borderRadius: "50px",
-            padding: "10px 20px",
+            padding: { xs: "8px 16px", md: "10px 20px" },
             textTransform: "none",
             fontSize: "1rem",
-              backgroundColor: "rgba(2, 2, 2, 0.59)",
-            
+            backgroundColor: "rgba(0, 0, 0, 0.5)", // Fond semi-transparent
+            "&:hover": {
+              backgroundColor: "rgba(255, 255, 255, 0.1)",
+              borderColor: "#ffffff",
+            },
           }}
         >
           Who we are? →
         </Button>
         <Button
           variant="outlined"
+          href="#work" // Ajout d'un lien pour la navigation
           sx={{
             borderColor: "#ffffff",
             color: "#ffffff",
             borderRadius: "50px",
-            padding: "10px 20px",
+            padding: { xs: "8px 16px", md: "10px 20px" },
             textTransform: "none",
             fontSize: "1rem",
-           borderStyle: "dashed",
+            borderStyle: "dashed",
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
             "&:hover": {
-              borderColor: "#ffffff",
               backgroundColor: "rgba(255, 255, 255, 0.1)",
+              borderColor: "#ffffff",
             },
           }}
         >
           Our cool work →
         </Button>
       </Stack>
-
-      {/* CSS Animation for Floating Effect */}
-      <style>
-        {`
-          @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-            100% { transform: translateY(0px); }
-          }
-        `}
-      </style>
     </Box>
   );
 };

@@ -27,7 +27,13 @@ export const deleteSolutions = (id) => async (dispatch) => {
 export const createSolution = (project) => async (dispatch) => {
   dispatch(setLoading());
   try {
-    const response = await api.post("project/addProject", project);
+    const response = await api.post("project/addProject", project
+, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }
+    );
     dispatch(fetchSolutions());
   } catch (error) {
     dispatch(setError(error.message));

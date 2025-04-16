@@ -15,6 +15,10 @@ import {
   Select,
   InputLabel,
   FormControl,
+  Grid,
+  Box,
+  Typography,
+  FormHelperText,
 } from "@mui/material";
 
 const UpdateOffre = ({ open, handleClose, offre }) => {
@@ -22,7 +26,6 @@ const UpdateOffre = ({ open, handleClose, offre }) => {
   const departments =
     useSelector((state) => state.departments.departments) || [];
 
-  // Initialisation avec un objet vide pour éviter les erreurs
   const [editedOffre, setEditedOffre] = useState({
     titre: "",
     description: "",
@@ -30,7 +33,6 @@ const UpdateOffre = ({ open, handleClose, offre }) => {
     departement: "",
   });
 
-  // Mettre à jour editedOffre quand l'offre change
   useEffect(() => {
     if (offre) {
       setEditedOffre({
@@ -58,64 +60,85 @@ const UpdateOffre = ({ open, handleClose, offre }) => {
   };
 
   return (
-    <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>Modifier l'offre de stage</DialogTitle>
-      <DialogContent>
-        <TextField
-          label="Titre"
-          name="titre"
-          fullWidth
-          margin="dense"
-          value={editedOffre.titre}
-          onChange={handleChange}
-        />
-        <TextField
-          label="Description"
-          name="description"
-          fullWidth
-          margin="dense"
-          value={editedOffre.description}
-          onChange={handleChange}
-        />
-        <TextField
-          label="Date de clôture"
-          name="date_limite"
-          type="date"
-          fullWidth
-          margin="dense"
-          InputLabelProps={{ shrink: true }}
-          value={
-            editedOffre.date_limite
-              ? dayjs(editedOffre.date_limite).format("YYYY-MM-DD")
-              : ""
-          }
-          onChange={handleChange}
-        />
+    <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
+      <DialogTitle sx={{ textAlign: "center", fontWeight: 600 }}>
+        Modifier l’offre de stage
+      </DialogTitle>
+      <DialogContent dividers>
+        <Box component="form" noValidate>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <TextField
+                label="Titre"
+                name="titre"
+                fullWidth
+                value={editedOffre.titre}
+                onChange={handleChange}
+              />
+            </Grid>
 
-        <FormControl fullWidth margin="dense">
-          <InputLabel>Département</InputLabel>
-          <Select
-            name="departement"
-            value={editedOffre.departement || ""}
-            onChange={handleChange}
-          >
-            {departments.length > 0 ? (
-              departments.map((dep) => (
-                <MenuItem key={dep._id} value={dep._id}>
-                  {dep.NameDep}
-                </MenuItem>
-              ))
-            ) : (
-              <MenuItem disabled>Aucun département disponible</MenuItem>
-              
-            )}
-          </Select>
-        </FormControl>
+            <Grid item xs={12}>
+              <TextField
+                label="Description"
+                name="description"
+                fullWidth
+                multiline
+                rows={4}
+                value={editedOffre.description}
+                onChange={handleChange}
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Date de clôture"
+                name="date_limite"
+                type="date"
+                fullWidth
+                InputLabelProps={{ shrink: true }}
+                value={
+                  editedOffre.date_limite
+                    ? dayjs(editedOffre.date_limite).format("YYYY-MM-DD")
+                    : ""
+                }
+                onChange={handleChange}
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={6}>
+              <FormControl fullWidth>
+                <InputLabel>Département</InputLabel>
+                <Select
+                  name="departement"
+                  value={editedOffre.departement || ""}
+                  onChange={handleChange}
+                >
+                  {departments.length > 0 ? (
+                    departments.map((dep) => (
+                      <MenuItem key={dep._id} value={dep._id}>
+                        {dep.NameDep}
+                      </MenuItem>
+                    ))
+                  ) : (
+                    <MenuItem disabled>Aucun département disponible</MenuItem>
+                  )}
+                </Select>
+              </FormControl>
+            </Grid>
+          </Grid>
+        </Box>
       </DialogContent>
-      <DialogActions>
-        <Button onClick={handleClose}>Annuler</Button>
-        <Button onClick={handleSubmit} variant="contained" color="primary">
-          Modifier
+
+      <DialogActions sx={{ px: 3, pb: 2 }}>
+        <Button onClick={handleClose} color="inherit">
+          Annuler
+        </Button>
+        <Button
+          onClick={handleSubmit}
+          variant="contained"
+          color="primary"
+        >
+          Enregistrer
         </Button>
       </DialogActions>
     </Dialog>
