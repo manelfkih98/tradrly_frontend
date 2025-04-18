@@ -6,6 +6,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchTest, updateResultat } from "../store/services/testService";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import { FaCheckCircle } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import {
+  Dialog,
+  DialogContent,
+  Typography,
+  Button,
+  Box,
+  Stack,
+} from "@mui/material";
 
 const Test = () => {
   const dispatch = useDispatch();
@@ -40,17 +51,23 @@ const Test = () => {
         maxTimeToFinish: 15,
         showTimerPanel: "top",
         showTimerPanelMode: "both",
-        pages: [
-          {
-            elements: testData.questions.map((q, index) => ({
+        locale: "fr",
+        navigation: {
+          next: "Suivant",
+          previous: "Précédent",
+          complete: "Terminer",
+        },
+        pages: testData.questions.map((q, index) => ({
+          elements: [
+            {
               type: q.propositions?.length > 0 ? "radiogroup" : "text",
               name: `q${index}`,
               title: q.questionText,
               choices: q.propositions?.length > 0 ? q.propositions : undefined,
               correctAnswer: q.reponse,
-            })),
-          },
-        ],
+            },
+          ],
+        })),
       };
 
       const model = new Model(surveyJson);
@@ -70,6 +87,7 @@ const Test = () => {
       model.onValueChanged.add((sender) => {
         localStorage.setItem(`survey-answers-${id}`, JSON.stringify(sender.data));
       });
+
       model.onTimerTick.add(() => {
         const timeLeft = model.maxTimeToFinish - model.timeSpent;
         if (!isNaN(timeLeft)) {
@@ -105,12 +123,95 @@ const Test = () => {
   }, [testData, canTakeTest, dispatch, id]);
 
   if (canTakeTest === null) return <div className="text-center mt-10">Chargement...</div>;
-  if (!canTakeTest)
+
+  if (!canTakeTest) {
     return (
-      <div className="text-center text-lg text-gray-600 mt-10">
-        Vous avez déjà passé ce test.
-      </div>
+      <Dialog
+        open={true}
+        PaperProps={{
+          component: motion.div,
+          initial: { opacity: 0, y: -50 },
+          animate: { opacity: 1, y: 0 },
+          transition: { duration: 0.5, ease: "easeOut" },
+          sx: {
+            borderRadius: "16px",
+            backgroundColor: "#fff",
+            boxShadow: "0 4px 20px rgba(0, 0, 0, 0.15)",
+            maxWidth: "450px",
+            width: "100%",
+          },
+        }}
+        BackdropProps={{
+          component: motion.div,
+          initial: { opacity: 0 },
+          animate: { opacity: 1 },
+          transition: { duration: 0.5 },
+          sx: { backgroundColor: "rgba(0, 0, 0, 0.5)" },
+        }}
+      >
+        <DialogContent sx={{ p: 4 }}>
+          <Box display="flex" flexDirection="column" alignItems="center" textAlign="center">
+            <Box
+              sx={{
+                position: "relative",
+                width: 80,
+                height: 80,
+                mb: 3,
+              }}
+            >
+              <FaCheckCircle
+                style={{
+                  fontSize: "60px",
+                  color: "#4F46E5",
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                }}
+              />
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  borderRadius: "50%",
+                  border: "4px solid #4F46E5",
+                  opacity: 0.2,
+                }}
+              />
+            </Box>
+            <Typography
+              variant="h5"
+              sx={{
+                fontWeight: "bold",
+                color: "#4F46E5",
+                mb: 2,
+                fontSize: "1.5rem",
+                textAlign: "center",
+              }}
+            >
+              Test Déjà Complété
+            </Typography>
+            <Typography
+              variant="body1"
+              sx={{ color: "#4B5563", mb: 2, textAlign: "center" }}
+            >
+              Vous avez déjà soumis ce test technique. 
+            </Typography>
+            <Typography
+              variant="body2"
+              sx={{ color: "#4B5563", mb: 4, textAlign: "center" }}
+            >
+              Je vous informerai des résultats dans quelques jours.
+            </Typography>
+           
+          </Box>
+        </DialogContent>
+      </Dialog>
     );
+  }
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">

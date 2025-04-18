@@ -28,7 +28,7 @@ function AllContact() {
   }, [dispatch]);
 
   return (
-    <Box sx={{ p: 4, bgcolor: "#f9fafb", minHeight: "100vh" }}>
+    <Box sx={{ p: 4, minHeight: "100vh" }}>
       <Typography variant="h4" fontWeight="bold" gutterBottom color="primary">
         📬 Messages de contact
       </Typography>

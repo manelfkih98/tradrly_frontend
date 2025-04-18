@@ -1,7 +1,10 @@
 import React, { useEffect } from "react";
-import { fetchPostsStage, refuser,accepter } from "../../../store/services/postsService";
+import {
+  fetchPostsStage,
+  refuserStage,
+} from "../../../store/services/postsService";
+import { passerTest } from "../../../store/services/QcmService";
 import { useDispatch, useSelector } from "react-redux";
-import {passerTest} from "../../../store/services/QcmService"
 import {
   Table,
   TableHead,
@@ -11,101 +14,184 @@ import {
   TableContainer,
   Paper,
   CircularProgress,
-  Typography,
-  Card,
   Button,
+  Tooltip,
+  Stack,
+  Box,
+  Chip,
+  styled,
 } from "@mui/material";
+import DownloadIcon from "@mui/icons-material/Download";
+import DeleteIcon from "@mui/icons-material/Delete";
+import QuizIcon from "@mui/icons-material/Quiz";
+
+const StatusChip = styled(Chip)(({ theme, status }) => ({
+  fontWeight: 500,
+  textTransform: "capitalize",
+  borderRadius: "16px",
+  transition: "all 0.2s ease",
+  "&:hover": {
+    transform: "scale(1.05)",
+    boxShadow: theme.shadows[2],
+  },
+  ...(status === "pending" && {
+    backgroundColor: theme.palette.warning.light,
+    color: theme.palette.warning.contrastText,
+  }),
+  ...(status === "refused" && {
+    backgroundColor: theme.palette.error.main,
+    color: theme.palette.error.contrastText,
+  }),
+  ...(status === "testPassed" && {
+    backgroundColor: theme.palette.info.main,
+    color: theme.palette.info.contrastText,
+  }),
+}));
 
 const AllPostStage = () => {
   const dispatch = useDispatch();
-  const posts = useSelector((state) => state.posts.posts);
+  const posts = useSelector((state) => state.posts.posts_stage);
   const loading = useSelector((state) => state.posts.loading);
-  const error = useSelector((state) => state.posts.error);
 
   useEffect(() => {
     dispatch(fetchPostsStage());
   }, [dispatch]);
 
   const handleRefuser = (id) => {
-    dispatch(refuser(id)); 
+    dispatch(  refuserStage
+(id));
   };
-  const handleAccepter=(id)=>
-  {
+
+  const handleAccepter = (id) => {
     dispatch(passerTest(id));
   };
 
   return (
-    <Card sx={{ p: 8 }}>
-      <TableContainer component={Paper}>
-        <Typography variant="h6" sx={{ marginBottom: 2, textAlign: "center" }}>
-          Liste des Posts
-        </Typography>
-
+    <Box sx={{ p: 3 }}>
+      <TableContainer
+        component={Paper}
+        sx={{
+          borderRadius: 3,
+          boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
+          p: 2,
+        }}
+      >
         {loading ? (
-          <CircularProgress sx={{ display: "block", margin: "auto" }} />
-        ) : error ? (
-          <Typography color="error" align="center">
-            Erreur: {error}
-          </Typography>
+          <CircularProgress sx={{ display: "block", margin: "auto", my: 5 }} />
         ) : (
           <Table>
             <TableHead>
-              <TableRow sx={{ backgroundColor: "#f5f5f5" }}>
-                <TableCell>
-                  <strong>Nom</strong>
-                </TableCell>
-                <TableCell>
-                  <strong>Email</strong>
-                </TableCell>
-                <TableCell>
-                  <strong>Tel</strong>
-                </TableCell>
-                <TableCell>
-                  <strong>Niveau</strong>
-                </TableCell>
-                <TableCell>
-                  <strong>Offre</strong>
-                </TableCell>
-                <TableCell>
-                  <strong>CV</strong>
-                </TableCell>
-                <TableCell>
-                  <strong>Actions</strong>
+              <TableRow sx={{ backgroundColor: "#f4f6f8" }}>
+                <TableCell sx={{ fontWeight: "bold" }}>Nom</TableCell>
+                <TableCell sx={{ fontWeight: "bold" }}>Email</TableCell>
+                <TableCell sx={{ fontWeight: "bold" }}>Téléphone</TableCell>
+                <TableCell sx={{ fontWeight: "bold" }}>Niveau</TableCell>
+                <TableCell sx={{ fontWeight: "bold" }}>Offre</TableCell>
+                <TableCell sx={{ fontWeight: "bold" }}>CV</TableCell>
+                <TableCell sx={{ fontWeight: "bold" }}>Statut</TableCell>
+                <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                  Actions
                 </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {posts.length > 0 ? (
-                posts.map((post) => (
-                  <TableRow key={post._id}>
-                    <TableCell>{post.name}</TableCell>
-                    <TableCell>{post.email}</TableCell>
-                    <TableCell>{post.number}</TableCell>
-                    <TableCell>{post.niveau}</TableCell>
-                    <TableCell>{post.jobId.titre}</TableCell>
-                   
-                    <TableCell>
-                    
-                      <a
-                        href={post.cv_local_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        Télécharger CV
-                      </a>
-                    </TableCell>
-                    <TableCell>
-                      <Button onClick={() => handleRefuser(post._id)}>
-                        Refuser
-                      </Button>
-                
-                      <Button onClick={()=>handleAccepter(post._id)}>Passer un Test</Button>
-                    </TableCell>
-                  </TableRow>
-                ))
+                posts.map((post) => {
+                  const isFinalized =
+                    post.status === "refused" || post.status === "testPassed";
+                  return (
+                    <TableRow
+                      key={post._id}
+                      hover
+                      sx={{
+                        "&:hover": {
+                          backgroundColor: "#f9fafb",
+                        },
+                      }}
+                    >
+                      <TableCell>{post.name}</TableCell>
+                      <TableCell>{post.email}</TableCell>
+                      <TableCell>{post.number}</TableCell>
+                      <TableCell>{post.niveau}</TableCell>
+                      <TableCell>{post.jobId?.titre}</TableCell>
+                      <TableCell>
+                        <Button
+                          variant="outlined"
+                          size="small"
+                          startIcon={<DownloadIcon />}
+                          href={post.cv_local_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          sx={{
+                            borderRadius: "12px",
+                            textTransform: "none",
+                          }}
+                        >
+                          CV
+                        </Button>
+                      </TableCell>
+                      <TableCell>
+                        <StatusChip
+                          label={
+                            post.status === "pending"
+                              ? "En attente"
+                              : post.status === "refused"
+                              ? "Refusé"
+                              : post.status === "testPassed"
+                              ? "Passe un test"
+                              : "Statut inconnu"
+                          }
+                          status={post.status || "en_attente"}
+                        />
+                      </TableCell>
+                      <TableCell align="center">
+                        {!isFinalized ? (
+                          <Stack
+                            direction="row"
+                            spacing={1}
+                            justifyContent="center"
+                          >
+                            <Tooltip title="Refuser la candidature">
+                              <Button
+                                variant="outlined"
+                                color="error"
+                                size="small"
+                                startIcon={<DeleteIcon />}
+                                onClick={() => handleRefuser(post._id)}
+                                sx={{
+                                  borderRadius: "12px",
+                                  textTransform: "none",
+                                }}
+                              >
+                                Refuser
+                              </Button>
+                            </Tooltip>
+                            <Tooltip title="Faire passer le test">
+                              <Button
+                                variant="contained"
+                                color="primary"
+                                size="small"
+                                startIcon={<QuizIcon />}
+                                onClick={() => handleAccepter(post._id)}
+                                sx={{
+                                  borderRadius: "12px",
+                                  textTransform: "none",
+                                }}
+                              >
+                                Test
+                              </Button>
+                            </Tooltip>
+                          </Stack>
+                        ) : (
+                          <Box sx={{ color: "text.secondary" }}>-</Box>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  );
+                })
               ) : (
                 <TableRow>
-                  <TableCell colSpan={6} align="center">
+                  <TableCell colSpan={8} align="center" sx={{ py: 4 }}>
                     Aucun post trouvé.
                   </TableCell>
                 </TableRow>
@@ -114,7 +200,7 @@ const AllPostStage = () => {
           </Table>
         )}
       </TableContainer>
-    </Card>
+    </Box>
   );
 };
 

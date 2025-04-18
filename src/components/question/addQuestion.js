@@ -1,150 +1,185 @@
 import React, { useState, useEffect } from "react";
+import {
+  Box,
+  Button,
+  Grid,
+  Typography,
+  TextField,
+  Paper,
+  IconButton,
+  FormControl,
+  Select,
+  MenuItem,
+  InputLabel,
+  CircularProgress,
+  Divider,
+  Chip,
+} from "@mui/material";
+import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchDepartments } from "../../store/services/departService"; // Action pour récupérer les départements
-import { Button, TextField, MenuItem, Select, InputLabel, FormControl, Grid, Typography, CircularProgress, Box, Paper } from "@mui/material";
-import { addQuestion } from "../../store/services/questionService"; // Action pour ajouter la question
+import { fetchDepartments } from "../../store/services/departService";
+import { addQuestion } from "../../store/services/questionService";
+import { useForm } from "react-hook-form";
 
 const AddQuestion = ({ onClose }) => {
   const dispatch = useDispatch();
 
-  const [questionText, setQuestionText] = useState("");
-  const [reponse, setReponse] = useState("");
   const [propositions, setPropositions] = useState([]);
-  const [departement_name, setDepartementName] = useState("");
   const [propositionInput, setPropositionInput] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const { departments, loading: loadingDepartments, error: errorDepartments } = useSelector((state) => state.departments);
+  const { departments, loading: loadingDepartments } = useSelector(
+    (state) => state.departments
+  );
 
+  // React Hook Form
+  const { register, handleSubmit, formState: { errors }, setValue, reset } = useForm();
+  
   useEffect(() => {
     dispatch(fetchDepartments());
   }, [dispatch]);
 
+  // Add proposition to list
   const handleAddProposition = () => {
-    if (propositionInput && !propositions.includes(propositionInput)) {
-      setPropositions((prevPropositions) => [...prevPropositions, propositionInput]);
-      setPropositionInput(""); 
+    if (propositionInput.trim() && !propositions.includes(propositionInput.trim())) {
+      setPropositions((prev) => [...prev, propositionInput.trim()]);
+      setPropositionInput("");
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  // Remove a proposition from list
+  const handleRemoveProposition = (index) => {
+    const updated = [...propositions];
+    updated.splice(index, 1);
+    setPropositions(updated);
+  };
+
+  // Submit form
+  const onSubmit = async (data) => {
     setLoading(true);
 
-    let updatedPropositions = [...propositions];
-
-    if (propositionInput.trim() && !updatedPropositions.includes(propositionInput.trim())) {
-      updatedPropositions.push(propositionInput.trim());
+    let updatedProps = [...propositions];
+    if (propositionInput.trim() && !updatedProps.includes(propositionInput.trim())) {
+      updatedProps.push(propositionInput.trim());
     }
 
     const newQuestion = {
-      questionText,
-      reponse,
-      propositions: updatedPropositions,
-      departement_name,
+      questionText: data.questionText,
+      reponse: data.reponse,
+      propositions: updatedProps,
+      departement_name: data.departement_name,
     };
 
-    dispatch(addQuestion(newQuestion));
-
-    resetForm();
-    onClose(false);
-  };
-
-  const resetForm = () => {
-    setQuestionText("");
-    setReponse("");
-    setPropositions([]);
-    setDepartementName("");
-    setPropositionInput("");
+    try {
+      await dispatch(addQuestion(newQuestion));
+      reset(); // Reset form after successful submission
+      onClose(false); // Close the modal or handle success
+    } catch (error) {
+      console.error("Error adding question:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <Box sx={{ padding: 4, display: "flex", justifyContent: "center", alignItems: "center" }}>
-      <Paper sx={{ p: 4, width: "100%", maxWidth: 600, borderRadius: 3, boxShadow: 3 }}>
-        <Typography variant="h5" sx={{ mb: 3, textAlign: "center", fontWeight: 600, color: "#3f51b5" }}>
-          Ajouter une Nouvelle Question
+    <Box sx={{ p: 4, display: "flex", justifyContent: "center", alignItems: "center" }}>
+      <Paper elevation={6} sx={{ p: 6, width: "100%", borderRadius: 4, backgroundColor: "#ffffff" }}>
+        <Typography variant="h5" sx={{ fontWeight: 700, color: "#2c3e50", textAlign: "center", mb: 3 }}>
+          Ajouter une Question
         </Typography>
-        <form onSubmit={handleSubmit}>
+        <Divider sx={{ mb: 3 }} />
+        <form onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={3}>
             <Grid item xs={12}>
               <TextField
-                label="Texte de la Question"
+                label="Texte de la question"
                 variant="outlined"
                 fullWidth
-                value={questionText}
-                onChange={(e) => setQuestionText(e.target.value)}
-                required
-                sx={{ backgroundColor: "#f5f5f5", borderRadius: 1 }}
+                {...register("questionText", { required: "Ce champ est obligatoire" })}
+                error={!!errors.questionText}
+                helperText={errors.questionText?.message}
               />
             </Grid>
 
             <Grid item xs={12}>
               <TextField
-                label="Réponse"
+                label="Réponse correcte"
                 variant="outlined"
                 fullWidth
-                value={reponse}
-                onChange={(e) => setReponse(e.target.value)}
-                required
-                sx={{ backgroundColor: "#f5f5f5", borderRadius: 1 }}
+                {...register("reponse", { required: "Ce champ est obligatoire" })}
+                error={!!errors.reponse}
+                helperText={errors.reponse?.message}
               />
             </Grid>
 
-            <Grid item xs={12}>
+            <Grid item xs={9}>
               <TextField
-                label="Proposition"
+                label="Ajouter une proposition"
                 variant="outlined"
                 fullWidth
                 value={propositionInput}
                 onChange={(e) => setPropositionInput(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") handleAddProposition();
-                }}
-                sx={{ backgroundColor: "#f5f5f5", borderRadius: 1 }}
               />
+            </Grid>
+            <Grid item xs={3}>
               <Button
-                variant="contained"
-                color="primary"
                 onClick={handleAddProposition}
+                startIcon={<AddCircleOutlineIcon />}
+                fullWidth
+                variant="outlined"
                 sx={{
-                  mt: 1,
-                  borderRadius: 1,
-                  backgroundColor: "#3f51b5",
-                  "&:hover": { backgroundColor: "#303f9f" },
+                  height: "100%",
+                  color: "#1e88e5",
+                  borderColor: "#1e88e5",
+                  "&:hover": {
+                    backgroundColor: "#e3f2fd",
+                    borderColor: "#1565c0",
+                  },
                 }}
               >
-                Ajouter la Proposition
+                Ajouter
               </Button>
-              <Box sx={{ mt: 2 }}>
-                {propositions.map((prop, index) => (
-                  <Typography key={index} variant="body2" color="textSecondary">
-                    {prop}
-                  </Typography>
-                ))}
-              </Box>
             </Grid>
 
+            {propositions.length > 0 && (
+              <Grid item xs={12}>
+                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+                  {propositions.map((prop, idx) => (
+                    <Chip
+                      key={idx}
+                      label={prop}
+                      onDelete={() => handleRemoveProposition(idx)}
+                      deleteIcon={<RemoveCircleOutlineIcon />}
+                      sx={{ backgroundColor: "#f0f0f0" }}
+                    />
+                  ))}
+                </Box>
+              </Grid>
+            )}
+
+            {/* Dropdown for Departments */}
             <Grid item xs={12}>
-              <FormControl fullWidth>
+              <FormControl fullWidth required>
                 <InputLabel>Département</InputLabel>
                 <Select
-                  value={departement_name}
-                  onChange={(e) => setDepartementName(e.target.value)}
-                  label="Département"
-                  required
-                  disabled={loadingDepartments}
-                  sx={{ backgroundColor: "#f5f5f5", borderRadius: 1 }}
+                  {...register("departement_name", { required: "Veuillez sélectionner un département" })}
+                  defaultValue=""
+                  error={!!errors.departement_name}
                 >
                   {loadingDepartments ? (
                     <MenuItem disabled>Chargement...</MenuItem>
                   ) : (
-                    departments?.map((departement) => (
-                      <MenuItem key={departement._id} value={departement.NameDep}>
-                        {departement.NameDep}
+                    departments?.map((dep) => (
+                      <MenuItem key={dep._id} value={dep.NameDep}>
+                        {dep.NameDep}
                       </MenuItem>
                     ))
                   )}
                 </Select>
+                {errors.departement_name && (
+                  <Typography variant="body2" color="error">{errors.departement_name.message}</Typography>
+                )}
               </FormControl>
             </Grid>
 
@@ -152,17 +187,20 @@ const AddQuestion = ({ onClose }) => {
               <Button
                 type="submit"
                 variant="contained"
-                color="primary"
                 fullWidth
                 disabled={loading}
                 sx={{
-                  borderRadius: 1,
+                  backgroundColor: "#2e7d32",
+                  color: "white",
+                  fontWeight: "bold",
                   py: 1.5,
-                  backgroundColor: "#3f51b5",
-                  "&:hover": { backgroundColor: "#303f9f" },
+                  borderRadius: 2,
+                  "&:hover": {
+                    backgroundColor: "#1b5e20",
+                  },
                 }}
               >
-                {loading ? <CircularProgress size={24} sx={{ color: "white" }} /> : "Ajouter la Question"}
+                {loading ? <CircularProgress size={24} sx={{ color: "#fff" }} /> : "Enregistrer la Question"}
               </Button>
             </Grid>
           </Grid>

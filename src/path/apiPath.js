@@ -62,7 +62,7 @@ TEAM:{
 CONTACT:{
   ADD_CONTACT:`${BASE_URL}/contact/addContact`,
   GET_CONTACT:`${BASE_URL}/contact/allContact`,
-  DELETE_CONTACT:`${BASE_URL}/contact/deleteContact`
+  
 
 }}
 export default PATHS

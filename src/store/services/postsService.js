@@ -5,13 +5,15 @@ import {
   setLoading,
   setError,
   setDemandes,
+  setPostsJob,
+  setPostsStage,
 } from "../slices/postsSlice";
 
 export const fetchPostsStage = () => async (dispatch) => {
   dispatch(setLoading());
   try {
     const response = await api.get(`${PATHS.POST.ALL_POST_STAGE}`);
-    dispatch(setPosts(response.data));
+    dispatch(setPostsStage(response.data));
   } catch (error) {
     dispatch(setError(error.message));
   }
@@ -20,17 +22,26 @@ export const fetchPostsJob = () => async (dispatch) => {
   dispatch(setLoading());
   try {
     const response = await api.get(`${PATHS.POST.ALL_POST_JOB}`);
-    dispatch(setPosts(response.data));
+    dispatch(setPostsJob(response.data));
   } catch (error) {
     dispatch(setError(error.message));
   }
 };
 
-export const refuser = (id) => async (dispatch) => {
+export const refuserStage = (id) => async (dispatch) => {
   dispatch(setLoading());
   try {
     const response = await api.post(`${PATHS.POST.REFUSER_POST}/${id}`);
     dispatch(fetchPostsStage());
+  } catch (error) {
+    dispatch(setError(error)); 
+  }
+};
+export const refuserJob = (id) => async (dispatch) => {
+  dispatch(setLoading());
+  try {
+    const response = await api.post(`${PATHS.POST.REFUSER_POST}/${id}`);
+    dispatch(fetchPostsJob());
   } catch (error) {
     dispatch(setError(error)); 
   }
@@ -48,10 +59,35 @@ export const refuser = (id) => async (dispatch) => {
 export const accepter = (id) => async (dispatch) => {
   try {
     const response = await api.post(`${PATHS.POST.ACCEPTER_POST}/${id}`);
+
   } catch (error) {
     dispatch(setError(error));
   }
 };
+export const passerTestJob = (id) => async (dispatch) => {
+ 
+  try {
+    const response = await api.post(`${PATHS.QCM.PASSER_TEST}/${id}`);
+    dispatch(fetchPostsJob());
+   
+    console.log("Test passé :", response.data);
+  } catch (error) {
+    dispatch(setError(error.message));
+  }
+};
+export const passerTestStage = (id) => async (dispatch) => {
+ 
+  try {
+    const response = await api.post(`${PATHS.QCM.PASSER_TEST}/${id}`);
+    dispatch(fetchPostsStage());
+   
+    console.log("Test passé :", response.data);
+  } catch (error) {
+    dispatch(setError(error.message));
+  }
+};
+
+
 
 export const accepterDemande = (id) => async (dispatch) => {
   try {

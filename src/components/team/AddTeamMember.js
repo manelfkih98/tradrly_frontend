@@ -6,11 +6,15 @@ import {
   Typography,
   Paper,
   Stack,
+  Avatar,
+  Divider,
 } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { addTeam } from "../../store/services/teamService";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import CancelIcon from "@mui/icons-material/Cancel";
 
-const AddTeamMember = ({ onMemberAdded  }) => {
+const AddTeamMember = ({ onMemberAdded }) => {
   const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     name: "",
@@ -19,33 +23,25 @@ const AddTeamMember = ({ onMemberAdded  }) => {
     linkedin: "",
     image: null,
   });
+  const [imagePreview, setImagePreview] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const [imagePreview, setImagePreview] = useState(null);
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    setFormData((prev) => ({ ...prev, image: file }));
-    setImagePreview(URL.createObjectURL(file)); 
+    if (file) {
+      setFormData((prev) => ({ ...prev, image: file }));
+      setImagePreview(URL.createObjectURL(file));
+    }
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-   /* const data = new FormData();
-    data.append("name", formData.name);
-    data.append("title", formData.title);
-    data.append("quote", formData.quote);
-    data.append("linkedin", formData.linkedin);
-    data.append("image", formData.image); 
-    console.log("Form data:", data); // Debugging line
-    console.log("Form data:", formData); // Debugging line*/
-
     try {
       await dispatch(addTeam(formData));
-     
       setFormData({
         name: "",
         title: "",
@@ -61,15 +57,24 @@ const AddTeamMember = ({ onMemberAdded  }) => {
   };
 
   return (
-    <Paper elevation={3} sx={{ p: 4, m: 4 }}>
-      <Typography variant="h5" mb={3}>
-        Add Team Member
+    <Paper
+      elevation={3}
+      sx={{
+        p: 4,
+        borderRadius: 3,
+        backgroundColor: "#f9f9f9",
+      }}
+    >
+      <Typography variant="h5" align="center" fontWeight="bold" gutterBottom>
+        Ajouter un membre à l'équipe
       </Typography>
+      <Divider sx={{ mb: 3 }} />
+
       <form onSubmit={handleSubmit} encType="multipart/form-data">
-        <Stack spacing={2}>
+        <Stack spacing={3}>
           <TextField
             name="name"
-            label="Name"
+            label="Nom"
             value={formData.name}
             onChange={handleChange}
             fullWidth
@@ -77,7 +82,7 @@ const AddTeamMember = ({ onMemberAdded  }) => {
           />
           <TextField
             name="title"
-            label="Title"
+            label="Poste"
             value={formData.title}
             onChange={handleChange}
             fullWidth
@@ -85,7 +90,7 @@ const AddTeamMember = ({ onMemberAdded  }) => {
           />
           <TextField
             name="quote"
-            label="Quote"
+            label="Citation"
             value={formData.quote}
             onChange={handleChange}
             fullWidth
@@ -93,15 +98,20 @@ const AddTeamMember = ({ onMemberAdded  }) => {
           />
           <TextField
             name="linkedin"
-            label="LinkedIn URL"
+            label="Lien LinkedIn"
             value={formData.linkedin}
             onChange={handleChange}
             fullWidth
           />
-          <Button variant="outlined" component="label">
-            Upload Image
+
+          <Button
+            variant="outlined"
+            component="label"
+            startIcon={<CloudUploadIcon />}
+          >
+            Importer une image
             <input
-            name="image"
+              name="image"
               type="file"
               hidden
               onChange={handleImageChange}
@@ -109,13 +119,36 @@ const AddTeamMember = ({ onMemberAdded  }) => {
               required
             />
           </Button>
+
           {imagePreview && (
-            <img src={imagePreview} alt="Preview" width={150} height="auto" />
+            <Box display="flex" alignItems="center" gap={2}>
+              <Avatar
+                src={imagePreview}
+                alt="Preview"
+                sx={{ width: 80, height: 80, borderRadius: 2 }}
+              />
+             
+            </Box>
           )}
 
-          <Button variant="contained" color="primary" type="submit">
-            Add Member
-          </Button>
+          <Box display="flex" justifyContent="space-between" gap={2}>
+            <Button
+              variant="contained"
+              color="primary"
+              type="submit"
+              fullWidth
+            >
+              Enregistrer
+            </Button>
+            <Button
+              startIcon={<CancelIcon />}
+              fullWidth
+              color="secondary"
+              onClick={onMemberAdded}
+            >
+              Annuler
+            </Button>
+          </Box>
         </Stack>
       </form>
     </Paper>

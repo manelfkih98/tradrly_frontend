@@ -4,8 +4,14 @@ import {
   Button,
   TextField,
   Typography,
-  Stack
+  Stack,
+  Paper,
+  Divider,
+  Avatar,
 } from "@mui/material";
+import SaveIcon from "@mui/icons-material/Save";
+import CancelIcon from "@mui/icons-material/Cancel";
+import ImageIcon from "@mui/icons-material/Image";
 import { useDispatch } from "react-redux";
 import { updateTeam } from "../../store/services/teamService";
 
@@ -18,7 +24,6 @@ const EditTeamMember = ({ selectedTeam, onCancel, onMemberUpdated }) => {
     linkedin: "",
     image: null,
   });
-
   const [imagePreview, setImagePreview] = useState(null);
 
   useEffect(() => {
@@ -61,71 +66,102 @@ const EditTeamMember = ({ selectedTeam, onCancel, onMemberUpdated }) => {
 
     try {
       await dispatch(updateTeam(selectedTeam._id, data));
-      onMemberUpdated(); // Rafraîchit la liste ou ferme le modal
+      onMemberUpdated();
     } catch (err) {
-      console.error("Erreur lors de la mise à jour :", err);
+      console.error("❌ Erreur lors de la mise à jour :", err);
     }
   };
 
   return (
-    <Box component="form" onSubmit={handleSubmit}>
-      <Typography variant="h6" mb={2}>
+    <Paper elevation={3} sx={{ p: 4, borderRadius: 3, backgroundColor: "#fdfdfd" }}>
+      <Typography variant="h5" align="center" fontWeight="bold" gutterBottom>
         Modifier un membre
       </Typography>
-      <Stack spacing={2}>
-        <TextField
-          name="name"
-          label="Nom"
-          value={formData.name}
-          onChange={handleChange}
-          fullWidth
-          required
-        />
-        <TextField
-          name="title"
-          label="Poste"
-          value={formData.title}
-          onChange={handleChange}
-          fullWidth
-          required
-        />
-        <TextField
-          name="quote"
-          label="Citation"
-          value={formData.quote}
-          onChange={handleChange}
-          fullWidth
-          required
-        />
-        <TextField
-          name="linkedin"
-          label="LinkedIn"
-          value={formData.linkedin}
-          onChange={handleChange}
-          fullWidth
-          required
-        />
-        <Button variant="outlined" component="label">
-          Changer l’image
-          <input type="file" hidden accept="image/*" onChange={handleImageChange} />
-        </Button>
-        {imagePreview && (
-          <img
-            src={imagePreview}
-            alt="Preview"
-            style={{ width: "120px", borderRadius: "8px" }}
+      <Divider sx={{ mb: 3 }} />
+
+      <Box component="form" onSubmit={handleSubmit}>
+        <Stack spacing={3}>
+          <TextField
+            name="name"
+            label="Nom"
+            value={formData.name}
+            onChange={handleChange}
+            fullWidth
+            required
           />
-        )}
-        <Stack direction="row" spacing={2}>
-          <Button type="submit" variant="contained" color="primary">
-            Mettre à jour
+          <TextField
+            name="title"
+            label="Poste"
+            value={formData.title}
+            onChange={handleChange}
+            fullWidth
+            required
+          />
+          <TextField
+            name="quote"
+            label="Citation"
+            value={formData.quote}
+            onChange={handleChange}
+            fullWidth
+            required
+          />
+          <TextField
+            name="linkedin"
+            label="Profil LinkedIn"
+            value={formData.linkedin}
+            onChange={handleChange}
+            fullWidth
+            required
+          />
+
+          <Button
+            variant="outlined"
+            component="label"
+            startIcon={<ImageIcon />}
+          >
+            Changer l’image
+            <input
+              type="file"
+              hidden
+              accept="image/*"
+              onChange={handleImageChange}
+            />
           </Button>
-          <Button variant="outlined" color="secondary" onClick={onCancel}>
-            Annuler
-          </Button>
+
+          {imagePreview && (
+            <Box display="flex" alignItems="center" gap={2}>
+              <Avatar
+                src={imagePreview}
+                alt="Preview"
+                sx={{ width: 80, height: 80, borderRadius: 2 }}
+              />
+             
+            </Box>
+          )}
+
+          <Stack direction="row" spacing={2} justifyContent="space-between">
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              startIcon={<SaveIcon />}
+              fullWidth
+            >
+              Sauvegarder
+            </Button>
+            <Button
+              variant="outlined"
+              color="secondary"
+              onClick={onCancel}
+              startIcon={<CancelIcon />}
+              fullWidth
+            >
+              Annuler
+            </Button>
+          </Stack>
         </Stack>
-      </Stack>
-    </Box>
+      </Box>
+    </Paper>
   );
 };
 
