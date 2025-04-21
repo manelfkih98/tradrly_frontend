@@ -32,24 +32,46 @@ const Navbar = ({ scrollToWorkShowcase }) => {
 
         <Box sx={{ display: "flex", gap: 3 }}>
           {navLinks.map((link) => (
-            <Button
-              key={link.label}
-              component={link.path ? NavLink : "button"} // Use NavLink for paths, button for scrolling
-              to={link.path} // Only used if path exists
-              onClick={link.scroll ? scrollToWorkShowcase : undefined} // Trigger scroll if scroll flag is true
-              color="inherit"
-              sx={{
-                textTransform: "none",
-                textDecoration: "none",
-                "&.active": {
-                  fontWeight: "bold",
-                  textDecoration: "underline",
-                  color: "#1E88E5",
-                },
-              }}
-            >
-              {link.label}
-            </Button>
+          <Button
+          key={link.label}
+          component={link.path ? NavLink : "button"}
+          to={link.path}
+          onClick={link.scroll ? scrollToWorkShowcase : undefined}
+          color="inherit"
+          sx={{
+            textTransform: "none",
+            textDecoration: "none",
+            position: "relative",
+            fontSize: "1rem",
+            transition: "color 0.3s",
+            "&:hover": {
+              color: "#1E88E5", // ou la couleur de ton thème
+            },
+            "&::after": {
+              content: '""',
+              position: "absolute",
+              bottom: -2,
+              left: 0,
+              width: "0%",
+              height: "2px",
+              backgroundColor: "#1E88E5",
+              transition: "width 0.3s",
+            },
+            "&:hover::after": {
+              width: "100%",
+            },
+            "&.active": {
+              fontWeight: "bold",
+              color: "#1E88E5",
+              "&::after": {
+                width: "100%",
+              },
+            },
+          }}
+        >
+          {link.label}
+        </Button>
+        
           ))}
         </Box>
 

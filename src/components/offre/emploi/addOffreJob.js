@@ -14,8 +14,12 @@ import {
   InputLabel,
   FormControl,
   FormHelperText,
+  IconButton,
+  Box,
 } from "@mui/material";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 
 const AddOffreJob = ({ open, handleClose }) => {
   const dispatch = useDispatch();
@@ -24,10 +28,20 @@ const AddOffreJob = ({ open, handleClose }) => {
   const {
     register,
     handleSubmit,
-    setValue,
+    control,
     reset,
     formState: { errors },
-  } = useForm();
+    setValue,
+  } = useForm({
+    defaultValues: {
+      titre: "",
+      description: "",
+      date_limite: "",
+      departement_name: "",
+      requirements: [""],
+      type: "job", // Ajout du champ type
+    },
+  });
 
   useEffect(() => {
     dispatch(fetchDepartments());
@@ -43,12 +57,13 @@ const AddOffreJob = ({ open, handleClose }) => {
   const onSubmit = (data) => {
     const newOffre = {
       ...data,
-      status: "true",
+      status: true,
       date_publi: new Date().toISOString(),
+      requirements: data.requirements.filter((req) => req.trim() !== ""),
     };
     dispatch(createOffreJob(newOffre));
     handleClose();
-    reset(); // Clear fields after submit
+    reset();
   };
 
   return (
@@ -67,6 +82,8 @@ const AddOffreJob = ({ open, handleClose }) => {
           label="Description"
           fullWidth
           margin="dense"
+          multiline
+          rows={4}
           {...register("description", { required: "La description est requise" })}
           error={!!errors.description}
           helperText={errors.description?.message}
@@ -84,7 +101,6 @@ const AddOffreJob = ({ open, handleClose }) => {
         <FormControl fullWidth margin="dense" error={!!errors.departement_name}>
           <InputLabel>Département</InputLabel>
           <Select
-            defaultValue=""
             {...register("departement_name", { required: "Le département est requis" })}
           >
             {departments.length > 0 ? (
@@ -99,10 +115,80 @@ const AddOffreJob = ({ open, handleClose }) => {
           </Select>
           <FormHelperText>{errors.departement_name?.message}</FormHelperText>
         </FormControl>
+       
+        <FormControl fullWidth margin="dense" error={!!errors.requirements}>
+          <InputLabel shrink>Exigences</InputLabel>
+          <Controller
+            name="requirements"
+            control={control}
+            rules={{
+              validate: {
+                notEmpty: (value) =>
+                  value.some((req) => req.trim() !== "") ||
+                  "Au moins une exigence est requise",
+              },
+            }}
+            render={({ field: { value, onChange } }) => (
+              <Box sx={{ mt: 2 }}>
+                {value.map((req, index) => (
+                  <Box key={index} sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                    <TextField
+                      fullWidth
+                      label={`Exigence ${index + 1}`}
+                      value={req}
+                      onChange={(e) => {
+                        const newValue = [...value];
+                        newValue[index] = e.target.value;
+                        onChange(newValue);
+                      }}
+                      error={!!errors.requirements?.[index]}
+                      helperText={errors.requirements?.[index]?.message}
+                    />
+                    {value.length > 1 && (
+                      <IconButton
+                        onClick={() => {
+                          const newValue = value.filter((_, i) => i !== index);
+                          onChange(newValue);
+                        }}
+                      >
+                        <RemoveCircleOutlineIcon sx={{ color: '#1e3a8a' }} />
+                      </IconButton>
+                    )}
+                    {index === value.length - 1 && (
+                      <IconButton
+                        onClick={() => onChange([...value, ""])}
+                      >
+                        <AddCircleOutlineIcon sx={{ color: '#1e3a8a' }} />
+                      </IconButton>
+                    )}
+                  </Box>
+                ))}
+              </Box>
+            )}
+          />
+          <FormHelperText>
+            {errors.requirements?.message}
+          </FormHelperText>
+        </FormControl>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose}>Annuler</Button>
-        <Button onClick={handleSubmit(onSubmit)} variant="contained" color="primary">
+        <Button
+          onClick={handleClose}
+          sx={{
+            color: '#1e3a8a',
+            '&:hover': { color: '#d4af37' },
+          }}
+        >
+          Annuler
+        </Button>
+        <Button
+          onClick={handleSubmit(onSubmit)}
+          variant="contained"
+          sx={{
+            bgcolor: '#1e3a8a',
+            '&:hover': { bgcolor: '#d4af37', color: '#1e3a8a' },
+          }}
+        >
           Ajouter
         </Button>
       </DialogActions>

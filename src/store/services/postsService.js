@@ -1,3 +1,4 @@
+import axios from "axios";
 import api from "../../config/api";
 import PATHS from "../../path/apiPath";
 import {
@@ -130,6 +131,36 @@ export const verifier = (id) => async (dispatch) => {
   try {
     const response = await api.get(`${PATHS.POST.VERIFIER}/${id}`);
     console.log("Test vérifié :", response);
+  } catch (error) {
+    dispatch(setError(error.message));
+  }
+};
+export const postuler = (data) => async (dispatch) => {
+  dispatch(setLoading());
+  try {
+    const response = await axios.post(PATHS.POST.POSTULER, data,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    console.log("Postulation réussie :", response.data);
+  } catch (error) {
+    dispatch(setError(error.message));
+  }
+};
+export const postulerSansOffre = (data) => async (dispatch) => {
+  dispatch(setLoading());
+  try {
+    const response = await axios.post(PATHS.POST.POST_SPONPONTANE, data,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    console.log("Postulation réussie :", response.data);
   } catch (error) {
     dispatch(setError(error.message));
   }

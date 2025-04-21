@@ -28,12 +28,13 @@ import Team from "./pages/team";
 import Contact from "./pages/contact";
 import NavbarDash from "./components/NavbarDash";
 import TestInfoPage from "./pages/TestInfoPage";
+import Careers from "./pages/careers";
 
 const App = () => {
   const location = useLocation();
 
   const hideSidebarRoutes = ["/", "/test/:id", "/loginCandidat/:id"];
-  const fullScreenRoutes = ["/home", "/about", "/blog", "/work", "/page_info/:id"];
+  const fullScreenRoutes = ["/home", "/about", "/blog", "/work", "/page_info/:id","/", "/careers"];
 
   const shouldHideSidebar = hideSidebarRoutes.some((path) =>
     matchPath({ path, end: true }, location.pathname)
@@ -51,6 +52,8 @@ const App = () => {
         <Route path="/about" element={<UboutUs />} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/work" element={<WorkShowcase />} />
+        <Route path="/" element={<Login />} />
+        <Route path="/careers" element={<Careers />} />
       </Routes>
     );
   }
@@ -63,7 +66,7 @@ const App = () => {
       <Box component="main" sx={{ flexGrow: 1, p: 3, width: "100%" }}>
     
         <Routes>
-          <Route path="/" element={<Login />} />
+         
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/departement" element={<Departement />} />
           <Route path="/solution" element={<Solution />} />
@@ -73,7 +76,7 @@ const App = () => {
           <Route path="/post/emploi" element={<Posts />} />
           <Route path="/post/stage" element={<PostStage />} />
           <Route path="/postwithoutoffre" element={<PostWithoutOffre />} />
-          <Route path="/login" element={<Login />} />
+      
           <Route path="/QCM" element={<Qcm />} />
           <Route path="/test/:id" element={<Test />} />
           <Route path="/loginCandidat/:id" element={<LoginCandidatPage />} />

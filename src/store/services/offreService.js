@@ -2,13 +2,31 @@
 import api from "../../config/api";
 import PATHS from "../../path/apiPath";
 
-import { setOffres, setLoading, setError } from "../slices/offreSlice";
+import { setOffres, setLoading, setError,setOffreJobActive,setOffreStageActive } from "../slices/offreSlice";
 
 export const fetchOffresStage = () => async (dispatch) => {
   dispatch(setLoading());
   try {
     const response = await api.get(PATHS.OFFRE.ALL_STAGE);
     dispatch(setOffres(response.data));
+  } catch (error) {
+    dispatch(setError(error.message));
+  }
+};
+export const fetchOffresStageActive = () => async (dispatch) => {
+  dispatch(setLoading());
+  try {
+    const response = await api.get(PATHS.OFFRE.OFFRE_STAGE_ACTIVE);
+    dispatch(setOffreStageActive(response.data));
+  } catch (error) {
+    dispatch(setError(error.message));
+  }
+};
+export const fetchOffresEmploiActive = () => async (dispatch) => {
+  dispatch(setLoading());
+  try {
+    const response = await api.get(PATHS.OFFRE.OFFRE_JOB_ACTIVE);
+    dispatch(setOffreJobActive(response.data));
   } catch (error) {
     dispatch(setError(error.message));
   }

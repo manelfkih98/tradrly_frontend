@@ -3,8 +3,6 @@ import {
   Box,
   Grid,
   Typography,
-  Card,
-  CardContent,
   IconButton,
   Button,
   TextField,
@@ -23,6 +21,9 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
+import SearchIcon from "@mui/icons-material/Search";
+import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import Swal from "sweetalert2";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -32,6 +33,16 @@ import {
   updateSolution,
 } from "../../store/services/solutionService";
 import AddSolution from "./AddSolution";
+import { styled } from "@mui/material/styles";
+
+// Bouton animé pour les actions
+const AnimatedIconButton = styled(IconButton)(({ theme }) => ({
+  transition: "transform 0.2s ease-in-out, color 0.3s ease",
+  "&:hover": {
+    transform: "scale(1.2)",
+    color: "#d4af37",
+  },
+}));
 
 function ListesSolution() {
   const dispatch = useDispatch();
@@ -51,8 +62,8 @@ function ListesSolution() {
       text: "Cette action est irréversible !",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#3085d6",
+      confirmButtonColor: "#b91c1c",
+      cancelButtonColor: "#1e3a8a",
       confirmButtonText: "Oui, supprimer !",
       cancelButtonText: "Annuler",
     }).then((result) => {
@@ -109,104 +120,226 @@ function ListesSolution() {
   );
 
   return (
-    <Box sx={{ padding: 4 }}>
-      <Grid container justifyContent="space-between" alignItems="center" mb={3}>
-        <Grid item>
-         
+    <Box
+      sx={{
+        p: { xs: 3, md: 6 },
+        borderRadius: 4,
+        backgroundColor: "#ffffff",
+        boxShadow: "0 4px 20px rgba(0,0,0,0.05)",
+        maxWidth: "1200px",
+        mx: "auto",
+        my: 4,
+      }}
+    >
+    
+
+      <Grid
+        container
+        justifyContent="space-between"
+        alignItems="center"
+        mb={4}
+        flexDirection={{ xs: "column", sm: "row" }}
+        gap={2}
+      >
+        <Grid item sx={{ flexGrow: 1, maxWidth: { xs: "100%", sm: "400px" } }}>
+          <TextField
+            fullWidth
+            variant="outlined"
+            placeholder="Rechercher un projet..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            InputProps={{
+              startAdornment: (
+                <SearchIcon sx={{ color: "#1e3a8a", mr: 1 }} />
+              ),
+            }}
+            sx={{
+              backgroundColor: "#f4f6f8",
+              borderRadius: 2,
+              "& .MuiOutlinedInput-root": {
+                "&:hover fieldset": {
+                  borderColor: "#d4af37",
+                },
+                "&.Mui-focused fieldset": {
+                  borderColor: "#1e3a8a",
+                },
+              },
+              transition: "all 0.3s ease",
+            }}
+          />
         </Grid>
         <Grid item>
           <Button
             variant="contained"
-            color="primary"
-            startIcon={<AddIcon />}
+            startIcon={<AddIcon sx={{ fontSize: "1.5rem" }} />}
             onClick={handleOpen}
+            sx={{
+              backgroundColor: "#1e3a8a",
+              color: "#ffffff",
+              borderRadius: 2,
+              px: 4,
+              py: 1.5,
+              fontWeight: 600,
+              "&:hover": {
+                backgroundColor: "#d4af37",
+                boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
+              },
+              transition: "all 0.3s ease",
+            }}
           >
             Ajouter un Projet
           </Button>
         </Grid>
       </Grid>
 
-      <TextField
-        fullWidth
-        variant="outlined"
-        placeholder="Rechercher un projet..."
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        sx={{ mb: 3 }}
-      />
-
-      
-        <CardContent>
-          {loading ? (
-            <CircularProgress sx={{ display: "block", mx: "auto" }} />
-          ) : error ? (
-            <Typography color="error" align="center">
-              Erreur: {error}
-            </Typography>
-          ) : (
-            <TableContainer component={Paper}>
-              <Table>
-                <TableHead sx={{ backgroundColor: "#f8f8f8" }}>
-                  <TableRow>
-                    <TableCell><strong>Projet</strong></TableCell>
-                    <TableCell><strong>Date</strong></TableCell>
-                    <TableCell><strong>Image</strong></TableCell>
-                    <TableCell><strong>Département</strong></TableCell>
-                    <TableCell align="center"><strong>Actions</strong></TableCell>
+      {loading ? (
+        <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
+          <CircularProgress sx={{ color: "#1e3a8a" }} />
+        </Box>
+      ) : error ? (
+        <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", py: 4, gap: 1 }}>
+          <ErrorOutlineIcon sx={{ color: "#b91c1c" }} />
+          <Typography color="#b91c1c" align="center">
+            Erreur: {error}
+          </Typography>
+        </Box>
+      ) : (
+        <TableContainer
+          component={Paper}
+          sx={{
+            borderRadius: 3,
+            boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+            overflowX: "auto",
+          }}
+        >
+          <Table>
+            <TableHead>
+              <TableRow sx={{ backgroundColor: "#1e3a8a" }}>
+                <TableCell sx={{ color: "#ffffff", fontWeight: 700, fontSize: "1rem", py: 3 }}>
+                  Projet
+                </TableCell>
+                <TableCell sx={{ color: "#ffffff", fontWeight: 700, fontSize: "1rem", py: 3 }}>
+                  Date
+                </TableCell>
+                <TableCell sx={{ color: "#ffffff", fontWeight: 700, fontSize: "1rem", py: 3 }}>
+                  Image
+                </TableCell>
+                <TableCell sx={{ color: "#ffffff", fontWeight: 700, fontSize: "1rem", py: 3 }}>
+                  Département
+                </TableCell>
+                <TableCell
+                  align="center"
+                  sx={{ color: "#ffffff", fontWeight: 700, fontSize: "1rem", py: 3 }}
+                >
+                  Actions
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {filteredProjects.length > 0 ? (
+                filteredProjects.map((project, index) => (
+                  <TableRow
+                    key={project._id}
+                    hover
+                    sx={{
+                      backgroundColor: index % 2 === 0 ? "#ffffff" : "#f9fafb",
+                      "&:hover": { backgroundColor: "#f1f5f9" },
+                    }}
+                  >
+                    <TableCell sx={{ py: 2, px: 3, fontSize: "0.9rem" }}>
+                      {project.name_project}
+                    </TableCell>
+                    <TableCell sx={{ py: 2, px: 3, fontSize: "0.9rem" }}>
+                      {formatDate(project.date_creation)}
+                    </TableCell>
+                    <TableCell sx={{ py: 2, px: 3 }}>
+                      <Avatar
+                        variant="rounded"
+                        src={project.image}
+                        alt={project.name_project}
+                        sx={{
+                          width: 50,
+                          height: 50,
+                          border: "1px solid #e5e7eb",
+                          borderRadius: 2,
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell sx={{ py: 2, px: 3 }}>
+                      {project.departementId ? (
+                        <Chip
+                          label={project.departementId.NameDep}
+                          sx={{
+                            backgroundColor: "#1e3a8a",
+                            color: "#ffffff",
+                            borderRadius: 1,
+                            fontSize: "0.85rem",
+                          }}
+                        />
+                      ) : (
+                        <Chip
+                          label="Non défini"
+                          sx={{
+                            backgroundColor: "#d4af37",
+                            color: "#1e3a8a",
+                            borderRadius: 1,
+                            fontSize: "0.85rem",
+                          }}
+                        />
+                      )}
+                    </TableCell>
+                    <TableCell align="center" sx={{ py: 2, px: 3 }}>
+                      <Tooltip
+                        title="Modifier"
+                        sx={{
+                          "& .MuiTooltip-tooltip": {
+                            backgroundColor: "#1e3a8a",
+                            color: "#ffffff",
+                          },
+                        }}
+                      >
+                        <AnimatedIconButton
+                          onClick={() => handleEdit(project)}
+                          sx={{ color: "#1e3a8a" }}
+                        >
+                          <EditIcon />
+                        </AnimatedIconButton>
+                      </Tooltip>
+                      <Tooltip
+                        title="Supprimer"
+                        sx={{
+                          "& .MuiTooltip-tooltip": {
+                            backgroundColor: "#1e3a8a",
+                            color: "#ffffff",
+                          },
+                        }}
+                      >
+                        <AnimatedIconButton
+                          onClick={() => handleDelete(project._id)}
+                          sx={{ color: "#b91c1c" }}
+                        >
+                          <DeleteIcon />
+                        </AnimatedIconButton>
+                      </Tooltip>
+                    </TableCell>
                   </TableRow>
-                </TableHead>
-                <TableBody>
-                  {filteredProjects.length > 0 ? (
-                    filteredProjects.map((project) => (
-                      <TableRow key={project._id}>
-                        <TableCell>{project.name_project}</TableCell>
-                        <TableCell>{formatDate(project.date_creation)}</TableCell>
-                        <TableCell>
-                          <Avatar
-                            variant="rounded"
-                            src={project.image}
-                            alt={project.name_project}
-                            sx={{ width: 60, height: 60 }}
-                          />
-                        </TableCell>
-                        <TableCell>
-                          {project.departementId ? (
-                            <Chip
-                              label={project.departementId.NameDep}
-                              color="info"
-                              variant="outlined"
-                            />
-                          ) : (
-                            <Chip label="Non défini" variant="outlined" color="warning" />
-                          )}
-                        </TableCell>
-                        <TableCell align="center">
-                          <Tooltip title="Modifier" arrow>
-                            <IconButton color="primary" onClick={() => handleEdit(project)}>
-                              <EditIcon />
-                            </IconButton>
-                          </Tooltip>
-                          <Tooltip title="Supprimer" arrow>
-                            <IconButton color="error" onClick={() => handleDelete(project._id)}>
-                              <DeleteIcon />
-                            </IconButton>
-                          </Tooltip>
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  ) : (
-                    <TableRow>
-                      <TableCell colSpan={5} align="center">
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={5} align="center">
+                    <Box display="flex" alignItems="center" justifyContent="center" py={4} gap={1}>
+                      <InfoOutlinedIcon sx={{ color: "#1e3a8a" }} />
+                      <Typography sx={{ color: "#1e3a8a", fontWeight: 500 }}>
                         Aucun projet trouvé.
-                      </TableCell>
-                    </TableRow>
-                  )}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          )}
-        </CardContent>
-    
+                      </Typography>
+                    </Box>
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      )}
 
       <AddSolution
         open={open}

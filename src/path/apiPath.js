@@ -21,7 +21,10 @@ OFFRE:{
          ADD_JOB:`${BASE_URL}/offre/addOffreJob`,
          UPDATE_OFFRE_STAGE:`${BASE_URL}/offre/update`,
          DEACTIVE_OFFRE:`${BASE_URL}/offre/deactivateOffre`,
-         ACTIVE_OFFRE:`${BASE_URL}/offre/activateOffre`
+         ACTIVE_OFFRE:`${BASE_URL}/offre/activateOffre`,
+         OFFRE_STAGE_ACTIVE:`${BASE_URL}/offre/offreByStageActive`,
+        OFFRE_JOB_ACTIVE:`${BASE_URL}/offre/offreByJobActive`,
+        
 },
 POST:{
   ALL_POST_STAGE:`${BASE_URL}/post/getAllPostStage`,
@@ -34,6 +37,8 @@ POST:{
    LOGIN_CANDIDAT:`${BASE_URL}/post/connecter`,
    MARK_COMPLETED:`${BASE_URL}/post/mark-completed`,
    VERIFIER:`${BASE_URL}/post/verifier`,
+   POSTULER:`${BASE_URL}/post/addPost`,
+   POST_SPONPONTANE:`${BASE_URL}/post/addPostWithoutOffre`,
    
 
 

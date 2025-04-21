@@ -11,17 +11,23 @@ import {
   TextField,
   Typography,
   Paper,
-  Alert
+  Alert,
+  IconButton,
+  InputAdornment,
 } from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import authService from "../../store/services/loginService";
+import logo from "../../image/image 4.png";
 
 const schema = yup.object().shape({
   email: yup.string().email("Email invalide").required("L'email est requis"),
-  password: yup.string().min(6, "Le mot de passe doit avoir au moins 6 caractères").required("Le mot de passe est requis"),
+  password: yup.string().required("Le mot de passe est requis"),
 });
 
 const LoginCart = () => {
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
   const {
     register,
     handleSubmit,
@@ -30,21 +36,19 @@ const LoginCart = () => {
     resolver: yupResolver(schema),
   });
 
+  const togglePasswordVisibility = () => {
+    setShowPassword((prev) => !prev);
+  };
+
   const onSubmit = async (data) => {
     setError("");
-    console.log("Données envoyées :", data);
-
     try {
       const response = await authService.login(data.email, data.password);
-      console.log("Connexion réussie:", response);
-
       if (response.accessToken) {
         localStorage.setItem("token", response.accessToken);
       }
-
       window.location.href = "/dashboard";
     } catch (err) {
-      console.error("Erreur de connexion :", err);
       setError("Échec de la connexion. Vérifiez vos identifiants.");
     }
   };
@@ -53,45 +57,67 @@ const LoginCart = () => {
     <Box
       sx={{
         minHeight: "100vh",
-        backgroundColor: "#f4f6f8",
+        background:
+          "linear-gradient(to right, rgb(70, 75, 86), rgba(108, 152, 228, 0.55))",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
+        p: 2,
       }}
     >
       <Paper
-        elevation={3}
+        elevation={8}
         sx={{
-          padding: 4,
+          p: 5,
+          maxWidth: 420,
           width: "100%",
-          maxWidth: 400,
-          borderRadius: 3,
+          borderRadius: 4,
+          backgroundColor: "#ffffff",
         }}
       >
-        <Typography variant="h4" fontWeight="bold" gutterBottom>
-          Tradrly
-        </Typography>
+        <Box textAlign="center" mb={3}>
+          <img src={logo} alt="Logo" style={{ maxWidth: "120px" }} />
+          <Typography variant="subtitle1" color="text.secondary">
+            Connectez-vous à votre espace
+          </Typography>
+        </Box>
 
-        {error && <Alert severity="error">{error}</Alert>}
-        <Box component="form" noValidate autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
+        {error && (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {error}
+          </Alert>
+        )}
+
+        <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)}>
           <TextField
             fullWidth
-            label="Email"
-            margin="normal"
+            label="Adresse Email"
             placeholder="your@email.com"
+            margin="normal"
             {...register("email")}
             error={!!errors.email}
             helperText={errors.email?.message}
           />
+
           <TextField
             fullWidth
             label="Mot de passe"
-            type="password"
+            type={showPassword ? "text" : "password"}
             margin="normal"
             {...register("password")}
             error={!!errors.password}
             helperText={errors.password?.message}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton onClick={togglePasswordVisibility} edge="end">
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
           />
+
           <Box
             sx={{
               display: "flex",
@@ -100,26 +126,24 @@ const LoginCart = () => {
               mt: 1,
             }}
           >
-            <FormControlLabel
-              control={<Checkbox />}
-              label="Se souvenir de moi"
-            />
-            <Link href="#" underline="hover">
-              Mot de passe oublié ?
-            </Link>
+            
           </Box>
+
           <Button
             type="submit"
             fullWidth
             variant="contained"
+            size="large"
             sx={{
               mt: 3,
-              background: "linear-gradient(to right, #2c3e50, #000000)",
-              color: "white",
-              textTransform: "none",
+              background: "linear-gradient(to right, #1e3c72, #2a5298)",
+              color: "#fff",
               fontWeight: "bold",
+              textTransform: "none",
+              borderRadius: 2,
+              boxShadow: "0 3px 5px rgba(0,0,0,0.2)",
               '&:hover': {
-                background: "linear-gradient(to right, #000000, #2c3e50)",
+                background: "linear-gradient(to left, #1e3c72, #2a5298)",
               },
             }}
           >
