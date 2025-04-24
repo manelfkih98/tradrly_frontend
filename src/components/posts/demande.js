@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   postWithoutOffre,
   refuserDemande,
@@ -20,11 +20,11 @@ import {
   Box,
   Chip,
   styled,
+  Pagination,
 } from "@mui/material";
 import DownloadIcon from "@mui/icons-material/Download";
 import DeleteIcon from "@mui/icons-material/Delete";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import QuizIcon from "@mui/icons-material/Quiz";  // Ajout de l'import pour QuizIcon
+import QuizIcon from "@mui/icons-material/Quiz";
 
 const StatusChip = styled(Chip)(({ theme, status }) => ({
   fontWeight: 500,
@@ -51,8 +51,11 @@ const StatusChip = styled(Chip)(({ theme, status }) => ({
 
 const Demande = () => {
   const dispatch = useDispatch();
-  const demandes = useSelector((state) => state.posts.demandes);
+  const demandes = useSelector((state) => state.posts.demandes) || [];
   const loading = useSelector((state) => state.posts.loading);
+
+  const [page, setPage] = useState(1);
+  const [rowsPerPage] = useState(5); // Consistent with AllPostEmploi and AllPostStage
 
   useEffect(() => {
     dispatch(postWithoutOffre());
@@ -64,14 +67,24 @@ const Demande = () => {
     });
   };
 
-  const handleAccepter = (id) => {
+  const handlePasseTest = (id) => {
     dispatch(accepterDemande(id)).then(() => {
       dispatch(postWithoutOffre());
     });
   };
 
+  const handlePageChange = (event, value) => {
+    setPage(value);
+  };
+
+  // Calculate the demands to display for the current page
+  const paginatedDemandes = demandes.slice(
+    (page - 1) * rowsPerPage,
+    page * rowsPerPage
+  );
+
   return (
-    <Box sx={{ p: 3 }}>
+    <Box sx={{ p: 3, maxWidth: 1400, mx: "auto" }}>
       <TableContainer
         component={Paper}
         sx={{
@@ -98,8 +111,8 @@ const Demande = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {demandes && demandes.length > 0 ? (
-                demandes.map((post) => {
+              {paginatedDemandes.length > 0 ? (
+                paginatedDemandes.map((post) => {
                   const isFinalized =
                     post.status === "refused" || post.status === "testPassed";
                   return (
@@ -127,6 +140,12 @@ const Demande = () => {
                           sx={{
                             borderRadius: "12px",
                             textTransform: "none",
+                            borderColor: "#1e3a8a",
+                            color: "#1e3a8a",
+                            "&:hover": {
+                              borderColor: "#d4af37",
+                              color: "#d4af37",
+                            },
                           }}
                         >
                           CV
@@ -171,13 +190,17 @@ const Demande = () => {
                             <Tooltip title="Faire passer le test">
                               <Button
                                 variant="contained"
-                                color="primary"
                                 size="small"
                                 startIcon={<QuizIcon />}
-                                onClick={() => handleAccepter(post._id)}
+                                onClick={() => handlePasseTest(post._id)}
                                 sx={{
                                   borderRadius: "12px",
                                   textTransform: "none",
+                                  bgcolor: "#1e3a8a",
+                                  "&:hover": {
+                                    bgcolor: "#d4af37",
+                                    color: "#1e3a8a",
+                                  },
                                 }}
                               >
                                 Test
@@ -202,6 +225,35 @@ const Demande = () => {
           </Table>
         )}
       </TableContainer>
+
+      {/* Pagination */}
+      {demandes.length > rowsPerPage && (
+        <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
+          <Pagination
+            count={Math.ceil(demandes.length / rowsPerPage)}
+            page={page}
+            onChange={handlePageChange}
+            color="primary"
+            shape="rounded"
+            sx={{
+              "& .MuiPaginationItem-root": {
+                color: "#1e3a8a",
+                "&:hover": {
+                  bgcolor: "#d4af37",
+                  color: "#fff",
+                },
+                "&.Mui-selected": {
+                  bgcolor: "#1e3a8a",
+                  color: "#fff",
+                  "&:hover": {
+                    bgcolor: "#d4af37",
+                  },
+                },
+              },
+            }}
+          />
+        </Box>
+      )}
     </Box>
   );
 };

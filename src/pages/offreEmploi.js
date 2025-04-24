@@ -5,7 +5,7 @@ import AllEmploi from "../components/offre/emploi/AllEmploi";
 
 const Offre = () => {
   return (
-    <Box sx={{ padding: 2, minHeight: "100vh", margin: "auto" }}>
+    <Box sx={{ margin:"auto",mt:8,px:2,  minHeight: "100vh"}}>
       {/* En-tête avec icône et titre */}
       <Box display="flex" alignItems="center" mb={4}>
         <WorkOutlineIcon sx={{ fontSize: 30, color: "#1976d2", mr: 1 }} />

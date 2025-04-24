@@ -29,9 +29,7 @@ function AllContact() {
 
   return (
     <Box sx={{ p: 4, minHeight: "100vh" }}>
-      <Typography variant="h4" fontWeight="bold" gutterBottom color="primary">
-        📬 Messages de contact
-      </Typography>
+      
 
       {loading && (
         <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
@@ -70,7 +68,7 @@ function AllContact() {
                         fontSize: "1rem",
                       }}
                     >
-                      {contact.email.charAt(0).toUpperCase()}
+                      {contact.email.charAt(1).toUpperCase()}
                     </Avatar>
                     <Box>
                       <Typography variant="subtitle1" fontWeight="bold">

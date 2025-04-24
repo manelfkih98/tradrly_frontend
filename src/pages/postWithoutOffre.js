@@ -5,7 +5,7 @@ import Demande from "../components/posts/demande";
 
 const PostWithoutOffre = () => {
   return (
-    <Box sx={{ margin: "auto", mt: 5, px: 2, minHeight: "100vh" }}>
+    <Box sx={{ margin:"auto",mt:8,px:2,  minHeight: "100vh"}}>
       {/* Header */}
       <Box display="flex" alignItems="center" mb={4}>
         <WorkOutlineIcon sx={{ fontSize: 30, color: "#1976d2", mr: 1 }} />

@@ -17,10 +17,10 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  TablePagination,
   Tooltip,
   TextField,
   Grid,
+  Pagination,
 } from "@mui/material";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -100,8 +100,8 @@ function AllTeam() {
   const [selectedTeam, setSelectedTeam] = useState(null);
 
   // Pagination state
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [page, setPage] = useState(1);
+  const rowsPerPage = 5; // Fixed to match AllPostEmploi, AllPostStage, Demande
 
   // Search state
   const [searchTerm, setSearchTerm] = useState("");
@@ -117,9 +117,9 @@ function AllTeam() {
       (team.title && team.title.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
-  // Réinitialiser la page à 0 lors de la modification du terme de recherche
+  // Réinitialiser la page à 1 lors de la modification du terme de recherche
   useEffect(() => {
-    setPage(0);
+    setPage(1);
   }, [searchTerm]);
 
   const handleDelete = (id) => {
@@ -159,12 +159,16 @@ function AllTeam() {
   const handleOpenDialog = () => setOpenDialog(true);
   const handleCloseDialog = () => setOpenDialog(false);
 
-  // Pagination handlers
-  const handleChangePage = (_, newPage) => setPage(newPage);
-  const handleChangeRowsPerPage = (e) => {
-    setRowsPerPage(parseInt(e.target.value, 10));
-    setPage(0);
+  // Pagination handler
+  const handlePageChange = (event, value) => {
+    setPage(value);
   };
+
+  // Calculate the teams to display for the current page
+  const paginatedTeams = filteredTeams.slice(
+    (page - 1) * rowsPerPage,
+    page * rowsPerPage
+  );
 
   return (
     <Box
@@ -178,8 +182,6 @@ function AllTeam() {
         my: 4,
       }}
     >
-      
-
       <Grid
         container
         justifyContent="space-between"
@@ -290,94 +292,92 @@ function AllTeam() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {filteredTeams.length > 0 ? (
-                  filteredTeams
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((team, index) => (
-                      <TableRow
-                        key={team._id}
-                        hover
-                        sx={{
-                          backgroundColor: index % 2 === 0 ? "#ffffff" : "#f9fafb",
-                          "&:hover": { backgroundColor: "#f1f5f9" },
-                        }}
-                      >
-                        <TableCell sx={{ py: 2, px: 3, fontSize: "0.9rem" }}>
-                          {team.name}
-                        </TableCell>
-                        <TableCell sx={{ py: 2, px: 3, fontSize: "0.9rem" }}>
-                          {team.title}
-                        </TableCell>
-                        <TableCell sx={{ py: 2, px: 3, fontSize: "0.9rem" }}>
-                          {team.quote}
-                        </TableCell>
-                        <TableCell sx={{ py: 2, px: 3 }}>
-                          {team.linkedin ? (
-                            <LinkedInLink
-                              href={
-                                team.linkedin.startsWith("http")
-                                  ? team.linkedin
-                                  : `https://${team.linkedin}`
-                              }
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              <LinkedInIcon fontSize="small" sx={{ mr: 0.5 }} />
-                              LinkedIn
-                            </LinkedInLink>
-                          ) : (
-                            <Typography sx={{ color: "#6b7280" }}>—</Typography>
-                          )}
-                        </TableCell>
-                        <TableCell sx={{ py: 2, px: 3 }}>
-                          <img
-                            src={team.image}
-                            alt={team.name}
-                            style={{
-                              width: 50,
-                              height: 50,
-                              objectFit: "cover",
-                              borderRadius: "50%",
-                              border: "1px solid #e5e7eb",
-                            }}
-                          />
-                        </TableCell>
-                        <TableCell align="center" sx={{ py: 2, px: 3 }}>
-                          <Tooltip
-                            title="Modifier"
-                            sx={{
-                              "& .MuiTooltip-tooltip": {
-                                backgroundColor: "#1e3a8a",
-                                color: "#ffffff",
-                              },
-                            }}
+                {paginatedTeams.length > 0 ? (
+                  paginatedTeams.map((team, index) => (
+                    <TableRow
+                      key={team._id}
+                      hover
+                      sx={{
+                        backgroundColor: index % 2 === 0 ? "#ffffff" : "#f9fafb",
+                        "&:hover": { backgroundColor: "#f1f5f9" },
+                      }}
+                    >
+                      <TableCell sx={{ py: 2, px: 3, fontSize: "0.9rem" }}>
+                        {team.name}
+                      </TableCell>
+                      <TableCell sx={{ py: 2, px: 3, fontSize: "0.9rem" }}>
+                        {team.title}
+                      </TableCell>
+                      <TableCell sx={{ py: 2, px: 3, fontSize: "0.9rem" }}>
+                        {team.quote}
+                      </TableCell>
+                      <TableCell sx={{ py: 2, px: 3 }}>
+                        {team.linkedin ? (
+                          <LinkedInLink
+                            href={
+                              team.linkedin.startsWith("http")
+                                ? team.linkedin
+                                : `https://${team.linkedin}`
+                            }
+                            target="_blank"
+                            rel="noopener noreferrer"
                           >
-                            <AnimatedIconButton
-                              onClick={() => handleEdit(team)}
-                              sx={{ color: "#1e3a8a" }}
-                            >
-                              <EditIcon />
-                            </AnimatedIconButton>
-                          </Tooltip>
-                          <Tooltip
-                            title="Supprimer"
-                            sx={{
-                              "& .MuiTooltip-tooltip": {
-                                backgroundColor: "#1e3a8a",
-                                color: "#ffffff",
-                              },
-                            }}
+                            <LinkedInIcon fontSize="small" sx={{ mr: 0.5 }} />
+                            LinkedIn
+                          </LinkedInLink>
+                        ) : (
+                          <Typography sx={{ color: "#6b7280" }}>—</Typography>
+                        )}
+                      </TableCell>
+                      <TableCell sx={{ py: 2, px: 3 }}>
+                        <img
+                          src={team.image}
+                          alt={team.name}
+                          style={{
+                            width: 50,
+                            height: 50,
+                            objectFit: "cover",
+                            borderRadius: "50%",
+                            border: "1px solid #e5e7eb",
+                          }}
+                        />
+                      </TableCell>
+                      <TableCell align="center" sx={{ py: 2, px: 3 }}>
+                        <Tooltip
+                          title="Modifier"
+                          sx={{
+                            "& .MuiTooltip-tooltip": {
+                              backgroundColor: "#1e3a8a",
+                              color: "#ffffff",
+                            },
+                          }}
+                        >
+                          <AnimatedIconButton
+                            onClick={() => handleEdit(team)}
+                            sx={{ color: "#1e3a8a" }}
                           >
-                            <AnimatedIconButton
-                              onClick={() => handleDelete(team._id)}
-                              sx={{ color: "#b91c1c" }}
-                            >
-                              <DeleteIcon />
-                            </AnimatedIconButton>
-                          </Tooltip>
-                        </TableCell>
-                      </TableRow>
-                    ))
+                            <EditIcon />
+                          </AnimatedIconButton>
+                        </Tooltip>
+                        <Tooltip
+                          title="Supprimer"
+                          sx={{
+                            "& .MuiTooltip-tooltip": {
+                              backgroundColor: "#1e3a8a",
+                              color: "#ffffff",
+                            },
+                          }}
+                        >
+                          <AnimatedIconButton
+                            onClick={() => handleDelete(team._id)}
+                            sx={{ color: "#b91c1c" }}
+                          >
+                            <DeleteIcon />
+                          </AnimatedIconButton>
+                        </Tooltip>
+                      </TableCell>
+                    </TableRow>
+                  ))
                 ) : (
                   <TableRow>
                     <TableCell colSpan={6} align="center">
@@ -393,49 +393,34 @@ function AllTeam() {
             </Table>
           </TableContainer>
 
-          {/* Styled Pagination */}
-          <Box
-            sx={{
-              mt: 2,
-              p: 1,
-              display: "flex",
-              justifyContent: "flex-end",
-              bgcolor: "#f4f6f8",
-              borderRadius: 2,
-            }}
-          >
-            <TablePagination
-              rowsPerPageOptions={[5, 10, 25]}
-              component="div"
-              count={filteredTeams.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-              sx={{
-                ".MuiTablePagination-toolbar": {
-                  minHeight: 48,
-                  px: 2,
-                },
-                ".MuiTablePagination-selectLabel, .MuiTablePagination-displayedRows": {
-                  fontSize: "0.9rem",
-                  color: "#1e3a8a",
-                },
-                ".MuiTablePagination-select": {
-                  mr: 1,
-                  backgroundColor: "#ffffff",
-                  borderRadius: 1,
-                  border: "1px solid #e5e7eb",
-                },
-                ".MuiTablePagination-actions": {
-                  "& button": {
+          {/* Pagination */}
+          {filteredTeams.length > rowsPerPage && (
+            <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
+              <Pagination
+                count={Math.ceil(filteredTeams.length / rowsPerPage)}
+                page={page}
+                onChange={handlePageChange}
+                color="primary"
+                shape="rounded"
+                sx={{
+                  "& .MuiPaginationItem-root": {
                     color: "#1e3a8a",
-                    "&:hover": { color: "#d4af37" },
+                    "&:hover": {
+                      bgcolor: "#d4af37",
+                      color: "#fff",
+                    },
+                    "&.Mui-selected": {
+                      bgcolor: "#1e3a8a",
+                      color: "#fff",
+                      "&:hover": {
+                        bgcolor: "#d4af37",
+                      },
+                    },
                   },
-                },
-              }}
-            />
-          </Box>
+                }}
+              />
+            </Box>
+          )}
         </>
       )}
 

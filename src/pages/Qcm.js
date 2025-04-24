@@ -1,37 +1,39 @@
+import React from "react";
 import AllQcm from "../components/QCM/allQcm";
-import { Box, Typography, Container } from "@mui/material";
+import { Box, Typography, Card, CardContent, Divider } from "@mui/material";
+import FactCheckIcon from "@mui/icons-material/FactCheck";
 
 const Qcm = () => {
   return (
-    <Box
-     
-    >
-      <Container maxWidth="lg">
-        <Box
-          
-        >
-          <Typography
-            variant="h4"
-            align="center"
-            fontWeight="bold"
-            color="primary"
-            gutterBottom
-          >
-            🧠 Espace Résultats QCM
+    <Box sx={{ margin: "auto", mt: 8, px: 2, minHeight: "100vh" }}>
+      {/* En-tête de la page */}
+      <Box display="flex" alignItems="center" mb={4}>
+        <FactCheckIcon sx={{ fontSize: 30, color: "#1976d2", mr: 1 }} />
+        <Box>
+          <Typography variant="h5" fontWeight="bold">
+            Espace Résultats QCM
           </Typography>
-
-          <Typography
-            variant="subtitle1"
-            align="center"
-            color="textSecondary"
-            mb={4}
-          >
+          <Typography variant="subtitle2" color="text.secondary">
             Retrouvez ici les résultats de tests passés par les candidats.
           </Typography>
-
-          <AllQcm />
         </Box>
-      </Container>
+      </Box>
+
+      <Divider sx={{ mb: 4 }} />
+
+      {/* Contenu principal */}
+      <Card
+        sx={{
+          backgroundColor: "#ffffff",
+          borderRadius: 3,
+          boxShadow: "0 4px 20px rgba(0, 0, 0, 0.1)",
+          overflow: "hidden",
+        }}
+      >
+        <CardContent>
+          <AllQcm />
+        </CardContent>
+      </Card>
     </Box>
   );
 };

@@ -32,33 +32,48 @@ const ContactSection = () => {
 
   const validateForm = () => {
     const errors = {};
-
+  
+    
+    const emailRegex = /^[ a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    
     if (!formData.email) {
       errors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+    } else if (!emailRegex.test(formData.email)) {
       errors.email = 'Email is invalid';
     }
-
+  
     if (!formData.object) {
       errors.object = 'Object is required';
     }
-
+  
     if (!formData.subject) {
       errors.subject = 'Subject is required';
     }
-
+  
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
+  
 
-  const handleSubmit = (e) => {
+ const handleSubmit = (e) => {
     e.preventDefault();
     if (validateForm()) {
-      dispatch(createContact(formData));
+      const contactData = {
+        object: formData.object,
+        email: formData.email,
+        subject: formData.subject,
+      };
+
+      console.log('Contact data:', formData); // Check the data before sending
+      dispatch(createContact(formData)); // This sends the data to your backend
+      console.log('Form submitted:', contactData); // Check the data being submitted
+
+      // Reset the form and errors
       setFormData({ email: '', object: '', subject: '' });
       setFormErrors({});
     }
-  };
+};
+
 
   return (
     <Box

@@ -121,15 +121,7 @@ function ListesSolution() {
 
   return (
     <Box
-      sx={{
-        p: { xs: 3, md: 6 },
-        borderRadius: 4,
-        backgroundColor: "#ffffff",
-        boxShadow: "0 4px 20px rgba(0,0,0,0.05)",
-        maxWidth: "1200px",
-        mx: "auto",
-        my: 4,
-      }}
+    
     >
     
 

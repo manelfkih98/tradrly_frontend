@@ -1,11 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   fetchPostsJob,
-refuserJob
-
+  refuserJob,
+  passerTestJob,
 } from "../../../store/services/postsService";
-import { passerTestJob } from "../../../store/services/postsService";
-import { useDispatch, useSelector } from "react-redux";
 import {
   Table,
   TableHead,
@@ -21,6 +20,7 @@ import {
   Box,
   Chip,
   styled,
+  Pagination,
 } from "@mui/material";
 import DownloadIcon from "@mui/icons-material/Download";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -40,7 +40,6 @@ const StatusChip = styled(Chip)(({ theme, status }) => ({
     backgroundColor: theme.palette.warning.light,
     color: theme.palette.warning.contrastText,
   }),
-
   ...(status === "refused" && {
     backgroundColor: theme.palette.error.main,
     color: theme.palette.error.contrastText,
@@ -53,8 +52,11 @@ const StatusChip = styled(Chip)(({ theme, status }) => ({
 
 const AllPostEmploi = () => {
   const dispatch = useDispatch();
-  const posts = useSelector((state) => state.posts.posts_job);
+  const posts = useSelector((state) => state.posts.posts_job) || [];
   const loading = useSelector((state) => state.posts.loading);
+
+  const [page, setPage] = useState(1);
+  const [rowsPerPage] = useState(5); // Adjust as needed
 
   useEffect(() => {
     dispatch(fetchPostsJob());
@@ -68,8 +70,18 @@ const AllPostEmploi = () => {
     dispatch(passerTestJob(id));
   };
 
+  const handlePageChange = (event, value) => {
+    setPage(value);
+  };
+
+  // Calculate the posts to display for the current page
+  const paginatedPosts = posts.slice(
+    (page - 1) * rowsPerPage,
+    page * rowsPerPage
+  );
+
   return (
-    <Box sx={{ p: 3 }}>
+    <Box sx={{ p: 3, maxWidth: 1400, mx: "auto" }}>
       <TableContainer
         component={Paper}
         sx={{
@@ -97,8 +109,8 @@ const AllPostEmploi = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {posts.length > 0 ? (
-                posts.map((post) => {
+              {paginatedPosts.length > 0 ? (
+                paginatedPosts.map((post) => {
                   const isFinalized =
                     post.status === "refused" || post.status === "testPassed";
                   return (
@@ -127,6 +139,12 @@ const AllPostEmploi = () => {
                           sx={{
                             borderRadius: "12px",
                             textTransform: "none",
+                            borderColor: "#1e3a8a",
+                            color: "#1e3a8a",
+                            "&:hover": {
+                              borderColor: "#d4af37",
+                              color: "#d4af37",
+                            },
                           }}
                         >
                           CV
@@ -143,7 +161,7 @@ const AllPostEmploi = () => {
                               ? "Passe un test"
                               : "Statut inconnu"
                           }
-                          status={post.status || "en_attente"}
+                          status={post.status || "pending"}
                         />
                       </TableCell>
                       <TableCell align="center">
@@ -171,13 +189,17 @@ const AllPostEmploi = () => {
                             <Tooltip title="Faire passer le test">
                               <Button
                                 variant="contained"
-                                color="primary"
                                 size="small"
                                 startIcon={<QuizIcon />}
                                 onClick={() => handlePasseTest(post._id)}
                                 sx={{
                                   borderRadius: "12px",
                                   textTransform: "none",
+                                  bgcolor: "#1e3a8a",
+                                  "&:hover": {
+                                    bgcolor: "#d4af37",
+                                    color: "#1e3a8a",
+                                  },
                                 }}
                               >
                                 Test
@@ -202,6 +224,35 @@ const AllPostEmploi = () => {
           </Table>
         )}
       </TableContainer>
+
+      {/* Pagination */}
+      {posts.length > rowsPerPage && (
+        <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
+          <Pagination
+            count={Math.ceil(posts.length / rowsPerPage)}
+            page={page}
+            onChange={handlePageChange}
+            color="primary"
+            shape="rounded"
+            sx={{
+              "& .MuiPaginationItem-root": {
+                color: "#1e3a8a",
+                "&:hover": {
+                  bgcolor: "#d4af37",
+                  color: "#fff",
+                },
+                "&.Mui-selected": {
+                  bgcolor: "#1e3a8a",
+                  color: "#fff",
+                  "&:hover": {
+                    bgcolor: "#d4af37",
+                  },
+                },
+              },
+            }}
+          />
+        </Box>
+      )}
     </Box>
   );
 };

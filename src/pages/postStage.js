@@ -5,7 +5,7 @@ import AllPostStage from "../components/posts/Stage/AllPostStage";
 
 const PostStage = () => {
   return (
-    <Box sx={{ margin: "auto", mt: 5, px: 2, minHeight: "100vh" }}>
+    <Box sx={{ margin:"auto",mt:8,px:2,  minHeight: "100vh"}}>
       {/* Header de la page */}
       <Box display="flex" alignItems="center" mb={4}>
         <WorkOutlineIcon sx={{ fontSize: 30, color: "#1976d2", mr: 1 }} />

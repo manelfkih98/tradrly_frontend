@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  Routes,
-  Route,
-  useLocation,
-  matchPath,
-} from "react-router-dom";
+import { Routes, Route, useLocation, matchPath } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
 import Dashboard from "./pages/dashboard";
 import Departement from "./pages/departemenet";
@@ -29,12 +24,22 @@ import Contact from "./pages/contact";
 import NavbarDash from "./components/NavbarDash";
 import TestInfoPage from "./pages/TestInfoPage";
 import Careers from "./pages/careers";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const App = () => {
   const location = useLocation();
 
   const hideSidebarRoutes = ["/", "/test/:id", "/loginCandidat/:id"];
-  const fullScreenRoutes = ["/home", "/about", "/blog", "/work", "/page_info/:id","/", "/careers"];
+  const fullScreenRoutes = [
+    "/home",
+    "/about",
+    "/blog",
+    "/work",
+    "/page_info/:id",
+    "/",
+    "/careers",
+  ];
 
   const shouldHideSidebar = hideSidebarRoutes.some((path) =>
     matchPath({ path, end: true }, location.pathname)
@@ -47,7 +52,7 @@ const App = () => {
   if (isFullScreenPage) {
     return (
       <Routes>
-        <Route path="/page_info/:id" element={<TestInfoPage/>} />
+        <Route path="/page_info/:id" element={<TestInfoPage />} />
         <Route path="/home" element={<Home />} />
         <Route path="/about" element={<UboutUs />} />
         <Route path="/blog" element={<Blog />} />
@@ -60,13 +65,15 @@ const App = () => {
 
   return (
     <Box sx={{ display: "flex" }}>
-     
-      {!shouldHideSidebar && <Sidebar />}
+      {!shouldHideSidebar && (
+        <>
+          <Sidebar />
+          <NavbarDash />
+        </>
+      )}
 
       <Box component="main" sx={{ flexGrow: 1, p: 3, width: "100%" }}>
-    
         <Routes>
-         
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/departement" element={<Departement />} />
           <Route path="/solution" element={<Solution />} />
@@ -76,13 +83,19 @@ const App = () => {
           <Route path="/post/emploi" element={<Posts />} />
           <Route path="/post/stage" element={<PostStage />} />
           <Route path="/postwithoutoffre" element={<PostWithoutOffre />} />
-      
           <Route path="/QCM" element={<Qcm />} />
           <Route path="/test/:id" element={<Test />} />
           <Route path="/loginCandidat/:id" element={<LoginCandidatPage />} />
           <Route path="/team" element={<Team />} />
           <Route path="/contact" element={<Contact />} />
         </Routes>
+        <ToastContainer
+          position="bottom-right"
+          autoClose={false}
+          closeOnClick
+          pauseOnHover
+          draggable
+        />
       </Box>
     </Box>
   );

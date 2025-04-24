@@ -1,12 +1,39 @@
 import React from 'react';
 import AllContact from '../components/contact/allContact';
-import { Box } from '@mui/material';
+import { Box, Typography, Divider, Card, CardContent } from '@mui/material';
+import ContactMailOutlinedIcon from '@mui/icons-material/ContactMailOutlined';
 
 const Contact = () => {
   return (
-    <Box>
-       <AllContact/>
-    
+    <Box sx={{ margin: "auto", mt: 8, px: 2, minHeight: "100vh" }}>
+      {/* En-tête de la page */}
+      <Box display="flex" alignItems="center" mb={4}>
+        <ContactMailOutlinedIcon sx={{ fontSize: 30, color: "#1976d2", mr: 1 }} />
+        <Box>
+          <Typography variant="h5" fontWeight="bold">
+            Gestion des Contacts
+          </Typography>
+          <Typography variant="subtitle2" color="text.secondary">
+            Visualisez et gérez les messages reçus via le formulaire de contact.
+          </Typography>
+        </Box>
+      </Box>
+
+      <Divider sx={{ mb: 4 }} />
+
+      {/* Contenu principal */}
+      <Card
+        sx={{
+          backgroundColor: "#ffffff",
+          borderRadius: 3,
+          boxShadow: "0 4px 20px rgba(0, 0, 0, 0.1)",
+          overflow: "hidden",
+        }}
+      >
+        <CardContent>
+          <AllContact />
+        </CardContent>
+      </Card>
     </Box>
   );
 };

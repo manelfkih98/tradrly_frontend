@@ -16,6 +16,8 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import { CandidatConnecter } from "../../store/services/postsService";
 import { useNavigate } from "react-router-dom";
+import { useParams } from 'react-router-dom';
+
 import logo from "../../image/image 4.png";
 
 // Validation schema using Yup
@@ -25,6 +27,8 @@ const schema = yup.object().shape({
 });
 
 const LoginCandidat = () => {
+  const { id } = useParams(); 
+  console.log(id); // Log the id to check if it's being passed correctly
   const dispatch = useDispatch();
   const { error } = useSelector((state) => state.posts);
   const navigate = useNavigate();
@@ -41,7 +45,7 @@ const LoginCandidat = () => {
   const onSubmit = async (data) => {
     try {
       const candidat = await dispatch(CandidatConnecter(data));
-      navigate(`/page_info/${candidat._id}`);
+      navigate(`/page_info/${id}`);
     } catch (error) {
       console.error("Erreur de connexion :", error);
     }

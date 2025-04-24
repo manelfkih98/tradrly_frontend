@@ -102,11 +102,8 @@ const AllQuestion = () => {
     questions?.filter((ques) => ques.questionText.toLowerCase().includes(searchTerm.toLowerCase())) || [];
 
   return (
-    <Card sx={{ p: 4 }}>
-      <Typography variant="h5" sx={{ mb: 3, textAlign: "center" }}>
-        Gestion des Questions
-      </Typography>
-
+    <Card >
+    
       <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
         <TextField
           label="Rechercher une question"

@@ -7,8 +7,6 @@ import {
   ListItemText,
   Box,
   Collapse,
-  Typography,
-  Divider,
 } from "@mui/material";
 import {
   Dashboard,
@@ -26,7 +24,7 @@ import {
   SendTimeExtension,
   PersonOutline,
 } from "@mui/icons-material";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import logo from "../image/image 4.png";
 
 const Sidebar = () => {
@@ -48,29 +46,30 @@ const Sidebar = () => {
         },
       }}
     >
-      <Box sx={{ p: 3, textAlign: "center"}}>
-      <img src={logo} alt="Logo" style={{ width: "80%", marginBottom: "8px" }} />
-     
+      <Box sx={{ p: 3, textAlign: "center" }}>
+        <img
+          src={logo}
+          alt="Logo"
+          style={{ width: "80%", marginBottom: "8px" }}
+        />
       </Box>
 
-   
-
       <List>
-        <ListItemButton component={Link} to="/dashboard">
+        <ListItemButton component={NavLink} to="/dashboard" activeClassName="active-link">
           <ListItemIcon>
             <Dashboard sx={{ color: "#64b5f6" }} />
           </ListItemIcon>
           <ListItemText primary="Dashboard" />
         </ListItemButton>
 
-        <ListItemButton component={Link} to="/departement">
+        <ListItemButton component={NavLink} to="/departement" activeClassName="active-link">
           <ListItemIcon>
             <TableChart sx={{ color: "#64b5f6" }} />
           </ListItemIcon>
           <ListItemText primary="Départements" />
         </ListItemButton>
 
-        <ListItemButton component={Link} to="/solution">
+        <ListItemButton component={NavLink} to="/solution" activeClassName="active-link">
           <ListItemIcon>
             <ReceiptLong sx={{ color: "#64b5f6" }} />
           </ListItemIcon>
@@ -88,13 +87,13 @@ const Sidebar = () => {
 
         <Collapse in={openOffre} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
-            <ListItemButton component={Link} to="/offre/stage" sx={{ pl: 4 }}>
+            <ListItemButton component={NavLink} to="/offre/stage" sx={{ pl: 4 }} activeClassName="active-link">
               <ListItemIcon>
                 <SchoolOutlined sx={{ color: "#64b5f6" }} />
               </ListItemIcon>
               <ListItemText primary="Stages" />
             </ListItemButton>
-            <ListItemButton component={Link} to="/offre/emploi" sx={{ pl: 4 }}>
+            <ListItemButton component={NavLink} to="/offre/emploi" sx={{ pl: 4 }} activeClassName="active-link">
               <ListItemIcon>
                 <WorkOutline sx={{ color: "#64b5f6" }} />
               </ListItemIcon>
@@ -114,13 +113,13 @@ const Sidebar = () => {
 
         <Collapse in={openPost} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
-            <ListItemButton component={Link} to="/post/stage" sx={{ pl: 4 }}>
+            <ListItemButton component={NavLink} to="/post/stage" sx={{ pl: 4 }} activeClassName="active-link">
               <ListItemIcon>
                 <SchoolOutlined sx={{ color: "#64b5f6" }} />
               </ListItemIcon>
               <ListItemText primary="Stages" />
             </ListItemButton>
-            <ListItemButton component={Link} to="/post/emploi" sx={{ pl: 4 }}>
+            <ListItemButton component={NavLink} to="/post/emploi" sx={{ pl: 4 }} activeClassName="active-link">
               <ListItemIcon>
                 <WorkOutline sx={{ color: "#64b5f6" }} />
               </ListItemIcon>
@@ -130,35 +129,35 @@ const Sidebar = () => {
         </Collapse>
 
         {/* --- Autres liens --- */}
-        <ListItemButton component={Link} to="/PostWithoutOffre">
+        <ListItemButton component={NavLink} to="/PostWithoutOffre" activeClassName="active-link">
           <ListItemIcon>
             <SendTimeExtension sx={{ color: "#64b5f6" }} />
           </ListItemIcon>
           <ListItemText primary="Demandes spontanées" />
         </ListItemButton>
 
-        <ListItemButton component={Link} to="/question">
+        <ListItemButton component={NavLink} to="/question" activeClassName="active-link">
           <ListItemIcon>
             <HelpOutline sx={{ color: "#64b5f6" }} />
           </ListItemIcon>
           <ListItemText primary="Questions fréquentes" />
         </ListItemButton>
 
-        <ListItemButton component={Link} to="/Qcm">
+        <ListItemButton component={NavLink} to="/Qcm" activeClassName="active-link">
           <ListItemIcon>
             <FactCheckOutlined sx={{ color: "#64b5f6" }} />
           </ListItemIcon>
           <ListItemText primary="Tests / QCM" />
         </ListItemButton>
 
-        <ListItemButton component={Link} to="/team">
+        <ListItemButton component={NavLink} to="/team" activeClassName="active-link">
           <ListItemIcon>
             <Groups2 sx={{ color: "#64b5f6" }} />
           </ListItemIcon>
           <ListItemText primary="Équipe" />
         </ListItemButton>
 
-        <ListItemButton component={Link} to="/contact">
+        <ListItemButton component={NavLink} to="/contact" activeClassName="active-link">
           <ListItemIcon>
             <ContactMailOutlined sx={{ color: "#64b5f6" }} />
           </ListItemIcon>
