@@ -10,13 +10,15 @@ import {
   List,
   ListItem,
   ListItemText,
+  Avatar,
 } from "@mui/material";
+import { ExitToApp } from "@mui/icons-material";
 import {
   Menu as MenuIcon,
-  AccountCircle,
   Notifications as NotificationsIcon,
   Mail as MailIcon,
   HelpOutline,
+  AccountCircle,
 } from "@mui/icons-material";
 import { Link, useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
@@ -35,6 +37,7 @@ const NavbarDash = () => {
   const [messageNotifications, setMessageNotifications] = useState([]);
   const [applicationNotifications, setApplicationNotifications] = useState([]);
   const [requestNotifications, setRequestNotifications] = useState([]);
+  const [userName, setUserName] = useState('');
 
   const openProfile = Boolean(anchorEl);
   const openNotif = Boolean(notifAnchor);
@@ -43,12 +46,63 @@ const NavbarDash = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("fullName");
+
     navigate("/");
   };
 
   const handleMenu = (event) => setAnchorEl(event.currentTarget);
 
+  // Get the first letter of the user's name
   useEffect(() => {
+    const user = localStorage.getItem("fullName");
+    if (user) {
+      setUserName(user.charAt(0).toUpperCase()); 
+    }
+  }, []);
+
+  // Save notifications to localStorage
+  const saveNotificationsToLocalStorage = () => {
+    localStorage.setItem(
+      "messageNotifications",
+      JSON.stringify(messageNotifications)
+    );
+    localStorage.setItem(
+      "applicationNotifications",
+      JSON.stringify(applicationNotifications)
+    );
+    localStorage.setItem(
+      "requestNotifications",
+      JSON.stringify(requestNotifications)
+    );
+  };
+
+  // Load notifications from localStorage
+  const loadNotificationsFromLocalStorage = () => {
+    const savedMessageNotifications = localStorage.getItem(
+      "messageNotifications"
+    );
+    const savedApplicationNotifications = localStorage.getItem(
+      "applicationNotifications"
+    );
+    const savedRequestNotifications = localStorage.getItem(
+      "requestNotifications"
+    );
+
+    if (savedMessageNotifications) {
+      setMessageNotifications(JSON.parse(savedMessageNotifications));
+    }
+    if (savedApplicationNotifications) {
+      setApplicationNotifications(JSON.parse(savedApplicationNotifications));
+    }
+    if (savedRequestNotifications) {
+      setRequestNotifications(JSON.parse(savedRequestNotifications));
+    }
+  };
+
+  useEffect(() => {
+    loadNotificationsFromLocalStorage();
+
     socket.on("nouvelle-candidature", (data) => {
       setApplicationNotifications((prev) => [data, ...prev]);
       toast.info(`${data.nom} a postulé à l’offre ${data.offre}`, {
@@ -86,6 +140,10 @@ const NavbarDash = () => {
     };
   }, []);
 
+  useEffect(() => {
+    saveNotificationsToLocalStorage();
+  }, [messageNotifications, applicationNotifications, requestNotifications]);
+
   return (
     <AppBar position="fixed" sx={{ backgroundColor: "#121212" }}>
       <Toolbar>
@@ -103,7 +161,6 @@ const NavbarDash = () => {
           </Link>
         </Typography>
 
-        {/* Notifications candidatures */}
         <IconButton
           color="inherit"
           onClick={(e) => setNotifAnchor(e.currentTarget)}
@@ -147,7 +204,6 @@ const NavbarDash = () => {
           )}
         </Menu>
 
-        {/* Notifications messages */}
         <IconButton
           color="inherit"
           onClick={(e) => setMessageAnchor(e.currentTarget)}
@@ -198,7 +254,6 @@ const NavbarDash = () => {
           )}
         </Menu>
 
-        {/* Notifications demandes */}
         <IconButton
           color="inherit"
           onClick={(e) => setRequestAnchor(e.currentTarget)}
@@ -242,7 +297,6 @@ const NavbarDash = () => {
           )}
         </Menu>
 
-        {/* Profil */}
         <IconButton
           size="large"
           edge="end"
@@ -250,7 +304,11 @@ const NavbarDash = () => {
           onClick={handleMenu}
           sx={{ ml: 2 }}
         >
-          <AccountCircle />
+          {userName ? (
+            <Avatar sx={{ bgcolor: "#1e88e5" }}>{userName}</Avatar>
+          ) : (
+            <AccountCircle />
+          )}
         </IconButton>
 
         <Menu
@@ -264,15 +322,10 @@ const NavbarDash = () => {
             },
           }}
         >
-          <MenuItem onClick={() => setAnchorEl(null)}>
-            <Link
-              to="/profile"
-              style={{ textDecoration: "none", color: "#fff" }}
-            >
-              Profile
-            </Link>
+          <MenuItem onClick={handleLogout}>
+            <ExitToApp sx={{ mr: 2 }} />
+            Se déconnecter
           </MenuItem>
-          <MenuItem onClick={handleLogout}>Logout</MenuItem>
         </Menu>
       </Toolbar>
     </AppBar>

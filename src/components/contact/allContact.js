@@ -68,7 +68,7 @@ function AllContact() {
                         fontSize: "1rem",
                       }}
                     >
-                      {contact.email.charAt(1).toUpperCase()}
+                      {contact.email.charAt(0).toUpperCase()}
                     </Avatar>
                     <Box>
                       <Typography variant="subtitle1" fontWeight="bold">

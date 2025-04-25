@@ -69,5 +69,21 @@ CONTACT:{
   GET_CONTACT:`${BASE_URL}/contact/allContact`,
   
 
-}}
+},
+
+DASHBOARD:{
+  GET_DASHBOARD:`${BASE_URL}/dashboard/getDataDashboard`,
+  GET_POST_OFFRE:`${BASE_URL}/dashboard/postulations-par-offre-stage`,
+  GET_POST_JOB:`${BASE_URL}/dashboard/postulations-par-offre-job`,
+ 
+
+},
+
+
+  
+
+
+
+}
+
 export default PATHS

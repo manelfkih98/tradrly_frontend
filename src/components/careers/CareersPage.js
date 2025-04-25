@@ -79,7 +79,7 @@ function CareersPage() {
           {loading ? (
             [...Array(3)].map((_, i) => (
               <Grid item xs={12} sm={6} md={4} key={i}>
-                <Skeleton variant="rectangular" height={200} />
+                <Skeleton variant="rectangular" height={300} />
               </Grid>
             ))
           ) : jobList.length > 0 ? (
@@ -94,6 +94,7 @@ function CareersPage() {
                     job={job}
                     onViewDetails={handleViewDetails}
                     onApply={handleApply}
+                    sx={{ height: '100%' }} // Ensure consistent height for each card
                   />
                 </motion.div>
               </Grid>
@@ -105,6 +106,7 @@ function CareersPage() {
       </Box>
     );
   };
+  
 
   return (
     <ThemeProvider theme={theme}>

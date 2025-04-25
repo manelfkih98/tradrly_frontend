@@ -59,7 +59,7 @@ const Sidebar = () => {
           <ListItemIcon>
             <Dashboard sx={{ color: "#64b5f6" }} />
           </ListItemIcon>
-          <ListItemText primary="Dashboard" />
+          <ListItemText primary="Tableau de bord" />
         </ListItemButton>
 
         <ListItemButton component={NavLink} to="/departement" activeClassName="active-link">

@@ -13,6 +13,9 @@ const login = async (email, password) => {
     if (response.data.token) {
       localStorage.setItem("token", response.data.token);
     }
+    if (response.data.fullName) {
+      localStorage.setItem("fullName", response.data.fullName);
+    }
 
     return response.data;
   } catch (error) {
