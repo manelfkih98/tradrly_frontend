@@ -305,7 +305,7 @@ const NavbarDash = () => {
           sx={{ ml: 2 }}
         >
           {userName ? (
-            <Avatar sx={{ bgcolor: "#1e88e5" }}>{userName}</Avatar>
+            <Avatar sx={{ bgcolor: "#1e3a8a" }}>{userName}</Avatar>
           ) : (
             <AccountCircle />
           )}

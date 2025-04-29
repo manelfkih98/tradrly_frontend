@@ -17,6 +17,7 @@ import {
   Tooltip,
   CircularProgress,
   Chip,
+  Pagination,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
@@ -35,7 +36,7 @@ import {
 import AddSolution from "./AddSolution";
 import { styled } from "@mui/material/styles";
 
-// Bouton animé pour les actions
+// Bouton animé
 const AnimatedIconButton = styled(IconButton)(({ theme }) => ({
   transition: "transform 0.2s ease-in-out, color 0.3s ease",
   "&:hover": {
@@ -51,6 +52,8 @@ function ListesSolution() {
   const [open, setOpen] = useState(false);
   const [editingProject, setEditingProject] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
   useEffect(() => {
     dispatch(fetchSolutions());
@@ -119,12 +122,19 @@ function ListesSolution() {
         project.description_project.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
-  return (
-    <Box
-    
-    >
-    
+  // Pagination
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentProjects = filteredProjects.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredProjects.length / itemsPerPage);
 
+  const handleChangePage = (event, value) => {
+    setCurrentPage(value);
+  };
+
+  return (
+    <Box>
+      {/* Recherche + Bouton ajouter */}
       <Grid
         container
         justifyContent="space-between"
@@ -139,7 +149,10 @@ function ListesSolution() {
             variant="outlined"
             placeholder="Rechercher un projet..."
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              setCurrentPage(1); // reset page si recherche
+            }}
             InputProps={{
               startAdornment: (
                 <SearchIcon sx={{ color: "#1e3a8a", mr: 1 }} />
@@ -184,6 +197,7 @@ function ListesSolution() {
         </Grid>
       </Grid>
 
+      {/* Loading / Error / Table */}
       {loading ? (
         <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
           <CircularProgress sx={{ color: "#1e3a8a" }} />
@@ -196,143 +210,115 @@ function ListesSolution() {
           </Typography>
         </Box>
       ) : (
-        <TableContainer
-          component={Paper}
-          sx={{
-            borderRadius: 3,
-            boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-            overflowX: "auto",
-          }}
-        >
-          <Table>
-            <TableHead>
-              <TableRow sx={{ backgroundColor: "#1e3a8a" }}>
-                <TableCell sx={{ color: "#ffffff", fontWeight: 700, fontSize: "1rem", py: 3 }}>
-                  Projet
-                </TableCell>
-                <TableCell sx={{ color: "#ffffff", fontWeight: 700, fontSize: "1rem", py: 3 }}>
-                  Date
-                </TableCell>
-                <TableCell sx={{ color: "#ffffff", fontWeight: 700, fontSize: "1rem", py: 3 }}>
-                  Image
-                </TableCell>
-                <TableCell sx={{ color: "#ffffff", fontWeight: 700, fontSize: "1rem", py: 3 }}>
-                  Département
-                </TableCell>
-                <TableCell
-                  align="center"
-                  sx={{ color: "#ffffff", fontWeight: 700, fontSize: "1rem", py: 3 }}
-                >
-                  Actions
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {filteredProjects.length > 0 ? (
-                filteredProjects.map((project, index) => (
-                  <TableRow
-                    key={project._id}
-                    hover
-                    sx={{
-                      backgroundColor: index % 2 === 0 ? "#ffffff" : "#f9fafb",
-                      "&:hover": { backgroundColor: "#f1f5f9" },
-                    }}
-                  >
-                    <TableCell sx={{ py: 2, px: 3, fontSize: "0.9rem" }}>
-                      {project.name_project}
-                    </TableCell>
-                    <TableCell sx={{ py: 2, px: 3, fontSize: "0.9rem" }}>
-                      {formatDate(project.date_creation)}
-                    </TableCell>
-                    <TableCell sx={{ py: 2, px: 3 }}>
-                      <Avatar
-                        variant="rounded"
-                        src={project.image}
-                        alt={project.name_project}
-                        sx={{
-                          width: 50,
-                          height: 50,
-                          border: "1px solid #e5e7eb",
-                          borderRadius: 2,
-                        }}
-                      />
-                    </TableCell>
-                    <TableCell sx={{ py: 2, px: 3 }}>
-                      {project.departementId ? (
-                        <Chip
-                          label={project.departementId.NameDep}
-                          sx={{
-                            backgroundColor: "#1e3a8a",
-                            color: "#ffffff",
-                            borderRadius: 1,
-                            fontSize: "0.85rem",
-                          }}
+        <>
+          <TableContainer
+            component={Paper}
+            sx={{
+              borderRadius: 3,
+              boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+              overflowX: "auto",
+            }}
+          >
+            <Table>
+              <TableHead>
+                <TableRow sx={{ backgroundColor: "#1e3a8a" }}>
+                  <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Projet</TableCell>
+                  <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Date</TableCell>
+                  <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Image</TableCell>
+                  <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Département</TableCell>
+                  <TableCell align="center" sx={{ color: "#ffffff", fontWeight: 700 }}>Actions</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {currentProjects.length > 0 ? (
+                  currentProjects.map((project, index) => (
+                    <TableRow
+                      key={project._id}
+                      hover
+                      sx={{
+                        backgroundColor: index % 2 === 0 ? "#ffffff" : "#f9fafb",
+                        "&:hover": { backgroundColor: "#f1f5f9" },
+                      }}
+                    >
+                      <TableCell>{project.name_project}</TableCell>
+                      <TableCell>{formatDate(project.date_creation)}</TableCell>
+                      <TableCell>
+                        <Avatar
+                          variant="rounded"
+                          src={project.image}
+                          alt={project.name_project}
+                          sx={{ width: 50, height: 50 }}
                         />
-                      ) : (
-                        <Chip
-                          label="Non défini"
-                          sx={{
-                            backgroundColor: "#d4af37",
-                            color: "#1e3a8a",
-                            borderRadius: 1,
-                            fontSize: "0.85rem",
-                          }}
-                        />
-                      )}
-                    </TableCell>
-                    <TableCell align="center" sx={{ py: 2, px: 3 }}>
-                      <Tooltip
-                        title="Modifier"
-                        sx={{
-                          "& .MuiTooltip-tooltip": {
-                            backgroundColor: "#1e3a8a",
-                            color: "#ffffff",
-                          },
-                        }}
-                      >
-                        <AnimatedIconButton
-                          onClick={() => handleEdit(project)}
-                          sx={{ color: "#1e3a8a" }}
-                        >
-                          <EditIcon />
-                        </AnimatedIconButton>
-                      </Tooltip>
-                      <Tooltip
-                        title="Supprimer"
-                        sx={{
-                          "& .MuiTooltip-tooltip": {
-                            backgroundColor: "#1e3a8a",
-                            color: "#ffffff",
-                          },
-                        }}
-                      >
-                        <AnimatedIconButton
-                          onClick={() => handleDelete(project._id)}
-                          sx={{ color: "#b91c1c" }}
-                        >
-                          <DeleteIcon />
-                        </AnimatedIconButton>
-                      </Tooltip>
+                      </TableCell>
+                      <TableCell>
+                        {project.departementId ? (
+                          <Chip label={project.departementId.NameDep} sx={{ backgroundColor: "#1e3a8a", color: "#fff" }} />
+                        ) : (
+                          <Chip label="Non défini" sx={{ backgroundColor: "#d4af37", color: "#1e3a8a" }} />
+                        )}
+                      </TableCell>
+                      <TableCell align="center">
+                        <Tooltip title="Modifier">
+                          <AnimatedIconButton onClick={() => handleEdit(project)}>
+                            <EditIcon sx={{color:"#1e3a8a"}}/>
+                          </AnimatedIconButton>
+                        </Tooltip>
+                        <Tooltip title="Supprimer">
+                          <AnimatedIconButton onClick={() => handleDelete(project._id)}>
+                            <DeleteIcon  sx={{ color: "#b91c1c" }} />
+                          </AnimatedIconButton>
+                        </Tooltip>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={5} align="center">
+                      <Box display="flex" alignItems="center" justifyContent="center" py={4} gap={1}>
+                        <InfoOutlinedIcon sx={{ color: "#1e3a8a" }} />
+                        <Typography>Aucun projet trouvé.</Typography>
+                      </Box>
                     </TableCell>
                   </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={5} align="center">
-                    <Box display="flex" alignItems="center" justifyContent="center" py={4} gap={1}>
-                      <InfoOutlinedIcon sx={{ color: "#1e3a8a" }} />
-                      <Typography sx={{ color: "#1e3a8a", fontWeight: 500 }}>
-                        Aucun projet trouvé.
-                      </Typography>
-                    </Box>
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+
+       
+          {filteredProjects.length > itemsPerPage && (
+            <Box display="flex" justifyContent="center" py={3}>
+              <Pagination
+                count={totalPages}
+                page={currentPage}
+                onChange={handleChangePage}
+                color="primary"
+               
+                shape="rounded"
+                sx={{
+                  "& .MuiPaginationItem-root": {
+                    color: "#1e3a8a",
+                    "&:hover": {
+                      bgcolor: "#d4af37",
+                      color: "#fff",
+                    },
+                    "&.Mui-selected": {
+                      bgcolor: "#1e3a8a",
+                      color: "#fff",
+                      "&:hover": {
+                        bgcolor: "#d4af37",
+                      },
+                    },
+                  },
+                }}
+              />
+            </Box>
+          )}
+        </>
       )}
 
+    
+    
       <AddSolution
         open={open}
         handleClose={handleClose}

@@ -73,14 +73,14 @@ const EditTeamMember = ({ selectedTeam, onCancel, onMemberUpdated }) => {
   };
 
   return (
-    <Paper elevation={3} sx={{ p: 4, borderRadius: 3, backgroundColor: "#fdfdfd" }}>
+    <Paper  sx={{ p: 4, borderRadius: 3, backgroundColor: "#fdfdfd" }}>
       <Typography variant="h5" align="center" fontWeight="bold" gutterBottom>
         Modifier un membre
       </Typography>
       <Divider sx={{ mb: 3 }} />
 
       <Box component="form" onSubmit={handleSubmit}>
-        <Stack spacing={3}>
+        <Stack spacing={5}>
           <TextField
             name="name"
             label="Nom"

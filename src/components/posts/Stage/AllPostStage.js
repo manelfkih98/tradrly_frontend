@@ -55,7 +55,7 @@ const AllPostStage = () => {
   const loading = useSelector((state) => state.posts.loading);
 
   const [page, setPage] = useState(1);
-  const [rowsPerPage] = useState(5); // Consistent with AllPostEmploi
+  const [rowsPerPage] = useState(4); 
 
   useEffect(() => {
     dispatch(fetchPostsStage());
@@ -94,15 +94,15 @@ const AllPostStage = () => {
         ) : (
           <Table>
             <TableHead>
-              <TableRow sx={{ backgroundColor: "#f4f6f8" }}>
-                <TableCell sx={{ fontWeight: "bold" }}>Nom</TableCell>
-                <TableCell sx={{ fontWeight: "bold" }}>Email</TableCell>
-                <TableCell sx={{ fontWeight: "bold" }}>Téléphone</TableCell>
-                <TableCell sx={{ fontWeight: "bold" }}>Niveau</TableCell>
-                <TableCell sx={{ fontWeight: "bold" }}>Offre</TableCell>
-                <TableCell sx={{ fontWeight: "bold" }}>CV</TableCell>
-                <TableCell sx={{ fontWeight: "bold" }}>Statut</TableCell>
-                <TableCell align="center" sx={{ fontWeight: "bold" }}>
+              <TableRow sx={{ backgroundColor: "#1e3a8a" }}>
+                <TableCell align="center"  sx={{ fontWeight: "bold",color:"white" }}>Nom</TableCell>
+                <TableCell align="center" sx={{ fontWeight: "bold",color:"white" }}>Email</TableCell>
+                <TableCell align="center"sx={{ fontWeight: "bold",color:"white" }}>Téléphone</TableCell>
+                <TableCell align="center"sx={{ fontWeight: "bold" ,color:"white"}}>Niveau</TableCell>
+                <TableCell align="center" sx={{ fontWeight: "bold",color:"white" }}>Offre</TableCell>
+                <TableCell align="center" sx={{ fontWeight: "bold",color:"white" }}>CV</TableCell>
+                <TableCell align="center" sx={{ fontWeight: "bold",color:"white" }}>Statut</TableCell>
+                <TableCell align="center" sx={{ fontWeight: "bold"  ,color:"white"}}>
                   Actions
                 </TableCell>
               </TableRow>

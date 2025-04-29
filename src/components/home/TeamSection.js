@@ -21,7 +21,7 @@ import LinkedInIcon from "@mui/icons-material/LinkedIn";
 const TeamSection = () => {
   const dispatch = useDispatch();
   const { teams, loading } = useSelector((state) => state.teams);
-  const scrollRef = useRef(null); // ✅ CORRECTION : scrollRef défini
+  const scrollRef = useRef(null); 
 
   useEffect(() => {
     dispatch(fetchTeam());
@@ -95,77 +95,78 @@ const TeamSection = () => {
         {teams && teams.length > 0 ? (
           teams.map((member, index) => (
             <Card
-              key={index}
-              sx={{
-                minWidth: 250,
-                flexShrink: 0,
-                borderRadius: 5,
-                boxShadow: 3,
-                backgroundColor: "#fff",
-                p: 2,
-              }}
-            >
-              <CardContent>
-                <Typography variant="subtitle2" fontWeight="bold">
-                  {member.title}
-                </Typography>
-                <Typography variant="h6" mb={2}>
-                  {member.name}
-                </Typography>
-                <CardMedia
-                  component="img"
-                  image={member.image}
-                  alt={member.name}
-                  sx={{ borderRadius: 3, height: 200, objectFit: "cover" }}
-                />
-                <Typography variant="body2" mt={2}>
-                  "{member.quote}"
-                </Typography>
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "center",
-                    gap: 1,
-                    mt: 1,
-                  }}
-                >
+            key={index}
+            sx={{
+              width: 250, // largeur fixe
+              height: 400, // hauteur fixe
+              flexShrink: 0,
+              borderRadius: 5,
+              boxShadow: 3,
+              backgroundColor: "#fff",
+              p: 2,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+            }}
+          >
+            <CardContent sx={{ p: 0, display: "flex", flexDirection: "column", flexGrow: 1 }}>
+              <Typography variant="subtitle2" fontWeight="bold">
+                {member.title}
+              </Typography>
+              <Typography variant="h6" mb={1}>
+                {member.name}
+              </Typography>
+              <CardMedia
+                component="img"
+                image={member.image}
+                alt={member.name}
+                sx={{
+                  borderRadius: 3,
+                  height: 180,
+                  objectFit: "cover",
+                  mb: 1,
+                }}
+              />
+              <Typography
+                variant="body2"
+                sx={{ flexGrow: 1, overflow: "hidden", textOverflow: "ellipsis" }}
+              >
+                "{member.quote}"
+              </Typography>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  gap: 1,
+                  mt: 1,
+                }}
+              >
+                {member.linkedin ? (
                   <a
-                    href={member.linkedin}
+                    href={
+                      member.linkedin.startsWith("http")
+                        ? member.linkedin
+                        : `https://${member.linkedin}`
+                    }
                     target="_blank"
                     rel="noopener noreferrer"
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      textDecoration: "none",
+                      color: "#0a66c2",
+                      gap: "6px",
+                    }}
                   >
-                    <TableCell>
-                      {member.linkedin ? (
-                        <a
-                          href={
-                            member.linkedin.startsWith("http")
-                              ? member.linkedin
-                              : `https://${member.linkedin}`
-                          }
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            textDecoration: "none",
-                            color: "#0a66c2",
-                            gap: "6px",
-                          }}
-                        >
-                          <LinkedInIcon
-                            fontSize="small"
-                            sx={{ color: "#0a66c2" }}
-                          />
-                         
-                        </a>
-                      ) : (
-                        "—"
-                      )}
-                    </TableCell>{" "}
+                    <LinkedInIcon fontSize="small" sx={{ color: "#0a66c2" }} />
                   </a>
-                </Box>
-              </CardContent>
-            </Card>
+                ) : (
+                  "—"
+                )}
+              </Box>
+            </CardContent>
+          </Card>
+          
           ))
         ) : (
           <Typography>Loading or no team members found...</Typography>

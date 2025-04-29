@@ -53,7 +53,7 @@ const AllQcm = () => {
                   <Stack direction="row" alignItems="center" spacing={2} mb={2}>
                     <Avatar
                       sx={{
-                        bgcolor: "primary.main",
+                        bgcolor: "#1e3a8a",
                         width: 56,
                         height: 56,
                         fontSize: 24,

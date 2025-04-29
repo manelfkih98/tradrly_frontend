@@ -94,7 +94,7 @@ function CareersPage() {
                     job={job}
                     onViewDetails={handleViewDetails}
                     onApply={handleApply}
-                    sx={{ height: '100%' }} // Ensure consistent height for each card
+                    sx={{ height: '100%' }} 
                   />
                 </motion.div>
               </Grid>

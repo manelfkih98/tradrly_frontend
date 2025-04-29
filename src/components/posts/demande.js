@@ -98,14 +98,14 @@ const Demande = () => {
         ) : (
           <Table>
             <TableHead>
-              <TableRow sx={{ backgroundColor: "#f4f6f8" }}>
-                <TableCell sx={{ fontWeight: "bold" }}>Nom</TableCell>
-                <TableCell sx={{ fontWeight: "bold" }}>Email</TableCell>
-                <TableCell sx={{ fontWeight: "bold" }}>Téléphone</TableCell>
-                <TableCell sx={{ fontWeight: "bold" }}>Niveau</TableCell>
-                <TableCell sx={{ fontWeight: "bold" }}>CV</TableCell>
-                <TableCell sx={{ fontWeight: "bold" }}>Status</TableCell>
-                <TableCell align="center" sx={{ fontWeight: "bold" }}>
+              <TableRow sx={{ backgroundColor: "#1e3a8a" }}>
+                <TableCell  align="center"sx={{ fontWeight: "bold",color:"white" }}>Nom</TableCell>
+                <TableCell align="center"sx={{ fontWeight: "bold" ,color:"white"}}>Email</TableCell>
+                <TableCell align="center"sx={{ fontWeight: "bold" ,color:"white"}}>Téléphone</TableCell>
+                <TableCell  align="center"sx={{ fontWeight: "bold" ,color:"white"}}>Niveau</TableCell>
+                <TableCell align="center"sx={{ fontWeight: "bold" ,color:"white"}}>CV</TableCell>
+                <TableCell align="center"sx={{ fontWeight: "bold" ,color:"white"}}>Status</TableCell>
+                <TableCell align="center" sx={{ fontWeight: "bold" ,color:"white"}}>
                   Actions
                 </TableCell>
               </TableRow>

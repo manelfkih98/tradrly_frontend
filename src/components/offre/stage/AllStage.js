@@ -19,6 +19,7 @@ import {
 import EditIcon from "@mui/icons-material/Edit";
 import SearchIcon from "@mui/icons-material/Search";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import AddOffreJobIcon from "@mui/icons-material/AddBox";
 import { useSelector, useDispatch } from "react-redux";
 import {
   fetchOffresStage,
@@ -104,8 +105,9 @@ const AllStage = () => {
             variant="contained"
             color="primary"
             onClick={() => setOpen(true)}
-            sx={{ borderRadius: 20, textTransform: "none" }}
+            sx={{ borderRadius: 20, textTransform: "none",backgroundColor: "#1e3a8a" }}
           >
+           
             Nouvelle Offre
           </Button>
         </Stack>
@@ -307,8 +309,28 @@ const AllStage = () => {
                 count={Math.ceil(filteredOffres.length / rowsPerPage)}
                 page={page}
                 onChange={handlePageChange}
-                color="primary"
+              
                 shape="rounded"
+                color="primary"
+                
+                size="medium"
+                sx={{
+                  "& .MuiPaginationItem-root": {
+                    color: "#1e3a8a",
+                    fontWeight: "bold",
+                    "&:hover": {
+                      backgroundColor: "#d4af37",
+                      color: "#ffffff",
+                    },
+                    "&.Mui-selected": {
+                      backgroundColor: "#1e3a8a",
+                      color: "#ffffff",
+                      "&:hover": {
+                        backgroundColor: "#d4af37",
+                      },
+                    },
+                  },
+                }}
               />
             </Box>
           )}

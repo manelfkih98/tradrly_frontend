@@ -7,13 +7,11 @@ import {
   TextField,
   Paper,
   IconButton,
-  FormControl,
-  Select,
-  MenuItem,
-  InputLabel,
   CircularProgress,
   Divider,
   Chip,
+  FormControl,
+  FormHelperText,
 } from "@mui/material";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
@@ -28,21 +26,31 @@ const AddQuestion = ({ onClose }) => {
   const [propositions, setPropositions] = useState([]);
   const [propositionInput, setPropositionInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [selectedDep, setSelectedDep] = useState(""); // État pour le bouton sélectionné
 
   const { departments, loading: loadingDepartments } = useSelector(
     (state) => state.departments
   );
 
   // React Hook Form
-  const { register, handleSubmit, formState: { errors }, setValue, reset } = useForm();
-  
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+    reset,
+  } = useForm();
+
   useEffect(() => {
     dispatch(fetchDepartments());
   }, [dispatch]);
 
   // Add proposition to list
   const handleAddProposition = () => {
-    if (propositionInput.trim() && !propositions.includes(propositionInput.trim())) {
+    if (
+      propositionInput.trim() &&
+      !propositions.includes(propositionInput.trim())
+    ) {
       setPropositions((prev) => [...prev, propositionInput.trim()]);
       setPropositionInput("");
     }
@@ -55,12 +63,21 @@ const AddQuestion = ({ onClose }) => {
     setPropositions(updated);
   };
 
+  // Gérer la sélection d'un bouton
+  const handleButtonClick = (depName) => {
+    setSelectedDep(depName);
+    setValue("departement_name", depName, { shouldValidate: true });
+  };
+
   // Submit form
   const onSubmit = async (data) => {
     setLoading(true);
 
     let updatedProps = [...propositions];
-    if (propositionInput.trim() && !updatedProps.includes(propositionInput.trim())) {
+    if (
+      propositionInput.trim() &&
+      !updatedProps.includes(propositionInput.trim())
+    ) {
       updatedProps.push(propositionInput.trim());
     }
 
@@ -83,9 +100,23 @@ const AddQuestion = ({ onClose }) => {
   };
 
   return (
-    <Box sx={{ p: 4, display: "flex", justifyContent: "center", alignItems: "center" }}>
-      <Paper elevation={6} sx={{ p: 6, width: "100%", borderRadius: 4, backgroundColor: "#ffffff" }}>
-        <Typography variant="h5" sx={{ fontWeight: 700, color: "#2c3e50", textAlign: "center", mb: 3 }}>
+    <Box
+      sx={{
+        p: 4,
+       
+      }}
+    >
+      <Paper>
+       
+        <Typography
+          variant="h5"
+          sx={{
+            fontWeight: 700,
+            color: "#2c3e50",
+            textAlign: "center",
+            mb: 3,
+          }}
+        >
           Ajouter une Question
         </Typography>
         <Divider sx={{ mb: 3 }} />
@@ -96,7 +127,9 @@ const AddQuestion = ({ onClose }) => {
                 label="Texte de la question"
                 variant="outlined"
                 fullWidth
-                {...register("questionText", { required: "Ce champ est obligatoire" })}
+                {...register("questionText", {
+                  required: "Ce champ est obligatoire",
+                })}
                 error={!!errors.questionText}
                 helperText={errors.questionText?.message}
               />
@@ -130,11 +163,11 @@ const AddQuestion = ({ onClose }) => {
                 variant="outlined"
                 sx={{
                   height: "100%",
-                  color: "#1e88e5",
-                  borderColor: "#1e88e5",
+                  color: "#1e3a8a",
+                  borderColor: "#1e3a8a",
                   "&:hover": {
-                    backgroundColor: "#e3f2fd",
-                    borderColor: "#1565c0",
+                    backgroundColor: "#e8f0fe",
+                    borderColor: "#16307a",
                   },
                 }}
               >
@@ -158,27 +191,89 @@ const AddQuestion = ({ onClose }) => {
               </Grid>
             )}
 
-            {/* Dropdown for Departments */}
+            {/* Boutons stylisés pour les départements */}
             <Grid item xs={12}>
-              <FormControl fullWidth required>
-                <InputLabel>Département</InputLabel>
-                <Select
-                  {...register("departement_name", { required: "Veuillez sélectionner un département" })}
-                  defaultValue=""
-                  error={!!errors.departement_name}
+              <FormControl
+                fullWidth
+                error={!!errors.departement_name}
+                required
+              >
+                <Typography
+                  variant="subtitle1"
+                  sx={{ color: "#2c3e50", mb: 1, fontWeight: 500 }}
                 >
+                  Département
+                </Typography>
+                <Grid container spacing={1} sx={{ overflowX: "auto" }}>
                   {loadingDepartments ? (
-                    <MenuItem disabled>Chargement...</MenuItem>
+                    <Grid item xs={12}>
+                      <Typography>Chargement...</Typography>
+                    </Grid>
                   ) : (
-                    departments?.map((dep) => (
-                      <MenuItem key={dep._id} value={dep.NameDep}>
-                        {dep.NameDep}
-                      </MenuItem>
-                    ))
+                    <>
+                      {departments.map((dep) => (
+                        <Grid item xs={6} sm={4} md={3} key={dep._id}>
+                          <Button
+                            fullWidth
+                            variant="outlined"
+                            onClick={() => handleButtonClick(dep.NameDep)}
+                            sx={{
+                              borderColor: "#1e3a8a",
+                              color: selectedDep === dep.NameDep ? "white" : "#1e3a8a",
+                              bgcolor: selectedDep === dep.NameDep ? "#1e3a8a" : "white",
+                              borderRadius: 2,
+                              textTransform: "none",
+                              transition: "all 0.3s",
+                              "&:hover": {
+                                bgcolor:
+                                  selectedDep === dep.NameDep
+                                    ? "#16307a"
+                                    : "#e8f0fe",
+                              },
+                            }}
+                            aria-selected={selectedDep === dep.NameDep}
+                            aria-label={`Sélectionner le département ${dep.NameDep}`}
+                          >
+                            {dep.NameDep}
+                          </Button>
+                        </Grid>
+                      ))}
+                      <Grid item xs={6} sm={4} md={3}>
+                        <Button
+                          fullWidth
+                          variant="outlined"
+                          onClick={() => handleButtonClick("")}
+                          sx={{
+                            borderColor: "#1e3a8a",
+                            color: selectedDep === "" ? "white" : "#1e3a8a",
+                            bgcolor: selectedDep === "" ? "#1e3a8a" : "white",
+                            borderRadius: 2,
+                            textTransform: "none",
+                            transition: "all 0.3s",
+                            "&:hover": {
+                              bgcolor: selectedDep === "" ? "#16307a" : "#e8f0fe",
+                            },
+                          }}
+                          aria-selected={selectedDep === ""}
+                          aria-label="Sélectionner aucun département"
+                        >
+                          Non spécifié
+                        </Button>
+                      </Grid>
+                    </>
                   )}
-                </Select>
+                </Grid>
+                <input
+                  type="hidden"
+                  {...register("departement_name", {
+                    required: "Veuillez sélectionner un département",
+                  })}
+                  value={selectedDep}
+                />
                 {errors.departement_name && (
-                  <Typography variant="body2" color="error">{errors.departement_name.message}</Typography>
+                  <FormHelperText>
+                    {errors.departement_name.message}
+                  </FormHelperText>
                 )}
               </FormControl>
             </Grid>
@@ -190,17 +285,18 @@ const AddQuestion = ({ onClose }) => {
                 fullWidth
                 disabled={loading}
                 sx={{
-                  backgroundColor: "#2e7d32",
+                  backgroundColor: "#1e3a8a",
                   color: "white",
                   fontWeight: "bold",
                   py: 1.5,
                   borderRadius: 2,
-                  "&:hover": {
-                    backgroundColor: "#1b5e20",
-                  },
                 }}
               >
-                {loading ? <CircularProgress size={24} sx={{ color: "#fff" }} /> : "Enregistrer la Question"}
+                {loading ? (
+                  <CircularProgress size={24} sx={{ color: "#fff" }} />
+                ) : (
+                  "Enregistrer la Question"
+                )}
               </Button>
             </Grid>
           </Grid>

@@ -151,7 +151,7 @@ function AddSolution({ open, handleClose, onSubmitSolution, editingSolution }) {
   useEffect(() => {
     if (editingSolution) {
       setValue("name_project", editingSolution.name_project || "");
-      setValue("description_project", editingSolution.description_project || "");
+     
       setValue("date_creation", editingSolution.date_creation?.substring(0, 10) || "");
       setValue("departement_name", editingSolution.departementId?.NameDep || "");
       setSelectedFile(null); // Reset file input during edit
@@ -171,7 +171,6 @@ function AddSolution({ open, handleClose, onSubmitSolution, editingSolution }) {
   const handleFormSubmit = (data) => {
     const formData = new FormData();
     formData.append("name_project", data.name_project);
-    formData.append("description_project", data.description_project || "");
     formData.append("date_creation", data.date_creation);
     formData.append("departement_name", data.departement_name);
 
@@ -220,14 +219,7 @@ function AddSolution({ open, handleClose, onSubmitSolution, editingSolution }) {
             helperText={errors.name_project?.message}
           />
 
-          <StyledTextField
-            label="Description (optionnel)"
-            fullWidth
-            multiline
-            rows={3}
-            variant="outlined"
-            {...register("description_project")}
-          />
+        
 
           <StyledTextField
             label="Date de création"
@@ -243,7 +235,7 @@ function AddSolution({ open, handleClose, onSubmitSolution, editingSolution }) {
           />
 
           <StyledFormControl fullWidth variant="outlined" error={!!errors.departement_name}>
-            <InputLabel>Département</InputLabel>
+          
             <Controller
               name="departement_name"
               control={control}

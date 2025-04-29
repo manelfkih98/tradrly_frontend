@@ -50,52 +50,152 @@ const Sidebar = () => {
         <img
           src={logo}
           alt="Logo"
-          style={{ width: "80%", marginBottom: "8px" }}
+          style={{
+            width: "80%",
+            marginBottom: "8px",
+            filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.3))",
+          }}
         />
       </Box>
 
       <List>
-        <ListItemButton component={NavLink} to="/dashboard" activeClassName="active-link">
+        <ListItemButton
+          component={NavLink}
+          to="/dashboard"
+          sx={{
+            "&.active-link": {
+              backgroundColor: "#1e3a8a",
+              color: "#fff",
+              "& .MuiListItemIcon-root": { color: "#fff" },
+            },
+            "&:hover": {
+              backgroundColor: "#d4af37",
+              color: "#1e3a8a",
+              "& .MuiListItemIcon-root": { color: "#1e3a8a" },
+            },
+            transition: "all 0.3s",
+          }}
+        >
           <ListItemIcon>
-            <Dashboard sx={{ color: "#64b5f6" }} />
+            <Dashboard sx={{ color: "#1e3a8a" }} />
           </ListItemIcon>
           <ListItemText primary="Tableau de bord" />
         </ListItemButton>
 
-        <ListItemButton component={NavLink} to="/departement" activeClassName="active-link">
+        <ListItemButton
+          component={NavLink}
+          to="/departement"
+          sx={{
+            "&.active-link": {
+              backgroundColor: "#1e3a8a",
+              color: "#fff",
+              "& .MuiListItemIcon-root": { color: "#fff" },
+            },
+            "&:hover": {
+              backgroundColor: "#d4af37",
+              color: "#1e3a8a",
+              "& .MuiListItemIcon-root": { color: "#1e3a8a" },
+            },
+            transition: "all 0.3s",
+          }}
+        >
           <ListItemIcon>
-            <TableChart sx={{ color: "#64b5f6" }} />
+            <TableChart sx={{ color: "#1e3a8a" }} />
           </ListItemIcon>
           <ListItemText primary="Départements" />
         </ListItemButton>
 
-        <ListItemButton component={NavLink} to="/solution" activeClassName="active-link">
+        <ListItemButton
+          component={NavLink}
+          to="/solution"
+          sx={{
+            "&.active-link": {
+              backgroundColor: "#1e3a8a",
+              color: "#fff",
+              "& .MuiListItemIcon-root": { color: "#fff" },
+            },
+            "&:hover": {
+              backgroundColor: "#d4af37",
+              color: "#1e3a8a",
+              "& .MuiListItemIcon-root": { color: "#1e3a8a" },
+            },
+            transition: "all 0.3s",
+          }}
+        >
           <ListItemIcon>
-            <ReceiptLong sx={{ color: "#64b5f6" }} />
+            <ReceiptLong sx={{ color: "#1e3a8a" }} />
           </ListItemIcon>
           <ListItemText primary="Projets" />
         </ListItemButton>
 
         {/* --- Offres --- */}
-        <ListItemButton onClick={() => setOpenOffre(!openOffre)}>
+        <ListItemButton
+          onClick={() => setOpenOffre(!openOffre)}
+          sx={{
+            "&.active-link": {
+              backgroundColor: "#1e3a8a",
+              color: "#fff",
+              "& .MuiListItemIcon-root": { color: "#fff" },
+            },
+            "&:hover": {
+              backgroundColor: "#d4af37",
+              color: "#1e3a8a",
+              "& .MuiListItemIcon-root": { color: "#1e3a8a" },
+            },
+            transition: "all 0.3s",
+          }}
+          aria-expanded={openOffre}
+        >
           <ListItemIcon>
-            <NotificationsNone sx={{ color: "#64b5f6" }} />
+            <NotificationsNone sx={{ color: "#1e3a8a" }} />
           </ListItemIcon>
           <ListItemText primary="Offres" />
-          {openOffre ? <ExpandLess /> : <ExpandMore />}
+          {openOffre ? <ExpandLess sx={{ color: "#1e3a8a" }} /> : <ExpandMore sx={{ color: "#1e3a8a" }} />}
         </ListItemButton>
 
         <Collapse in={openOffre} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
-            <ListItemButton component={NavLink} to="/offre/stage" sx={{ pl: 4 }} activeClassName="active-link">
+            <ListItemButton
+              component={NavLink}
+              to="/offre/stage"
+              sx={{
+                "&.active-link": {
+                  backgroundColor: "#1e3a8a",
+                  color: "#fff",
+                  "& .MuiListItemIcon-root": { color: "#fff" },
+                },
+                "&:hover": {
+                  backgroundColor: "#d4af37",
+                  color: "#1e3a8a",
+                  "& .MuiListItemIcon-root": { color: "#1e3a8a" },
+                },
+                transition: "all 0.3s",
+              }}
+            >
               <ListItemIcon>
-                <SchoolOutlined sx={{ color: "#64b5f6" }} />
+                <SchoolOutlined sx={{ color: "#1e3a8a" }} />
               </ListItemIcon>
               <ListItemText primary="Stages" />
             </ListItemButton>
-            <ListItemButton component={NavLink} to="/offre/emploi" sx={{ pl: 4 }} activeClassName="active-link">
+            <ListItemButton
+              component={NavLink}
+              to="/offre/emploi"
+              sx={{
+                "&.active-link": {
+                  backgroundColor: "#1e3a8a",
+                  color: "#fff",
+                  "& .MuiListItemIcon-root": { color: "#fff" },
+                },
+                "&:hover": {
+                  backgroundColor: "#d4af37",
+                  color: "#1e3a8a",
+                  "& .MuiListItemIcon-root": { color: "#1e3a8a" },
+                },
+                transition: "all 0.3s",
+              }}
+            >
               <ListItemIcon>
-                <WorkOutline sx={{ color: "#64b5f6" }} />
+                <WorkOutline sx={{ color: "#1e3a8a" }} />
               </ListItemIcon>
               <ListItemText primary="Emplois" />
             </ListItemButton>
@@ -103,25 +203,73 @@ const Sidebar = () => {
         </Collapse>
 
         {/* --- Postulations --- */}
-        <ListItemButton onClick={() => setOpenPost(!openPost)}>
+        <ListItemButton
+          onClick={() => setOpenPost(!openPost)}
+          sx={{
+            "&.active-link": {
+              backgroundColor: "#1e3a8a",
+              color: "#fff",
+              "& .MuiListItemIcon-root": { color: "#fff" },
+            },
+            "&:hover": {
+              backgroundColor: "#d4af37",
+              color: "#1e3a8a",
+              "& .MuiListItemIcon-root": { color: "#1e3a8a" },
+            },
+            transition: "all 0.3s",
+          }}
+          aria-expanded={openPost}
+        >
           <ListItemIcon>
-            <PersonOutline sx={{ color: "#64b5f6" }} />
+            <PersonOutline sx={{ color: "#1e3a8a" }} />
           </ListItemIcon>
           <ListItemText primary="Postulations" />
-          {openPost ? <ExpandLess /> : <ExpandMore />}
+          {openPost ? <ExpandLess sx={{ color: "#1e3a8a" }} /> : <ExpandMore sx={{ color: "#1e3a8a" }} />}
         </ListItemButton>
 
         <Collapse in={openPost} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
-            <ListItemButton component={NavLink} to="/post/stage" sx={{ pl: 4 }} activeClassName="active-link">
+            <ListItemButton
+              component={NavLink}
+              to="/post/stage"
+              sx={{
+                "&.active-link": {
+                  backgroundColor: "#1e3a8a",
+                  color: "#fff",
+                  "& .MuiListItemIcon-root": { color: "#fff" },
+                },
+                "&:hover": {
+                  backgroundColor: "#d4af37",
+                  color: "#1e3a8a",
+                  "& .MuiListItemIcon-root": { color: "#1e3a8a" },
+                },
+                transition: "all 0.3s",
+              }}
+            >
               <ListItemIcon>
-                <SchoolOutlined sx={{ color: "#64b5f6" }} />
+                <SchoolOutlined sx={{ color: "#1e3a8a" }} />
               </ListItemIcon>
               <ListItemText primary="Stages" />
             </ListItemButton>
-            <ListItemButton component={NavLink} to="/post/emploi" sx={{ pl: 4 }} activeClassName="active-link">
+            <ListItemButton
+              component={NavLink}
+              to="/post/emploi"
+              sx={{
+                "&.active-link": {
+                  backgroundColor: "#1e3a8a",
+                  color: "#fff",
+                  "& .MuiListItemIcon-root": { color: "#fff" },
+                },
+                "&:hover": {
+                  backgroundColor: "#d4af37",
+                  color: "#1e3a8a",
+                  "& .MuiListItemIcon-root": { color: "#1e3a8a" },
+                },
+                transition: "all 0.3s",
+              }}
+            >
               <ListItemIcon>
-                <WorkOutline sx={{ color: "#64b5f6" }} />
+                <WorkOutline sx={{ color: "#1e3a8a" }} />
               </ListItemIcon>
               <ListItemText primary="Emplois" />
             </ListItemButton>
@@ -129,37 +277,117 @@ const Sidebar = () => {
         </Collapse>
 
         {/* --- Autres liens --- */}
-        <ListItemButton component={NavLink} to="/PostWithoutOffre" activeClassName="active-link">
+        <ListItemButton
+          component={NavLink}
+          to="/PostWithoutOffre"
+          sx={{
+            "&.active-link": {
+              backgroundColor: "#1e3a8a",
+              color: "#fff",
+              "& .MuiListItemIcon-root": { color: "#fff" },
+            },
+            "&:hover": {
+              backgroundColor: "#d4af37",
+              color: "#1e3a8a",
+              "& .MuiListItemIcon-root": { color: "#1e3a8a" },
+            },
+            transition: "all 0.3s",
+          }}
+        >
           <ListItemIcon>
-            <SendTimeExtension sx={{ color: "#64b5f6" }} />
+            <SendTimeExtension sx={{ color: "#1e3a8a" }} />
           </ListItemIcon>
           <ListItemText primary="Demandes spontanées" />
         </ListItemButton>
 
-        <ListItemButton component={NavLink} to="/question" activeClassName="active-link">
+        <ListItemButton
+          component={NavLink}
+          to="/question"
+          sx={{
+            "&.active-link": {
+              backgroundColor: "#1e3a8a",
+              color: "#fff",
+              "& .MuiListItemIcon-root": { color: "#fff" },
+            },
+            "&:hover": {
+              backgroundColor: "#d4af37",
+              color: "#1e3a8a",
+              "& .MuiListItemIcon-root": { color: "#1e3a8a" },
+            },
+            transition: "all 0.3s",
+          }}
+        >
           <ListItemIcon>
-            <HelpOutline sx={{ color: "#64b5f6" }} />
+            <HelpOutline sx={{ color: "#1e3a8a" }} />
           </ListItemIcon>
           <ListItemText primary="Questions fréquentes" />
         </ListItemButton>
 
-        <ListItemButton component={NavLink} to="/Qcm" activeClassName="active-link">
+        <ListItemButton
+          component={NavLink}
+          to="/Qcm"
+          sx={{
+            "&.active-link": {
+              backgroundColor: "#1e3a8a",
+              color: "#fff",
+              "& .MuiListItemIcon-root": { color: "#fff" },
+            },
+            "&:hover": {
+              backgroundColor: "#d4af37",
+              color: "#1e3a8a",
+              "& .MuiListItemIcon-root": { color: "#1e3a8a" },
+            },
+            transition: "all 0.3s",
+          }}
+        >
           <ListItemIcon>
-            <FactCheckOutlined sx={{ color: "#64b5f6" }} />
+            <FactCheckOutlined sx={{ color: "#1e3a8a" }} />
           </ListItemIcon>
           <ListItemText primary="Tests / QCM" />
         </ListItemButton>
 
-        <ListItemButton component={NavLink} to="/team" activeClassName="active-link">
+        <ListItemButton
+          component={NavLink}
+          to="/team"
+          sx={{
+            "&.active-link": {
+              backgroundColor: "#1e3a8a",
+              color: "#fff",
+              "& .MuiListItemIcon-root": { color: "#fff" },
+            },
+            "&:hover": {
+              backgroundColor: "#d4af37",
+              color: "#1e3a8a",
+              "& .MuiListItemIcon-root": { color: "#1e3a8a" },
+            },
+            transition: "all 0.3s",
+          }}
+        >
           <ListItemIcon>
-            <Groups2 sx={{ color: "#64b5f6" }} />
+            <Groups2 sx={{ color: "#1e3a8a" }} />
           </ListItemIcon>
           <ListItemText primary="Équipe" />
         </ListItemButton>
 
-        <ListItemButton component={NavLink} to="/contact" activeClassName="active-link">
+        <ListItemButton
+          component={NavLink}
+          to="/contact"
+          sx={{
+            "&.active-link": {
+              backgroundColor: "#1e3a8a",
+              color: "#fff",
+              "& .MuiListItemIcon-root": { color: "#fff" },
+            },
+            "&:hover": {
+              backgroundColor: "#d4af37",
+              color: "#1e3a8a",
+              "& .MuiListItemIcon-root": { color: "#1e3a8a" },
+            },
+            transition: "all 0.3s",
+          }}
+        >
           <ListItemIcon>
-            <ContactMailOutlined sx={{ color: "#64b5f6" }} />
+            <ContactMailOutlined sx={{ color: "#1e3a8a" }} />
           </ListItemIcon>
           <ListItemText primary="Contacts" />
         </ListItemButton>

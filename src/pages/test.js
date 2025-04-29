@@ -48,7 +48,7 @@ const Test = () => {
     if (canTakeTest && testData?.questions?.length > 0) {
       const surveyJson = {
         title: "Test technique",
-        maxTimeToFinish: 15,
+        maxTimeToFinish: 30,
         showTimerPanel: "top",
         showTimerPanelMode: "both",
         locale: "fr",

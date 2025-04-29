@@ -6,7 +6,7 @@ import { NavLink } from "react-router-dom";
 
 const navLinks = [
   { label: "Who are we", path: "/about" },
-  { label: "Our work", scroll: true }, // Add scroll flag instead of path
+  { label: "Our work" }, 
   { label: "Our team" },
   { label: "Careers", path: "/careers" },
   { label: "Blog", path: "/blog" },

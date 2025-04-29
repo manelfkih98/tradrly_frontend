@@ -99,25 +99,25 @@ function AllTeam() {
   const [editMode, setEditMode] = useState(false);
   const [selectedTeam, setSelectedTeam] = useState(null);
 
-  // Pagination state
+ 
   const [page, setPage] = useState(1);
-  const rowsPerPage = 5; // Fixed to match AllPostEmploi, AllPostStage, Demande
+  const rowsPerPage = 4; 
 
-  // Search state
+  
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     dispatch(fetchTeam());
   }, [dispatch]);
 
-  // Filtrer les membres en fonction du terme de recherche
+  
   const filteredTeams = teams.filter(
     (team) =>
       (team.name && team.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
       (team.title && team.title.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
-  // Réinitialiser la page à 1 lors de la modification du terme de recherche
+ 
   useEffect(() => {
     setPage(1);
   }, [searchTerm]);
@@ -159,12 +159,12 @@ function AllTeam() {
   const handleOpenDialog = () => setOpenDialog(true);
   const handleCloseDialog = () => setOpenDialog(false);
 
-  // Pagination handler
+ 
   const handlePageChange = (event, value) => {
     setPage(value);
   };
 
-  // Calculate the teams to display for the current page
+  
   const paginatedTeams = filteredTeams.slice(
     (page - 1) * rowsPerPage,
     page * rowsPerPage
