@@ -1,4 +1,3 @@
-// src/services/offreService.js
 import api from "../../config/api";
 import PATHS from "../../path/apiPath";
 

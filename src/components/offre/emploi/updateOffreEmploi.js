@@ -135,22 +135,40 @@ const UpdateOffreEmploi = ({ open, handleClose, offre }) => {
             },
           }}
         />
-        <TextField
-          label="Date de clôture"
-          type="date"
-          fullWidth
-          margin="dense"
-          InputLabelProps={{ shrink: true }}
-          {...register("date_limite", { required: "La date de clôture est requise" })}
-          error={!!errors.date_limite}
-          helperText={errors.date_limite?.message}
-          sx={{
-            '& .MuiOutlinedInput-root': {
-              '&:hover fieldset': { borderColor: '#d4af37' },
-              '&.Mui-focused fieldset': { borderColor: '#1e3a8a' },
-            },
-          }}
-        />
+     <TextField
+                label="Date de clôture"
+                type="date"
+                fullWidth
+                margin="dense"
+                InputLabelProps={{ shrink: true }}
+                inputProps={{
+                  min: offre?.date_limite
+                    ? dayjs(offre.date_limite).format("YYYY-MM-DD")
+                    : undefined,
+                }}
+                {...register("date_limite", {
+                  required: "La date de clôture est requise",
+                  validate: (value) => {
+                    const minDate = offre?.date_limite
+                      ? dayjs(offre.date_limite).format("YYYY-MM-DD")
+                      : null;
+                    return (
+                      !minDate ||
+                      value >= minDate ||
+                      `La date ne peut pas être avant ${minDate}`
+                    );
+                  },
+                })}
+                error={!!errors.date_limite}
+                helperText={errors.date_limite?.message}
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: 2,
+                    "&:hover fieldset": { borderColor: "#d4af37" },
+                    "&.Mui-focused fieldset": { borderColor: "#1e3a8a" },
+                  },
+                }}
+              />
         <FormControl fullWidth margin="dense" error={!!errors.departement}>
           <InputLabel sx={{ '&.Mui-focused': { color: '#1e3a8a' } }}>
             Département

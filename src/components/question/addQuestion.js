@@ -39,7 +39,11 @@ const AddQuestion = ({ onClose }) => {
     formState: { errors },
     setValue,
     reset,
+    watch,
   } = useForm();
+
+  // Surveiller le champ reponse pour la validation
+  const reponseValue = watch("reponse");
 
   useEffect(() => {
     dispatch(fetchDepartments());
@@ -91,6 +95,8 @@ const AddQuestion = ({ onClose }) => {
     try {
       await dispatch(addQuestion(newQuestion));
       reset(); // Reset form after successful submission
+      setPropositions([]); // Réinitialiser les propositions
+      setPropositionInput(""); // Réinitialiser l'input de proposition
       onClose(false); // Close the modal or handle success
     } catch (error) {
       console.error("Error adding question:", error);
@@ -103,17 +109,15 @@ const AddQuestion = ({ onClose }) => {
     <Box
       sx={{
         p: 4,
-       
       }}
     >
       <Paper>
-       
         <Typography
           variant="h5"
           sx={{
             fontWeight: 700,
             color: "#2c3e50",
-            textAlign: "center",
+            textAlig: "center",
             mb: 3,
           }}
         >
@@ -140,7 +144,28 @@ const AddQuestion = ({ onClose }) => {
                 label="Réponse correcte"
                 variant="outlined"
                 fullWidth
-                {...register("reponse", { required: "Ce champ est obligatoire" })}
+                {...register("reponse", {
+                  required: "Ce champ est obligatoire",
+                  validate: {
+                    inPropositions: (value) => {
+                      // Si des propositions existent ou si une proposition est en cours de saisie
+                      const hasPropositions =
+                        propositions.length > 0 || propositionInput.trim();
+                      if (!hasPropositions) return true; // Pas de propositions, validation OK
+                      const allPropositions = [
+                        ...propositions,
+                        ...(propositionInput.trim() &&
+                        !propositions.includes(propositionInput.trim())
+                          ? [propositionInput.trim()]
+                          : []),
+                      ];
+                      return (
+                        allPropositions.includes(value) ||
+                        "La réponse correcte doit être l'une des propositions"
+                      );
+                    },
+                  },
+                })}
                 error={!!errors.reponse}
                 helperText={errors.reponse?.message}
               />
@@ -219,8 +244,10 @@ const AddQuestion = ({ onClose }) => {
                             onClick={() => handleButtonClick(dep.NameDep)}
                             sx={{
                               borderColor: "#1e3a8a",
-                              color: selectedDep === dep.NameDep ? "white" : "#1e3a8a",
-                              bgcolor: selectedDep === dep.NameDep ? "#1e3a8a" : "white",
+                              color:
+                                selectedDep === dep.NameDep ? "white" : "#1e3a8a",
+                              bgcolor:
+                                selectedDep === dep.NameDep ? "#1e3a8a" : "white",
                               borderRadius: 2,
                               textTransform: "none",
                               transition: "all 0.3s",

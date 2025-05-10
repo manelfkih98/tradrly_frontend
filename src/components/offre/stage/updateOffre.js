@@ -18,16 +18,15 @@ import {
   IconButton,
 } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
-
 import { useForm, Controller } from "react-hook-form";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import dayjs from "dayjs";
-import { v4 as uuidv4 } from "uuid";
 
 const UpdateOffre = ({ open, handleClose, offre }) => {
   const dispatch = useDispatch();
-  const { departments, loading: depLoading } = useSelector((state) => state.departments) || {};
+  const { departments, loading: depLoading } =
+    useSelector((state) => state.departments) || {};
 
   const {
     register,
@@ -47,18 +46,18 @@ const UpdateOffre = ({ open, handleClose, offre }) => {
 
   // Charger les départements
   useEffect(() => {
-    console.log("Chargement des départements"); // Débogage
     dispatch(fetchDepartments());
   }, [dispatch]);
 
-  // Initialiser le formulaire avec les données de l'offre
+  // Initialiser les valeurs du formulaire
   useEffect(() => {
-    console.log("Initialisation - Open:", open, "Offre:", offre, "Départements:", departments); // Débogage
     if (open && offre) {
-      // Vérifier si offre.departement correspond à un _id dans departments
-      const departementId = offre.departement?._id || (typeof offre.departement === "string" ? offre.departement : "");
-      const isValidDepartement = departments.some((dep) => dep._id === departementId);
-      console.log("Département initial:", departementId, "Valide:", isValidDepartement); // Débogage
+      const departementId =
+        offre.departement?._id ||
+        (typeof offre.departement === "string" ? offre.departement : "");
+      const isValidDepartement = departments.some(
+        (dep) => dep._id === departementId
+      );
 
       const initialValues = {
         titre: offre.titre || "",
@@ -68,19 +67,24 @@ const UpdateOffre = ({ open, handleClose, offre }) => {
             ? dayjs(offre.date_limite).format("YYYY-MM-DD")
             : "",
         departement: isValidDepartement ? departementId : "",
-        requirements: Array.isArray(offre.requirements) && offre.requirements.length > 0 ? offre.requirements : [""],
+        requirements:
+          Array.isArray(offre.requirements) && offre.requirements.length > 0
+            ? offre.requirements
+            : [""],
       };
-      console.log("Valeurs initiales:", initialValues); // Débogage
+
       reset(initialValues, { keepErrors: false, keepDirty: false });
     } else {
-      console.log("Réinitialisation - Aucun offre ou dialog fermé"); // Débogage
-      reset({
-        titre: "",
-        description: "",
-        date_limite: "",
-        departement: "",
-        requirements: [""],
-      }, { keepErrors: false, keepDirty: false });
+      reset(
+        {
+          titre: "",
+          description: "",
+          date_limite: "",
+          departement: "",
+          requirements: [""],
+        },
+        { keepErrors: false, keepDirty: false }
+      );
     }
   }, [open, offre, departments, reset]);
 
@@ -89,23 +93,26 @@ const UpdateOffre = ({ open, handleClose, offre }) => {
       console.error("Erreur: ID de l'offre manquant");
       return;
     }
+
     const updatedOffre = {
       ...data,
       requirements: data.requirements.filter((req) => req.trim() !== ""),
     };
-    console.log("Données soumises:", updatedOffre); // Débogage
+
     await dispatch(updateOffreStage(offre._id, updatedOffre));
     handleClose();
   };
 
   return (
     <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
-      <DialogTitle sx={{ color: "#1e3a8a", fontWeight: "bold", textAlign: "center" }}>
+      <DialogTitle
+        sx={{ color: "#1e3a8a", fontWeight: "bold", textAlign: "center" }}
+      >
         Modifier l’offre de stage
       </DialogTitle>
       <DialogContent sx={{ pt: 2 }}>
         <Box component="form" noValidate autoComplete="off">
-          {/* Title Field */}
+          {/* Titre */}
           <TextField
             label="Titre de l'offre"
             fullWidth
@@ -124,7 +131,8 @@ const UpdateOffre = ({ open, handleClose, offre }) => {
               },
             }}
           />
-          {/* Description Field */}
+
+          {/* Description */}
           <TextField
             label="Description"
             fullWidth
@@ -145,7 +153,8 @@ const UpdateOffre = ({ open, handleClose, offre }) => {
               },
             }}
           />
-          {/* Requirements Field */}
+
+          {/* Exigences */}
           <FormControl fullWidth margin="dense" error={!!errors.requirements}>
             <InputLabel shrink sx={{ "&.Mui-focused": { color: "#1e3a8a" } }}>
               Exigences
@@ -162,10 +171,9 @@ const UpdateOffre = ({ open, handleClose, offre }) => {
               }}
               render={({ field: { value, onChange } }) => (
                 <Box sx={{ mt: 2 }}>
-                  {console.log("Requirements value:", value)} 
                   {value.map((req, index) => (
                     <Box
-                      key={`req-${uuidv4()}`}
+                      key={`req-${index}`} // ✅ Clé stable
                       sx={{ display: "flex", alignItems: "center", mb: 1 }}
                     >
                       <TextField
@@ -181,14 +189,18 @@ const UpdateOffre = ({ open, handleClose, offre }) => {
                           "& .MuiOutlinedInput-root": {
                             borderRadius: 2,
                             "&:hover fieldset": { borderColor: "#d4af37" },
-                            "&.Mui-focused fieldset": { borderColor: "#1e3a8a" },
+                            "&.Mui-focused fieldset": {
+                              borderColor: "#1e3a8a",
+                            },
                           },
                         }}
                       />
                       {value.length > 1 && (
                         <IconButton
                           onClick={() => {
-                            const newValue = value.filter((_, i) => i !== index);
+                            const newValue = value.filter(
+                              (_, i) => i !== index
+                            );
                             onChange(newValue);
                           }}
                         >
@@ -207,18 +219,31 @@ const UpdateOffre = ({ open, handleClose, offre }) => {
             />
             <FormHelperText>{errors.requirements?.message}</FormHelperText>
           </FormControl>
-          {/* Closing Date Field */}
+
+          {/* Date de clôture */}
           <TextField
             label="Date de clôture"
             type="date"
             fullWidth
             margin="dense"
             InputLabelProps={{ shrink: true }}
+            inputProps={{
+              min: offre?.date_limite
+                ? dayjs(offre.date_limite).format("YYYY-MM-DD")
+                : undefined,
+            }}
             {...register("date_limite", {
               required: "La date de clôture est requise",
-              validate: (value) =>
-                value >= new Date().toISOString().split("T")[0] ||
-                "La date doit être aujourd'hui ou dans le futur",
+              validate: (value) => {
+                const minDate = offre?.date_limite
+                  ? dayjs(offre.date_limite).format("YYYY-MM-DD")
+                  : null;
+                return (
+                  !minDate ||
+                  value >= minDate ||
+                  `La date ne peut pas être avant ${minDate}`
+                );
+              },
             })}
             error={!!errors.date_limite}
             helperText={errors.date_limite?.message}
@@ -230,7 +255,8 @@ const UpdateOffre = ({ open, handleClose, offre }) => {
               },
             }}
           />
-          {/* Department Field */}
+
+          {/* Département */}
           <FormControl
             fullWidth
             margin="dense"
@@ -250,8 +276,12 @@ const UpdateOffre = ({ open, handleClose, offre }) => {
                   onChange={onChange}
                   sx={{
                     borderRadius: 2,
-                    "&:hover .MuiOutlinedInput-notchedOutline": { borderColor: "#d4af37" },
-                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": { borderColor: "#1e3a8a" },
+                    "&:hover .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "#d4af37",
+                    },
+                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "#1e3a8a",
+                    },
                   }}
                 >
                   {depLoading ? (
@@ -275,6 +305,7 @@ const UpdateOffre = ({ open, handleClose, offre }) => {
           </FormControl>
         </Box>
       </DialogContent>
+
       <DialogActions sx={{ px: 3, py: 2 }}>
         <Button
           onClick={handleClose}

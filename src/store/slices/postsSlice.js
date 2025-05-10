@@ -4,6 +4,7 @@ const initialState = {
   posts_stage: [],
   posts_job: [],
   demandes: [],
+  post_by_conadi:[],
   loading: false,
   error: null,
 };
@@ -29,6 +30,12 @@ const postsSlice = createSlice({
       state.loading = false;
       state.error = null;
     },
+    setPostByConadi:(state,action)=>
+    {
+      state.post_by_conadi=action.payload;
+      state.loading=false;
+      state.error=null;
+    },
 
     setLoading: (state) => {
       state.loading = true;
@@ -49,6 +56,7 @@ export const {
   setPostsJob,
   setPostsStage,
   setDemandes,
+  setPostByConadi,
   clearPostsData,
 } = postsSlice.actions;
 

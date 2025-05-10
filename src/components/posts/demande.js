@@ -203,7 +203,7 @@ const Demande = () => {
                                   },
                                 }}
                               >
-                                Test
+                                Envoyer un test
                               </Button>
                             </Tooltip>
                           </Stack>

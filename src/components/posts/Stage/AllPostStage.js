@@ -3,6 +3,7 @@ import {
   fetchPostsStage,
   refuserStage,
 } from "../../../store/services/postsService";
+import { fetchOffresStage } from "../../../store/services/offreService"; // Nouveau service pour récupérer les offres
 import { passerTest } from "../../../store/services/QcmService";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -21,6 +22,10 @@ import {
   Chip,
   styled,
   Pagination,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import DownloadIcon from "@mui/icons-material/Download";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -52,35 +57,92 @@ const StatusChip = styled(Chip)(({ theme, status }) => ({
 const AllPostStage = () => {
   const dispatch = useDispatch();
   const posts = useSelector((state) => state.posts.posts_stage) || [];
-  const loading = useSelector((state) => state.posts.loading);
+  const offres = useSelector((state) => state.offres?.offres?.offreByStage ) || []; // Récupérer les offres depuis le store
+  const loadingPosts = useSelector((state) => state.posts.loading);
+  const loadingOffres = useSelector((state) => state.offres?.loading);
 
   const [page, setPage] = useState(1);
-  const [rowsPerPage] = useState(4); 
+  const [rowsPerPage] = useState(4);
+  const [selectedOffre, setSelectedOffre] = useState(""); // État pour le filtre par offre
 
+  // Charger les candidatures et les offres
   useEffect(() => {
     dispatch(fetchPostsStage());
+    dispatch(fetchOffresStage()); // Charger les offres
   }, [dispatch]);
 
+  // Gérer le refus d'une candidature
   const handleRefuser = (id) => {
     dispatch(refuserStage(id));
   };
 
+  // Gérer le passage au test
   const handlePasseTest = (id) => {
     dispatch(passerTest(id));
   };
 
+  // Gérer le changement de page
   const handlePageChange = (event, value) => {
     setPage(value);
   };
 
-  // Calculate the posts to display for the current page
-  const paginatedPosts = posts.slice(
+  // Gérer le changement de filtre par offre
+  const handleOffreChange = (event) => {
+    setSelectedOffre(event.target.value);
+    setPage(1); // Réinitialiser la page à 1 lors du changement de filtre
+  };
+
+  // Filtrer les candidatures en fonction de l'offre sélectionnée
+  const filteredPosts = selectedOffre
+    ? posts.filter((post) => post.jobId?._id === selectedOffre)
+    : posts;
+
+  // Calculer les candidatures à afficher pour la page actuelle
+  const paginatedPosts = filteredPosts.slice(
     (page - 1) * rowsPerPage,
     page * rowsPerPage
   );
 
   return (
     <Box sx={{ p: 3, maxWidth: 1400, mx: "auto" }}>
+      {/* Filtre par offre */}
+      <Box sx={{ mb: 3, maxWidth: 300 }}>
+        <FormControl fullWidth>
+          <InputLabel id="offre-filter-label">Filtrer par offre</InputLabel>
+          <Select
+            labelId="offre-filter-label"
+            value={selectedOffre}
+            label="Filtrer par offre"
+            onChange={handleOffreChange}
+            sx={{
+              borderRadius: 2,
+              "&:hover .MuiOutlinedInput-notchedOutline": {
+                borderColor: "#d4af37",
+              },
+              "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                borderColor: "#1e3a8a",
+              },
+            }}
+          >
+            <MenuItem value="">Toutes les offres</MenuItem>
+            {loadingOffres ? (
+              <MenuItem disabled>
+                <CircularProgress size={20} sx={{ mr: 1 }} />
+                Chargement...
+              </MenuItem>
+            ) : offres.length > 0 ? (
+              offres.map((offre) => (
+                <MenuItem key={offre._id} value={offre._id}>
+                  {offre.titre}
+                </MenuItem>
+              ))
+            ) : (
+              <MenuItem disabled>Aucune offre disponible</MenuItem>
+            )}
+          </Select>
+        </FormControl>
+      </Box>
+
       <TableContainer
         component={Paper}
         sx={{
@@ -89,20 +151,34 @@ const AllPostStage = () => {
           p: 2,
         }}
       >
-        {loading ? (
+        {loadingPosts ? (
           <CircularProgress sx={{ display: "block", margin: "auto", my: 5 }} />
         ) : (
           <Table>
             <TableHead>
               <TableRow sx={{ backgroundColor: "#1e3a8a" }}>
-                <TableCell align="center"  sx={{ fontWeight: "bold",color:"white" }}>Nom</TableCell>
-                <TableCell align="center" sx={{ fontWeight: "bold",color:"white" }}>Email</TableCell>
-                <TableCell align="center"sx={{ fontWeight: "bold",color:"white" }}>Téléphone</TableCell>
-                <TableCell align="center"sx={{ fontWeight: "bold" ,color:"white"}}>Niveau</TableCell>
-                <TableCell align="center" sx={{ fontWeight: "bold",color:"white" }}>Offre</TableCell>
-                <TableCell align="center" sx={{ fontWeight: "bold",color:"white" }}>CV</TableCell>
-                <TableCell align="center" sx={{ fontWeight: "bold",color:"white" }}>Statut</TableCell>
-                <TableCell align="center" sx={{ fontWeight: "bold"  ,color:"white"}}>
+                <TableCell align="center" sx={{ fontWeight: "bold", color: "white" }}>
+                  Nom
+                </TableCell>
+                <TableCell align="center" sx={{ fontWeight: "bold", color: "white" }}>
+                  Email
+                </TableCell>
+                <TableCell align="center" sx={{ fontWeight: "bold", color: "white" }}>
+                  Téléphone
+                </TableCell>
+                <TableCell align="center" sx={{ fontWeight: "bold", color: "white" }}>
+                  Niveau
+                </TableCell>
+                <TableCell align="center" sx={{ fontWeight: "bold", color: "white" }}>
+                  Offre
+                </TableCell>
+                <TableCell align="center" sx={{ fontWeight: "bold", color: "white" }}>
+                  CV
+                </TableCell>
+                <TableCell align="center" sx={{ fontWeight: "bold", color: "white" }}>
+                  Statut
+                </TableCell>
+                <TableCell align="center" sx={{ fontWeight: "bold", color: "white" }}>
                   Actions
                 </TableCell>
               </TableRow>
@@ -201,7 +277,7 @@ const AllPostStage = () => {
                                   },
                                 }}
                               >
-                                Test
+                                Envoyer un test
                               </Button>
                             </Tooltip>
                           </Stack>
@@ -215,7 +291,7 @@ const AllPostStage = () => {
               ) : (
                 <TableRow>
                   <TableCell colSpan={8} align="center" sx={{ py: 4 }}>
-                    Aucun post trouvé.
+                    Aucune candidature trouvée.
                   </TableCell>
                 </TableRow>
               )}
@@ -225,10 +301,10 @@ const AllPostStage = () => {
       </TableContainer>
 
       {/* Pagination */}
-      {posts.length > rowsPerPage && (
+      {filteredPosts.length > rowsPerPage && (
         <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
           <Pagination
-            count={Math.ceil(posts.length / rowsPerPage)}
+            count={Math.ceil(filteredPosts.length / rowsPerPage)}
             page={page}
             onChange={handlePageChange}
             color="primary"

@@ -8,13 +8,18 @@ import {
   CardContent,
   Grid,
   Avatar,
-  Chip,
   CircularProgress,
   Alert,
   Divider,
   Stack,
+  Tooltip,
 } from "@mui/material";
 import { EmailOutlined, SubjectOutlined } from "@mui/icons-material";
+
+function truncateText(text, maxLength = 100) {
+  if (!text) return "";
+  return text.length > maxLength ? text.substring(0, maxLength) + "..." : text;
+}
 
 function AllContact() {
   const dispatch = useDispatch();
@@ -29,8 +34,6 @@ function AllContact() {
 
   return (
     <Box sx={{ p: 4, minHeight: "100vh" }}>
-      
-
       {loading && (
         <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
           <CircularProgress color="primary" />
@@ -62,7 +65,7 @@ function AllContact() {
                   <Stack direction="row" spacing={2} alignItems="center" mb={2}>
                     <Avatar
                       sx={{
-                        bgcolor: "#1e88e5",
+                        bgcolor: "#1e3a8a",
                         width: 44,
                         height: 44,
                         fontSize: "1rem",
@@ -74,7 +77,6 @@ function AllContact() {
                       <Typography variant="subtitle1" fontWeight="bold">
                         {contact.object}
                       </Typography>
-                     
                     </Box>
                   </Stack>
 
@@ -89,7 +91,11 @@ function AllContact() {
 
                   <Stack direction="row" alignItems="flex-start" spacing={1}>
                     <SubjectOutlined fontSize="small" color="action" sx={{ mt: 0.3 }} />
-                    <Typography variant="body2">{contact.subject}</Typography>
+                    <Tooltip title={contact.subject}>
+                      <Typography variant="body2">
+                        {truncateText(contact.subject, 30)}
+                      </Typography>
+                    </Tooltip>
                   </Stack>
                 </CardContent>
               </Card>

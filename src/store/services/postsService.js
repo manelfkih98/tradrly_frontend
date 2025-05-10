@@ -8,6 +8,8 @@ import {
   setDemandes,
   setPostsJob,
   setPostsStage,
+  setPostByConadi
+ 
 } from "../slices/postsSlice";
 
 export const fetchPostsStage = () => async (dispatch) => {
@@ -87,9 +89,6 @@ export const passerTestStage = (id) => async (dispatch) => {
     dispatch(setError(error.message));
   }
 };
-
-
-
 export const accepterDemande = (id) => async (dispatch) => {
   try {
     const response = await api.post(`${PATHS.POST.ACCEPTER_DEMANDE}/${id}`);
@@ -97,7 +96,6 @@ export const accepterDemande = (id) => async (dispatch) => {
     dispatch(setError(error));
   }
 };
-
 export const postWithoutOffre = () => async (dispatch) => {
   dispatch(setLoading());
   try {
@@ -165,3 +163,36 @@ export const postulerSansOffre = (data) => async (dispatch) => {
     dispatch(setError(error.message));
   }
 };
+
+export const loginCondidat = async (email) => {
+  try {
+    const response = await api.post(PATHS.POST.LOGIN_CONADIDAT_ESPACE, { email });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+export const postByCondidat = (email) => {
+  return async (dispatch) => {
+    try {
+      const response = await api.post(PATHS.POST.POST_CONDIDAT, { email });
+      dispatch(setPostByConadi(response.data));
+    } catch (error) {
+      dispatch(setError(error.message));
+    }
+  };
+};
+
+  export const update_cv = (formData) => {
+    return async (dispatch) => {
+      try {
+        const response = await api.put(PATHS.POST.UPDATE_CV, formData, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
+        
+      } catch (error) {
+        dispatch(setError(error.message));
+      }
+    };
+  };
+  

@@ -26,6 +26,7 @@ import TestInfoPage from "./pages/TestInfoPage";
 import Careers from "./pages/careers";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Postcandidat from "./pages/candidat"
 
 const App = () => {
   const location = useLocation();
@@ -39,6 +40,7 @@ const App = () => {
     "/page_info/:id",
     "/",
     "/careers",
+    "/dashboardcon",
   ];
 
   const shouldHideSidebar = hideSidebarRoutes.some((path) =>
@@ -59,6 +61,7 @@ const App = () => {
         <Route path="/work" element={<WorkShowcase />} />
         <Route path="/" element={<Login />} />
         <Route path="/careers" element={<Careers />} />
+        <Route path="/dashboardcon" element={<Postcandidat/>} />
       </Routes>
     );
   }

@@ -108,7 +108,7 @@ const AllEmploi = () => {
             onClick={() => setOpen(true)}
             sx={{ borderRadius: 20, textTransform: "none", backgroundColor: "#1e3a8a" }}
           >
-            <AddOffreJobIcon sx={{ mr: 1 }} />
+            
             Nouvelle Offre
           </Button>
         </Stack>

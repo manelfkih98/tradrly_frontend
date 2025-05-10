@@ -9,19 +9,15 @@ import {
   MenuItem,
   Typography,
   Divider,
-  InputLabel,
-  FormControl,
-  IconButton,
   Box,
 } from "@mui/material";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchDepartments } from "../../store/services/departService";
 import { styled } from "@mui/material/styles";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import BusinessIcon from "@mui/icons-material/Business";
 
-// Dialog Style with modern glass look
 const StyledDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiPaper-root": {
     borderRadius: 20,
@@ -40,10 +36,6 @@ const StyledTitle = styled(DialogTitle)(({ theme }) => ({
   fontSize: "1.4rem",
   backgroundColor: "#1e3a8a",
   color: "#fff",
-  borderTopLeftRadius: 20,
-  borderTopRightRadius: 20,
-  padding: "16px 24px",
-  textAlign: "center",
 }));
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
@@ -67,39 +59,16 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
     "&.Mui-focused": {
       color: "#1e3a8a",
     },
-  },
-}));
-
-const StyledFormControl = styled(FormControl)(({ theme }) => ({
-  marginBottom: "20px",
-  "& .MuiOutlinedInput-root": {
-    borderRadius: 10,
-    backgroundColor: "#f4f6f8",
-    transition: "all 0.3s ease",
-    "& fieldset": {
-      borderColor: theme.palette.grey[300],
-    },
-    "&:hover fieldset": {
-      borderColor: "#d4af37",
-    },
-    "&.Mui-focused fieldset": {
-      borderColor: "#1e3a8a",
+    "&:after": {
+      content: '" *"',
+      color: "#b91c1c",
     },
   },
-  "& .MuiInputLabel-root": {
-    color: theme.palette.grey[600],
-    "&.Mui-focused": {
-      color: "#1e3a8a",
-    },
+  "& .MuiFormHelperText-root": {
+    color: "#b91c1c",
+    fontSize: "0.85rem",
+    marginLeft: "4px",
   },
-}));
-
-const ErrorText = styled(Typography)(({ theme }) => ({
-  color: "#b91c1c",
-  fontSize: "0.85rem",
-  marginTop: "-16px",
-  marginBottom: "12px",
-  marginLeft: "4px",
 }));
 
 const StyledButton = styled(Button)(({ theme }) => ({
@@ -136,13 +105,13 @@ function AddSolution({ open, handleClose, onSubmitSolution, editingSolution }) {
   const {
     register,
     handleSubmit,
-    control,
     setValue,
     formState: { errors },
     reset,
   } = useForm();
 
   const [selectedFile, setSelectedFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
 
   useEffect(() => {
     dispatch(fetchDepartments());
@@ -151,20 +120,30 @@ function AddSolution({ open, handleClose, onSubmitSolution, editingSolution }) {
   useEffect(() => {
     if (editingSolution) {
       setValue("name_project", editingSolution.name_project || "");
-     
       setValue("date_creation", editingSolution.date_creation?.substring(0, 10) || "");
-      setValue("departement_name", editingSolution.departementId?.NameDep || "");
-      setSelectedFile(null); // Reset file input during edit
+
+      const depId = editingSolution.departementId?._id || editingSolution.departementId;
+      const matchedDep = departments.find((dep) => dep._id === depId);
+      if (matchedDep) {
+        setValue("departement_name", matchedDep.NameDep);
+      } else {
+        setValue("departement_name", "");
+      }
+
+      setSelectedFile(null);
+      setPreviewUrl(null);
     } else {
       reset();
       setSelectedFile(null);
+      setPreviewUrl(null);
     }
-  }, [editingSolution, setValue, reset]);
+  }, [editingSolution, setValue, reset, departments]);
 
   useEffect(() => {
     if (!open) {
       reset();
       setSelectedFile(null);
+      setPreviewUrl(null);
     }
   }, [open, reset]);
 
@@ -181,6 +160,7 @@ function AddSolution({ open, handleClose, onSubmitSolution, editingSolution }) {
     onSubmitSolution(formData);
     reset();
     setSelectedFile(null);
+    setPreviewUrl(null);
     handleClose();
   };
 
@@ -188,6 +168,7 @@ function AddSolution({ open, handleClose, onSubmitSolution, editingSolution }) {
     const file = e.target.files[0];
     if (file) {
       setSelectedFile(file);
+      setPreviewUrl(URL.createObjectURL(file));
     }
   };
 
@@ -200,7 +181,7 @@ function AddSolution({ open, handleClose, onSubmitSolution, editingSolution }) {
       <DialogContent sx={{ px: { xs: 3, sm: 4 }, pt: { xs: 2, sm: 3 } }}>
         <Typography
           variant="body2"
-          sx={{ mb: 3, color: "#4b5563", fontStyle: "italic", fontSize: "0.9rem" }}
+          sx={{ mb: 2, mt: 1, color: "#4b5563", fontStyle: "italic", fontSize: "0.9rem" }}
         >
           {editingSolution
             ? "Modifiez les informations pour mettre à jour le projet."
@@ -219,8 +200,6 @@ function AddSolution({ open, handleClose, onSubmitSolution, editingSolution }) {
             helperText={errors.name_project?.message}
           />
 
-        
-
           <StyledTextField
             label="Date de création"
             type="date"
@@ -234,59 +213,52 @@ function AddSolution({ open, handleClose, onSubmitSolution, editingSolution }) {
             helperText={errors.date_creation?.message}
           />
 
-          <StyledFormControl fullWidth variant="outlined" error={!!errors.departement_name}>
-          
-            <Controller
-              name="departement_name"
-              control={control}
-              rules={{ required: "Le département est requis" }}
-              render={({ field: { onChange, value } }) => (
-                <TextField
-                  select
-                  value={value || ""}
-                  onChange={onChange}
-                  variant="outlined"
-                  label="Département"
-                  InputProps={{
-                    startAdornment: (
-                      <BusinessIcon sx={{ color: "#1e3a8a", mr: 1 }} />
-                    ),
-                  }}
-                >
-                  {departments.length > 0 ? (
-                    departments.map((dep) => (
-                      <MenuItem key={dep._id} value={dep.NameDep}>
-                        {dep.NameDep}
-                      </MenuItem>
-                    ))
-                  ) : (
-                    <MenuItem disabled>Aucun département disponible</MenuItem>
-                  )}
-                </TextField>
-              )}
-            />
-            {errors.departement_name && (
-              <ErrorText>{errors.departement_name.message}</ErrorText>
+          <StyledTextField
+            select
+            label="Département"
+            fullWidth
+            variant="outlined"
+            {...register("departement_name", {
+              required: "Le département est requis",
+            })}
+            error={!!errors.departement_name}
+            helperText={errors.departement_name?.message}
+            InputProps={{
+              startAdornment: (
+                <BusinessIcon sx={{ color: "#1e3a8a", mr: 1 }} />
+              ),
+            }}
+          >
+            {departments.length > 0 ? (
+              departments.map((dep) => (
+                <MenuItem key={dep._id} value={dep.NameDep}>
+                  {dep.NameDep}
+                </MenuItem>
+              ))
+            ) : (
+              <MenuItem disabled>Aucun département disponible</MenuItem>
             )}
-          </StyledFormControl>
+          </StyledTextField>
 
           <Box sx={{ mb: 3 }}>
-            <FileInputButton
-              component="label"
-              startIcon={<UploadFileIcon />}
-            >
+            <FileInputButton component="label" startIcon={<UploadFileIcon />}>
               {selectedFile ? "Changer l'image" : "Téléverser une image"}
-              <input
-                type="file"
-                accept="image/*"
-                hidden
-                onChange={handleFileChange}
-              />
+              <input type="file" accept="image/*" hidden onChange={handleFileChange} />
             </FileInputButton>
-            {selectedFile && (
-              <Typography variant="body2" sx={{ mt: 1, color: "#1e3a8a" }}>
-                Fichier sélectionné : {selectedFile.name}
-              </Typography>
+
+            {previewUrl && (
+              <Box sx={{ mt: 2, textAlign: "center" }}>
+                <img
+                  src={previewUrl}
+                  alt="Aperçu"
+                  style={{
+                    maxWidth: "100%",
+                    maxHeight: "200px",
+                    borderRadius: "12px",
+                    boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
+                  }}
+                />
+              </Box>
             )}
           </Box>
 

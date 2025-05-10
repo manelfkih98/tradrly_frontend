@@ -64,9 +64,10 @@ const Sidebar = () => {
           to="/dashboard"
           sx={{
             "&.active-link": {
-              backgroundColor: "#1e3a8a",
-              color: "#fff",
-              "& .MuiListItemIcon-root": { color: "#fff" },
+              backgroundColor: "#d4af37", // Gold for active state (same as hover)
+              color: "#1e3a8a",
+              "& .MuiListItemIcon-root": { color: "#1e3a8a" },
+              "& .MuiListItemText-primary": { fontWeight: "bold" },
             },
             "&:hover": {
               backgroundColor: "#d4af37",
@@ -87,9 +88,10 @@ const Sidebar = () => {
           to="/departement"
           sx={{
             "&.active-link": {
-              backgroundColor: "#1e3a8a",
-              color: "#fff",
-              "& .MuiListItemIcon-root": { color: "#fff" },
+              backgroundColor: "#d4af37",
+              color: "#1e3a8a",
+              "& .MuiListItemIcon-root": { color: "#1e3a8a" },
+              "& .MuiListItemText-primary": { fontWeight: "bold" },
             },
             "&:hover": {
               backgroundColor: "#d4af37",
@@ -110,9 +112,10 @@ const Sidebar = () => {
           to="/solution"
           sx={{
             "&.active-link": {
-              backgroundColor: "#1e3a8a",
-              color: "#fff",
-              "& .MuiListItemIcon-root": { color: "#fff" },
+              backgroundColor: "#d4af37",
+              color: "#1e3a8a",
+              "& .MuiListItemIcon-root": { color: "#1e3a8a" },
+              "& .MuiListItemText-primary": { fontWeight: "bold" },
             },
             "&:hover": {
               backgroundColor: "#d4af37",
@@ -132,11 +135,6 @@ const Sidebar = () => {
         <ListItemButton
           onClick={() => setOpenOffre(!openOffre)}
           sx={{
-            "&.active-link": {
-              backgroundColor: "#1e3a8a",
-              color: "#fff",
-              "& .MuiListItemIcon-root": { color: "#fff" },
-            },
             "&:hover": {
               backgroundColor: "#d4af37",
               color: "#1e3a8a",
@@ -160,9 +158,10 @@ const Sidebar = () => {
               to="/offre/stage"
               sx={{
                 "&.active-link": {
-                  backgroundColor: "#1e3a8a",
-                  color: "#fff",
-                  "& .MuiListItemIcon-root": { color: "#fff" },
+                  backgroundColor: "#d4af37",
+                  color: "#1e3a8a",
+                  "& .MuiListItemIcon-root": { color: "#1e3a8a" },
+                  "& .MuiListItemText-primary": { fontWeight: "bold" },
                 },
                 "&:hover": {
                   backgroundColor: "#d4af37",
@@ -182,9 +181,10 @@ const Sidebar = () => {
               to="/offre/emploi"
               sx={{
                 "&.active-link": {
-                  backgroundColor: "#1e3a8a",
-                  color: "#fff",
-                  "& .MuiListItemIcon-root": { color: "#fff" },
+                  backgroundColor: "#d4af37",
+                  color: "#1e3a8a",
+                  "& .MuiListItemIcon-root": { color: "#1e3a8a" },
+                  "& .MuiListItemText-primary": { fontWeight: "bold" },
                 },
                 "&:hover": {
                   backgroundColor: "#d4af37",
@@ -206,11 +206,6 @@ const Sidebar = () => {
         <ListItemButton
           onClick={() => setOpenPost(!openPost)}
           sx={{
-            "&.active-link": {
-              backgroundColor: "#1e3a8a",
-              color: "#fff",
-              "& .MuiListItemIcon-root": { color: "#fff" },
-            },
             "&:hover": {
               backgroundColor: "#d4af37",
               color: "#1e3a8a",
@@ -223,7 +218,7 @@ const Sidebar = () => {
           <ListItemIcon>
             <PersonOutline sx={{ color: "#1e3a8a" }} />
           </ListItemIcon>
-          <ListItemText primary="Postulations" />
+          <ListItemText primary="gestion des candidats" />
           {openPost ? <ExpandLess sx={{ color: "#1e3a8a" }} /> : <ExpandMore sx={{ color: "#1e3a8a" }} />}
         </ListItemButton>
 
@@ -234,9 +229,10 @@ const Sidebar = () => {
               to="/post/stage"
               sx={{
                 "&.active-link": {
-                  backgroundColor: "#1e3a8a",
-                  color: "#fff",
-                  "& .MuiListItemIcon-root": { color: "#fff" },
+                  backgroundColor: "#d4af37",
+                  color: "#1e3a8a",
+                  "& .MuiListItemIcon-root": { color: "#1e3a8a" },
+                  "& .MuiListItemText-primary": { fontWeight: "bold" },
                 },
                 "&:hover": {
                   backgroundColor: "#d4af37",
@@ -256,9 +252,10 @@ const Sidebar = () => {
               to="/post/emploi"
               sx={{
                 "&.active-link": {
-                  backgroundColor: "#1e3a8a",
-                  color: "#fff",
-                  "& .MuiListItemIcon-root": { color: "#fff" },
+                  backgroundColor: "#d4af37",
+                  color: "#1e3a8a",
+                  "& .MuiListItemIcon-root": { color: "#1e3a8a" },
+                  "& .MuiListItemText-primary": { fontWeight: "bold" },
                 },
                 "&:hover": {
                   backgroundColor: "#d4af37",
@@ -282,9 +279,10 @@ const Sidebar = () => {
           to="/PostWithoutOffre"
           sx={{
             "&.active-link": {
-              backgroundColor: "#1e3a8a",
-              color: "#fff",
-              "& .MuiListItemIcon-root": { color: "#fff" },
+              backgroundColor: "#d4af37",
+              color: "#1e3a8a",
+              "& .MuiListItemIcon-root": { color: "#1e3a8a" },
+              "& .MuiListItemText-primary": { fontWeight: "bold" },
             },
             "&:hover": {
               backgroundColor: "#d4af37",
@@ -305,9 +303,10 @@ const Sidebar = () => {
           to="/question"
           sx={{
             "&.active-link": {
-              backgroundColor: "#1e3a8a",
-              color: "#fff",
-              "& .MuiListItemIcon-root": { color: "#fff" },
+              backgroundColor: "#d4af37",
+              color: "#1e3a8a",
+              "& .MuiListItemIcon-root": { color: "#1e3a8a" },
+              "& .MuiListItemText-primary": { fontWeight: "bold" },
             },
             "&:hover": {
               backgroundColor: "#d4af37",
@@ -328,9 +327,10 @@ const Sidebar = () => {
           to="/Qcm"
           sx={{
             "&.active-link": {
-              backgroundColor: "#1e3a8a",
-              color: "#fff",
-              "& .MuiListItemIcon-root": { color: "#fff" },
+              backgroundColor: "#d4af37",
+              color: "#1e3a8a",
+              "& .MuiListItemIcon-root": { color: "#1e3a8a" },
+              "& .MuiListItemText-primary": { fontWeight: "bold" },
             },
             "&:hover": {
               backgroundColor: "#d4af37",
@@ -351,9 +351,10 @@ const Sidebar = () => {
           to="/team"
           sx={{
             "&.active-link": {
-              backgroundColor: "#1e3a8a",
-              color: "#fff",
-              "& .MuiListItemIcon-root": { color: "#fff" },
+              backgroundColor: "#d4af37",
+              color: "#1e3a8a",
+              "& .MuiListItemIcon-root": { color: "#1e3a8a" },
+              "& .MuiListItemText-primary": { fontWeight: "bold" },
             },
             "&:hover": {
               backgroundColor: "#d4af37",
@@ -374,9 +375,10 @@ const Sidebar = () => {
           to="/contact"
           sx={{
             "&.active-link": {
-              backgroundColor: "#1e3a8a",
-              color: "#fff",
-              "& .MuiListItemIcon-root": { color: "#fff" },
+              backgroundColor: "#d4af37",
+              color: "#1e3a8a",
+              "& .MuiListItemIcon-root": { color: "#1e3a8a" },
+              "& .MuiListItemText-primary": { fontWeight: "bold" },
             },
             "&:hover": {
               backgroundColor: "#d4af37",

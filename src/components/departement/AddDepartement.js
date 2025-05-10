@@ -118,7 +118,7 @@ function AddDepartement({ open, handleClose, handleSubmit, editingDepartment }) 
       <DialogContent sx={{ px: { xs: 3, sm: 4 }, pt: { xs: 2, sm: 3 } }}>
         <Typography
           variant="body2"
-          sx={{ mb: 3, color: "#4b5563", fontStyle: "italic", fontSize: "0.9rem" }}
+          sx={{   mt: 2, mb: 1, color: "#4b5563", fontStyle: "italic", fontSize: "0.9rem" }}
         >
           {editingDepartment
             ? "Modifiez les informations pour mettre à jour le département."
