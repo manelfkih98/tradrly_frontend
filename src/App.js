@@ -41,6 +41,7 @@ const App = () => {
     "/",
     "/careers",
     "/dashboardcon",
+    "/analysecv",
   ];
 
   const shouldHideSidebar = hideSidebarRoutes.some((path) =>

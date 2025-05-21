@@ -24,7 +24,7 @@ function JobCard({ job, onViewDetails, onApply }) {
           height: '100%',
           display: 'flex',
           flexDirection: 'column',
-          background: 'linear-gradient(135deg, #ffffff 0%, #e0f2fe 100%)',
+          background: 'linear-gradient(135deg, #ffffff 0%,rgb(188, 185, 223) 100%,rgba(145, 64, 145, 0.27))',
           borderRadius: '12px',
           border: '1px solid rgba(255, 255, 255, 0.3)',
           backdropFilter: 'blur(8px)',
@@ -112,9 +112,9 @@ function JobCard({ job, onViewDetails, onApply }) {
             <Button
               size="small"
               sx={{
-                color: '#1e3a8a',
+                color: '#914091',
                 fontWeight: 600,
-                '&:hover': { color: '#d4af37' },
+               
               }}
               onClick={() => onViewDetails(job)}
               aria-label={`Voir les détails de ${job.titre}`}
@@ -132,8 +132,8 @@ function JobCard({ job, onViewDetails, onApply }) {
                 fontWeight: 600,
                 px: 3,
                 '&:hover': {
-                  bgcolor: '#d4af37',
-                  color: '#1e3a8a',
+                  bgcolor: '#914091',
+                
                 },
               }}
               onClick={() => onApply(job)}

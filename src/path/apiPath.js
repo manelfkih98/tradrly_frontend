@@ -41,7 +41,8 @@ POST:{
   POST_SPONPONTANE:`${BASE_URL}/post/addPostWithoutOffre`,
   LOGIN_CONADIDAT_ESPACE:`${BASE_URL}/post/loginEmail`,
   POST_CONDIDAT:`${BASE_URL}/post/postByEmail`,
-  UPDATE_CV :`${BASE_URL}/post/update-cv`,
+  UPDATE_Post :`${BASE_URL}/post/updatePost`,
+  GET_CV :`${BASE_URL}/post/getPostByFileName`,
    
 
 

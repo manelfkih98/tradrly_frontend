@@ -2,33 +2,45 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchQcm } from "../../store/services/QcmService";
 import {
+  Box,
+  Grid,
   Card,
   CardContent,
-  Typography,
   Avatar,
-  Box,
-  Stack,
-  Chip,
-  Grid,
+  Typography,
   CircularProgress,
+  Chip,
   Divider,
+  Stack,
+  Fade,
 } from "@mui/material";
 import MailIcon from "@mui/icons-material/Email";
 import PhoneIcon from "@mui/icons-material/Phone";
-import ScoreIcon from "@mui/icons-material/EmojiEvents";
 import { styled } from "@mui/system";
 
-// Style pour une carte professionnelle
-const ProfessionalCard = styled(Card)(({ theme }) => ({
-  backgroundColor: "#ffffff",
-  border: "1px solid #e8ecef",
-  borderRadius: "12px",
-  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.05)",
-  transition: "box-shadow 0.2s ease-in-out",
+const StyledCard = styled(Card)({
+  borderRadius: 10,
+  backgroundColor: "#F8FAFC",
+  border: "1px solid #E5E7EB",
+  boxShadow: "0 2px 6px rgba(0, 0, 0, 0.05)",
+  transition: "border-color 0.3s ease, box-shadow 0.3s ease",
   "&:hover": {
-    boxShadow: "0 4px 16px rgba(0, 0, 0, 0.1)",
+    borderColor: "#914091",
+    boxShadow: "0 4px 12px rgba(145, 64, 145, 0.15)",
   },
-}));
+});
+
+const StyledAvatar = styled(Avatar)({
+  width: 40,
+  height: 40,
+  backgroundColor: "#1E3A8A",
+  fontSize: "1.2rem",
+  border: "2px solid #DBEAFE",
+  transition: "transform 0.3s ease",
+  "&:hover": {
+    transform: "scale(1.1)",
+  },
+});
 
 const AllQcm = () => {
   const QCMs = useSelector((state) => state.Qcms.QCM);
@@ -39,119 +51,111 @@ const AllQcm = () => {
   }, [dispatch]);
 
   return (
-    <Box sx={{ p: { xs: 2, md: 4 }, minHeight: "100vh" }}>
+    <Box
+      sx={{
+        p: { xs: 3, md: 4 },
+        backgroundColor: "#F8FAFC",
+        minHeight: "100vh",
+        maxWidth: "1200px",
+        mx: "auto",
+        fontFamily: "'Poppins', sans-serif",
+      }}
+    >
       {QCMs === undefined ? (
         <Box sx={{ display: "flex", justifyContent: "center", mt: 6 }}>
-          <CircularProgress color="primary" />
+          <CircularProgress sx={{ color: "#914091" }} />
         </Box>
       ) : QCMs.length === 0 ? (
         <Typography
           align="center"
           variant="h6"
-          color="text.secondary"
-          sx={{ mt: 6, fontWeight: 500 }}
+          sx={{ mt: 6, color: "#1E3A8A", fontWeight: 500 }}
         >
           Aucun QCM trouvé.
         </Typography>
       ) : (
         <Grid container spacing={3}>
-          {QCMs.map((qcm) => (
-            <Grid item xs={12} sm={6} md={4} key={qcm._id}>
-              <ProfessionalCard>
-                <CardContent sx={{ p: 3 }}>
-                  {/* En-tête avec avatar et nom */}
-                  <Stack direction="row" alignItems="center" spacing={2} mb={2}>
-                    <Avatar
-                      sx={{
-                        bgcolor: "#003087",
-                        width: 48,
-                        height: 48,
-                        fontSize: 20,
-                        fontWeight: 600,
-                      }}
-                    >
-                      {qcm.post_id?.name?.charAt(0).toUpperCase()}
-                    </Avatar>
-                    <Box>
-                      <Typography
-                        variant="h6"
-                        fontWeight={600}
-                        color="#1a202c"
-                      >
-                        {qcm.post_id?.name}
-                      </Typography>
-                      <Typography
-                        variant="body2"
-                        color="text.secondary"
-                        fontWeight={500}
-                      >
-                        {qcm.post_id?.jobId?.titre || "Poste non spécifié"}
-                      </Typography>
-                    </Box>
-                  </Stack>
+          {QCMs.map((qcm) => {
+            const total = qcm.questions?.length || 1;
+            const score = qcm.resultat || 0;
+            const percentage = Math.round((score / total) * 100);
+            const isSuccess = percentage >= 50;
 
-                  <Divider sx={{ my: 2, borderColor: "#e8ecef" }} />
+            return (
+              <Grid item xs={12} sm={6} md={4} key={qcm._id}>
+                <Fade in timeout={600}>
+                  <StyledCard>
+                    <CardContent sx={{ p: 2.5 }}>
+                      <Stack direction="row" spacing={2} alignItems="center" mb={2}>
+                        <StyledAvatar>
+                          {qcm.post_id?.name?.charAt(0).toUpperCase() || "?"}
+                        </StyledAvatar>
+                        <Box>
+                          <Typography
+                            variant="h6"
+                            fontWeight={600}
+                            sx={{ color: "#1E3A8A" }}
+                          >
+                            {qcm.post_id?.name || "Sans nom"}
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            sx={{ color: "#1E3A8A", opacity: 0.7 }}
+                          >
+                            {qcm.post_id?.jobId?.titre || "Poste non spécifié"}
+                          </Typography>
+                        </Box>
+                      </Stack>
 
-                  {/* Informations de contact */}
-                  <Stack spacing={1.5} mb={2}>
-                    <Box display="flex" alignItems="center" gap={1.5}>
-                      <MailIcon
-                        fontSize="small"
-                        sx={{ color: "#6b7280" }}
-                      />
-                      <Typography
-                        variant="body2"
-                        color="#374151"
-                        fontWeight={400}
-                      >
-                        {qcm.post_id?.email}
-                      </Typography>
-                    </Box>
-                    <Box display="flex" alignItems="center" gap={1.5}>
-                      <PhoneIcon
-                        fontSize="small"
-                        sx={{ color: "#6b7280" }}
-                      />
-                      <Typography
-                        variant="body2"
-                        color="#374151"
-                        fontWeight={400}
-                      >
-                        {qcm.post_id?.number}
-                      </Typography>
-                    </Box>
-                  </Stack>
+                      <Divider sx={{ my: 1.5, borderColor: "#E5E7EB", width: "80%", mx: "auto" }} />
 
-                  {/* Score */}
-                  <Chip
-                    icon={
-                      <ScoreIcon
-                        sx={{ fontSize: 18, color: "inherit" }}
-                      />
-                    }
-                    label={`Score : ${qcm.resultat} / ${qcm.questions?.length}`}
-                    color={
-                      qcm.resultat >= (qcm.questions?.length || 1) / 2
-                        ? "success"
-                        : "error"
-                    }
-                    variant="outlined"
-                    sx={{
-                      fontWeight: 500,
-                      borderRadius: 2,
-                      fontSize: "0.85rem",
-                      bgcolor: qcm.resultat >= (qcm.questions?.length || 1) / 2
-                        ? "rgba(34, 197, 94, 0.1)"
-                        : "rgba(239, 68, 68, 0.1)",
-                      borderColor: qcm.resultat >= (qcm.questions?.length || 1) / 2
-                        ? "rgba(34, 197, 94, 0.5)"
-                        : "rgba(239, 68, 68, 0.5)",
-                    }}
-                  />
-                </CardContent>
-              </ProfessionalCard>
-            </Grid>
-          ))}
+                      <Stack spacing={1.5} mb={2}>
+                        <Box display="flex" alignItems="center" gap={1}>
+                          <MailIcon
+                            fontSize="small"
+                            sx={{ color: "#914091", "&:hover": { color: "#1E3A8A" } }}
+                          />
+                          <Typography variant="body2" sx={{ color: "#1E3A8A" }}>
+                            {qcm.post_id?.email || "—"}
+                          </Typography>
+                        </Box>
+                        <Box display="flex" alignItems="center" gap={1}>
+                          <PhoneIcon
+                            fontSize="small"
+                            sx={{ color: "#914091", "&:hover": { color: "#1E3A8A" } }}
+                          />
+                          <Typography variant="body2" sx={{ color: "#1E3A8A" }}>
+                            {qcm.post_id?.number || "—"}
+                          </Typography>
+                        </Box>
+                      </Stack>
+
+                      <Divider sx={{ my: 1.5, borderColor: "#E5E7EB", width: "80%", mx: "auto" }} />
+
+                      <Box display="flex" justifyContent="space-between" alignItems="center">
+                        <Chip
+                          label={`Score : ${score}/${total}`}
+                          sx={{
+                            fontWeight: 500,
+                            bgcolor: isSuccess ? "#DBEAFE" : "#FFF1F2",
+                            color: isSuccess ? "green" : "#EF4444",
+                            borderRadius: 1,
+                          }}
+                        />
+                        <Typography
+                          variant="body2"
+                          fontWeight={600}
+                          sx={{ color: isSuccess ? "green" : "#EF4444" }}
+                        >
+                          {percentage}%
+                        </Typography>
+                      </Box>
+                    </CardContent>
+                  </StyledCard>
+                </Fade>
+              </Grid>
+            );
+          })}
         </Grid>
       )}
     </Box>

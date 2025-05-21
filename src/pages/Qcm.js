@@ -8,9 +8,9 @@ const Qcm = () => {
     <Box sx={{ margin: "auto", mt: 8, px: 2, minHeight: "100vh" }}>
       {/* En-tête de la page */}
       <Box display="flex" alignItems="center" mb={4}>
-        <FactCheckIcon sx={{ fontSize: 30, color: "#1976d2", mr: 1 }} />
+        <FactCheckIcon sx={{ fontSize: 30, color: "#914091", mr: 1 }} />
         <Box>
-          <Typography variant="h5" fontWeight="bold">
+          <Typography variant="h5" fontWeight="bold" color="#1E3A8A">
             Espace Résultats QCM
           </Typography>
           <Typography variant="subtitle2" color="text.secondary">

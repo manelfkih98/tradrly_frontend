@@ -99,10 +99,9 @@ const Demande = () => {
           <Table>
             <TableHead>
               <TableRow sx={{ backgroundColor: "#1e3a8a" }}>
-                <TableCell  align="center"sx={{ fontWeight: "bold",color:"white" }}>Nom</TableCell>
+                <TableCell  align="center"sx={{ fontWeight: "bold",color:"white" }}>Candidat</TableCell>
                 <TableCell align="center"sx={{ fontWeight: "bold" ,color:"white"}}>Email</TableCell>
                 <TableCell align="center"sx={{ fontWeight: "bold" ,color:"white"}}>Téléphone</TableCell>
-                <TableCell  align="center"sx={{ fontWeight: "bold" ,color:"white"}}>Niveau</TableCell>
                 <TableCell align="center"sx={{ fontWeight: "bold" ,color:"white"}}>CV</TableCell>
                 <TableCell align="center"sx={{ fontWeight: "bold" ,color:"white"}}>Status</TableCell>
                 <TableCell align="center" sx={{ fontWeight: "bold" ,color:"white"}}>
@@ -125,16 +124,15 @@ const Demande = () => {
                         },
                       }}
                     >
-                      <TableCell>{post.name}</TableCell>
+                      <TableCell>{post.nom } {post.prenom}</TableCell>
                       <TableCell>{post.email}</TableCell>
                       <TableCell>{post.number}</TableCell>
-                      <TableCell>{post.niveau}</TableCell>
                       <TableCell>
                         <Button
                           variant="outlined"
                           size="small"
                           startIcon={<DownloadIcon />}
-                          href={post.cv_local_url}
+                          href={post.cv_google_drive_url}
                           target="_blank"
                           rel="noopener noreferrer"
                           sx={{

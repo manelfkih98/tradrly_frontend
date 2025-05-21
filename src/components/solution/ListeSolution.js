@@ -36,12 +36,12 @@ import {
 import AddSolution from "./AddSolution";
 import { styled } from "@mui/material/styles";
 
-// Bouton animé
 const AnimatedIconButton = styled(IconButton)(({ theme }) => ({
-  transition: "transform 0.2s ease-in-out, color 0.3s ease",
+  transition: "transform 0.2s ease-in-out, color 0.3s ease, background-color 0.3s ease",
   "&:hover": {
     transform: "scale(1.2)",
-    color: "#d4af37",
+    color: "#914091",
+    backgroundColor: "#EDE9FE",
   },
 }));
 
@@ -65,8 +65,8 @@ function ListesSolution() {
       text: "Cette action est irréversible !",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#b91c1c",
-      cancelButtonColor: "#1e3a8a",
+      confirmButtonColor: "#914091",
+      cancelButtonColor: "#1E3A8A",
       confirmButtonText: "Oui, supprimer !",
       cancelButtonText: "Annuler",
     }).then((result) => {
@@ -122,7 +122,6 @@ function ListesSolution() {
         project.description_project.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
-  // Pagination
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentProjects = filteredProjects.slice(indexOfFirstItem, indexOfLastItem);
@@ -134,7 +133,6 @@ function ListesSolution() {
 
   return (
     <Box>
-      {/* Recherche + Bouton ajouter */}
       <Grid
         container
         justifyContent="space-between"
@@ -151,22 +149,25 @@ function ListesSolution() {
             value={searchTerm}
             onChange={(e) => {
               setSearchTerm(e.target.value);
-              setCurrentPage(1); // reset page si recherche
+              setCurrentPage(1);
             }}
             InputProps={{
               startAdornment: (
-                <SearchIcon sx={{ color: "#1e3a8a", mr: 1 }} />
+                <SearchIcon sx={{ color: "#1E3A8A", mr: 1, transition: "color 0.3s" }} />
               ),
             }}
             sx={{
-              backgroundColor: "#f4f6f8",
+              backgroundColor: "#F8FAFC",
               borderRadius: 2,
               "& .MuiOutlinedInput-root": {
+                "& fieldset": {
+                  borderColor: "#1E3A8A",
+                },
                 "&:hover fieldset": {
-                  borderColor: "#d4af37",
+                  borderColor: "#914091",
                 },
                 "&.Mui-focused fieldset": {
-                  borderColor: "#1e3a8a",
+                  borderColor: "#914091",
                 },
               },
               transition: "all 0.3s ease",
@@ -179,15 +180,15 @@ function ListesSolution() {
             startIcon={<AddIcon sx={{ fontSize: "1.5rem" }} />}
             onClick={handleOpen}
             sx={{
-              backgroundColor: "#1e3a8a",
-              color: "#ffffff",
+              backgroundColor: "#914091",
+              color: "#FFFFFF",
               borderRadius: 2,
               px: 4,
               py: 1.5,
               fontWeight: 600,
               "&:hover": {
-                backgroundColor: "#d4af37",
-                boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
+                backgroundColor: "#7E3A8A",
+                boxShadow: "0 4px 8px rgba(145, 64, 145, 0.3)",
               },
               transition: "all 0.3s ease",
             }}
@@ -197,15 +198,14 @@ function ListesSolution() {
         </Grid>
       </Grid>
 
-      {/* Loading / Error / Table */}
       {loading ? (
         <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
-          <CircularProgress sx={{ color: "#1e3a8a" }} />
+          <CircularProgress sx={{ color: "#1E3A8A" }} />
         </Box>
       ) : error ? (
         <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", py: 4, gap: 1 }}>
-          <ErrorOutlineIcon sx={{ color: "#b91c1c" }} />
-          <Typography color="#b91c1c" align="center">
+          <ErrorOutlineIcon sx={{ color: "#1E3A8A" }} />
+          <Typography color="#1E3A8A" align="center">
             Erreur: {error}
           </Typography>
         </Box>
@@ -216,17 +216,18 @@ function ListesSolution() {
             sx={{
               borderRadius: 3,
               boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+              backgroundColor: "#FFFFFF",
               overflowX: "auto",
             }}
           >
             <Table>
               <TableHead>
-                <TableRow sx={{ backgroundColor: "#1e3a8a" }}>
-                  <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Projet</TableCell>
-                  <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Date</TableCell>
-                  <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Image</TableCell>
-                  <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Département</TableCell>
-                  <TableCell align="center" sx={{ color: "#ffffff", fontWeight: 700 }}>Actions</TableCell>
+                <TableRow sx={{ backgroundColor: "#EDE9FE" }}>
+                  <TableCell sx={{ color: "#1E3A8A", fontWeight: 700 }}>Projet</TableCell>
+                  <TableCell sx={{ color: "#1E3A8A", fontWeight: 700 }}>Date</TableCell>
+                  <TableCell sx={{ color: "#1E3A8A", fontWeight: 700 }}>Image</TableCell>
+                  <TableCell sx={{ color: "#1E3A8A", fontWeight: 700 }}>Département</TableCell>
+                  <TableCell align="center" sx={{ color: "#1E3A8A", fontWeight: 700 }}>Actions</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -236,12 +237,13 @@ function ListesSolution() {
                       key={project._id}
                       hover
                       sx={{
-                        backgroundColor: index % 2 === 0 ? "#ffffff" : "#f9fafb",
-                        "&:hover": { backgroundColor: "#f1f5f9" },
+                        backgroundColor: index % 2 === 0 ? "#FFFFFF" : "#F8FAFC",
+                        "&:hover": { backgroundColor: "#DBEAFE" },
+                        transition: "all 0.3s ease",
                       }}
                     >
-                      <TableCell>{project.name_project}</TableCell>
-                      <TableCell>{formatDate(project.date_creation)}</TableCell>
+                      <TableCell sx={{ color: "#1E3A8A" }}>{project.name_project}</TableCell>
+                      <TableCell sx={{ color: "#1E3A8A" }}>{formatDate(project.date_creation)}</TableCell>
                       <TableCell>
                         <Avatar
                           variant="rounded"
@@ -252,20 +254,20 @@ function ListesSolution() {
                       </TableCell>
                       <TableCell>
                         {project.departementId ? (
-                          <Chip label={project.departementId.NameDep} sx={{ backgroundColor: "#1e3a8a", color: "#fff" }} />
+                          <Chip label={project.departementId.NameDep} sx={{ backgroundColor: "#EDE9FE", color: "#1E3A8A" }} />
                         ) : (
-                          <Chip label="Non défini" sx={{ backgroundColor: "#d4af37", color: "#1e3a8a" }} />
+                          <Chip label="Non défini" sx={{ backgroundColor: "#DBEAFE", color: "#1E3A8A" }} />
                         )}
                       </TableCell>
                       <TableCell align="center">
                         <Tooltip title="Modifier">
-                          <AnimatedIconButton onClick={() => handleEdit(project)}>
-                            <EditIcon sx={{color:"#1e3a8a"}}/>
+                          <AnimatedIconButton onClick={() => handleEdit(project)} sx={{ color: "#1E3A8A" }}>
+                            <EditIcon />
                           </AnimatedIconButton>
                         </Tooltip>
                         <Tooltip title="Supprimer">
-                          <AnimatedIconButton onClick={() => handleDelete(project._id)}>
-                            <DeleteIcon  sx={{ color: "#b91c1c" }} />
+                          <AnimatedIconButton onClick={() => handleDelete(project._id)} sx={{ color: "red" }}>
+                            <DeleteIcon />
                           </AnimatedIconButton>
                         </Tooltip>
                       </TableCell>
@@ -275,8 +277,8 @@ function ListesSolution() {
                   <TableRow>
                     <TableCell colSpan={5} align="center">
                       <Box display="flex" alignItems="center" justifyContent="center" py={4} gap={1}>
-                        <InfoOutlinedIcon sx={{ color: "#1e3a8a" }} />
-                        <Typography>Aucun projet trouvé.</Typography>
+                        <InfoOutlinedIcon sx={{ color: "#1E3A8A" }} />
+                        <Typography sx={{ color: "#1E3A8A" }}>Aucun projet trouvé.</Typography>
                       </Box>
                     </TableCell>
                   </TableRow>
@@ -285,28 +287,26 @@ function ListesSolution() {
             </Table>
           </TableContainer>
 
-       
           {filteredProjects.length > itemsPerPage && (
             <Box display="flex" justifyContent="center" py={3}>
               <Pagination
                 count={totalPages}
                 page={currentPage}
                 onChange={handleChangePage}
-                color="primary"
-               
                 shape="rounded"
                 sx={{
                   "& .MuiPaginationItem-root": {
-                    color: "#1e3a8a",
+                    color: "#1E3A8A",
                     "&:hover": {
-                      bgcolor: "#d4af37",
-                      color: "#fff",
+                      backgroundColor: "#EDE9FE",
+                      color: "#914091",
                     },
                     "&.Mui-selected": {
-                      bgcolor: "#1e3a8a",
-                      color: "#fff",
+                      backgroundColor: "#DBEAFE",
+                      color: "#1E3A8A",
                       "&:hover": {
-                        bgcolor: "#d4af37",
+                        backgroundColor: "#EDE9FE",
+                        color: "#914091",
                       },
                     },
                   },
@@ -317,8 +317,6 @@ function ListesSolution() {
         </>
       )}
 
-    
-    
       <AddSolution
         open={open}
         handleClose={handleClose}

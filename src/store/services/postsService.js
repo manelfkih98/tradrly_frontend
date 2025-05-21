@@ -8,9 +8,11 @@ import {
   setDemandes,
   setPostsJob,
   setPostsStage,
-  setPostByConadi
- 
+  setPostByConadi,
+  setPostSuccess
 } from "../slices/postsSlice";
+import { updatePost  } from "../slices/postsSlice";
+
 
 export const fetchPostsStage = () => async (dispatch) => {
   dispatch(setLoading());
@@ -136,13 +138,7 @@ export const verifier = (id) => async (dispatch) => {
 export const postuler = (data) => async (dispatch) => {
   dispatch(setLoading());
   try {
-    const response = await axios.post(PATHS.POST.POSTULER, data,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      }
-    );
+    const response = await axios.post(PATHS.POST.POSTULER, data );
     console.log("Postulation réussie :", response.data);
   } catch (error) {
     dispatch(setError(error.message));
@@ -151,13 +147,7 @@ export const postuler = (data) => async (dispatch) => {
 export const postulerSansOffre = (data) => async (dispatch) => {
   dispatch(setLoading());
   try {
-    const response = await axios.post(PATHS.POST.POST_SPONPONTANE, data,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      }
-    );
+    const response = await axios.post(PATHS.POST.POST_SPONPONTANE, data );
     console.log("Postulation réussie :", response.data);
   } catch (error) {
     dispatch(setError(error.message));
@@ -183,13 +173,27 @@ export const postByCondidat = (email) => {
   };
 };
 
-  export const update_cv = (formData) => {
+export const update_cv = (idPost, formData) => {
+  return async (dispatch) => {
+    try {
+      const response = await api.put(`${PATHS.POST.UPDATE_Post}/${idPost}`, formData); // no headers needed
+      console.log("update_cv response:", response.data);
+      dispatch(updatePost(response.data.postupdated));
+      return response.data.postupdated;
+    } catch (error) {
+      const errorMessage = error.response?.data?.message || error.message || "Erreur lors de la mise à jour du CV";
+      console.error("update_cv error:", error);
+      dispatch(setError(errorMessage));
+      throw { payload: errorMessage };
+    }
+  };
+};
+
+  export const get_cv = (filename) => {
     return async (dispatch) => {
       try {
-        const response = await api.put(PATHS.POST.UPDATE_CV, formData, {
-          headers: { 'Content-Type': 'multipart/form-data' },
-        });
-        
+        const response = await api.get(`${PATHS.POST.GET_CV}/${filename}`);
+       
       } catch (error) {
         dispatch(setError(error.message));
       }

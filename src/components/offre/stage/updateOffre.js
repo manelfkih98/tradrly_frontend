@@ -16,12 +16,79 @@ import {
   FormHelperText,
   Box,
   IconButton,
+  CircularProgress,
+  Fade,
 } from "@mui/material";
-import CircularProgress from "@mui/material/CircularProgress";
 import { useForm, Controller } from "react-hook-form";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
+import { styled } from "@mui/material/styles";
 import dayjs from "dayjs";
+
+const StyledTextField = styled(TextField)(({ theme }) => ({
+  "& .MuiOutlinedInput-root": {
+    borderRadius: 2,
+    backgroundColor: "#F8FAFC",
+    transition: "all 0.3s ease",
+    "& fieldset": {
+      borderColor: "#1E3A8A",
+    },
+    "&:hover fieldset": {
+      borderColor: "#914091",
+    },
+    "&.Mui-focused fieldset": {
+      borderColor: "#914091",
+    },
+  },
+  "& .MuiInputLabel-root": {
+    color: "#1E3A8A",
+    "&.Mui-focused": {
+      color: "#914091",
+    },
+  },
+}));
+
+const StyledFormControl = styled(FormControl)(({ theme }) => ({
+  "& .MuiOutlinedInput-root": {
+    borderRadius: 2,
+    backgroundColor: "#F8FAFC",
+    transition: "all 0.3s ease",
+    "& fieldset": {
+      borderColor: "#1E3A8A",
+    },
+    "&:hover fieldset": {
+      borderColor: "#914091",
+    },
+    "&.Mui-focused fieldset": {
+      borderColor: "#914091",
+    },
+  },
+  "& .MuiInputLabel-root": {
+    color: "#1E3A8A",
+    "&.Mui-focused": {
+      color: "#914091",
+    },
+  },
+}));
+
+const StyledButton = styled(Button)(({ theme }) => ({
+  borderRadius: 20,
+  textTransform: "none",
+  transition: "all 0.3s ease",
+  "&:hover": {
+    transform: "translateY(-2px)",
+    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+  },
+}));
+
+const StyledIconButton = styled(IconButton)(({ theme }) => ({
+  color: "#1E3A8A",
+  transition: "all 0.3s ease",
+  "&:hover": {
+    color: "#914091",
+    backgroundColor: "#EDE9FE",
+  },
+}));
 
 const UpdateOffre = ({ open, handleClose, offre }) => {
   const dispatch = useDispatch();
@@ -44,12 +111,10 @@ const UpdateOffre = ({ open, handleClose, offre }) => {
     },
   });
 
-  // Charger les départements
   useEffect(() => {
     dispatch(fetchDepartments());
   }, [dispatch]);
 
-  // Initialiser les valeurs du formulaire
   useEffect(() => {
     if (open && offre) {
       const departementId =
@@ -104,16 +169,42 @@ const UpdateOffre = ({ open, handleClose, offre }) => {
   };
 
   return (
-    <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
+    <Dialog
+      open={open}
+      onClose={handleClose}
+      fullWidth
+      maxWidth="sm"
+      TransitionComponent={Fade}
+      TransitionProps={{ timeout: 300 }}
+      sx={{
+        "& .MuiDialog-paper": {
+          backgroundColor: "#F8FAFC",
+          border: "1px solid #E5E7EB",
+          borderRadius: 3,
+        },
+      }}
+    >
       <DialogTitle
-        sx={{ color: "#1e3a8a", fontWeight: "bold", textAlign: "center" }}
+        sx={{
+          fontWeight: "bold",
+          textAlign: "center",
+          color: "#1E3A8A",
+          backgroundColor: "#EDE9FE",
+          py: 2,
+          borderRadius: "8px 8px 0 0",
+        }}
       >
         Modifier l’offre de stage
       </DialogTitle>
-      <DialogContent sx={{ pt: 2 }}>
+      <DialogContent
+        sx={{
+          pt: 2,
+          mt: 1, // Added small space between DialogTitle and DialogContent
+        }}
+      >
         <Box component="form" noValidate autoComplete="off">
           {/* Titre */}
-          <TextField
+          <StyledTextField
             label="Titre de l'offre"
             fullWidth
             margin="dense"
@@ -123,17 +214,10 @@ const UpdateOffre = ({ open, handleClose, offre }) => {
             })}
             error={!!errors.titre}
             helperText={errors.titre?.message}
-            sx={{
-              "& .MuiOutlinedInput-root": {
-                borderRadius: 2,
-                "&:hover fieldset": { borderColor: "#d4af37" },
-                "&.Mui-focused fieldset": { borderColor: "#1e3a8a" },
-              },
-            }}
           />
 
           {/* Description */}
-          <TextField
+          <StyledTextField
             label="Description"
             fullWidth
             margin="dense"
@@ -145,20 +229,11 @@ const UpdateOffre = ({ open, handleClose, offre }) => {
             })}
             error={!!errors.description}
             helperText={errors.description?.message}
-            sx={{
-              "& .MuiOutlinedInput-root": {
-                borderRadius: 2,
-                "&:hover fieldset": { borderColor: "#d4af37" },
-                "&.Mui-focused fieldset": { borderColor: "#1e3a8a" },
-              },
-            }}
           />
 
           {/* Exigences */}
-          <FormControl fullWidth margin="dense" error={!!errors.requirements}>
-            <InputLabel shrink sx={{ "&.Mui-focused": { color: "#1e3a8a" } }}>
-              Exigences
-            </InputLabel>
+          <StyledFormControl fullWidth margin="dense" error={!!errors.requirements}>
+            <InputLabel shrink>Exigences</InputLabel>
             <Controller
               name="requirements"
               control={control}
@@ -173,10 +248,10 @@ const UpdateOffre = ({ open, handleClose, offre }) => {
                 <Box sx={{ mt: 2 }}>
                   {value.map((req, index) => (
                     <Box
-                      key={`req-${index}`} // ✅ Clé stable
+                      key={`req-${index}`}
                       sx={{ display: "flex", alignItems: "center", mb: 1 }}
                     >
-                      <TextField
+                      <StyledTextField
                         fullWidth
                         label={`Exigence ${index + 1}`}
                         value={req}
@@ -185,18 +260,9 @@ const UpdateOffre = ({ open, handleClose, offre }) => {
                           newValue[index] = e.target.value;
                           onChange(newValue);
                         }}
-                        sx={{
-                          "& .MuiOutlinedInput-root": {
-                            borderRadius: 2,
-                            "&:hover fieldset": { borderColor: "#d4af37" },
-                            "&.Mui-focused fieldset": {
-                              borderColor: "#1e3a8a",
-                            },
-                          },
-                        }}
                       />
                       {value.length > 1 && (
-                        <IconButton
+                        <StyledIconButton
                           onClick={() => {
                             const newValue = value.filter(
                               (_, i) => i !== index
@@ -204,13 +270,13 @@ const UpdateOffre = ({ open, handleClose, offre }) => {
                             onChange(newValue);
                           }}
                         >
-                          <RemoveCircleOutlineIcon sx={{ color: "#1e3a8a" }} />
-                        </IconButton>
+                          <RemoveCircleOutlineIcon />
+                        </StyledIconButton>
                       )}
                       {index === value.length - 1 && (
-                        <IconButton onClick={() => onChange([...value, ""])}>
-                          <AddCircleOutlineIcon sx={{ color: "#1e3a8a" }} />
-                        </IconButton>
+                        <StyledIconButton onClick={() => onChange([...value, ""])}>
+                          <AddCircleOutlineIcon />
+                        </StyledIconButton>
                       )}
                     </Box>
                   ))}
@@ -218,10 +284,10 @@ const UpdateOffre = ({ open, handleClose, offre }) => {
               )}
             />
             <FormHelperText>{errors.requirements?.message}</FormHelperText>
-          </FormControl>
+          </StyledFormControl>
 
           {/* Date de clôture */}
-          <TextField
+          <StyledTextField
             label="Date de clôture"
             type="date"
             fullWidth
@@ -247,25 +313,16 @@ const UpdateOffre = ({ open, handleClose, offre }) => {
             })}
             error={!!errors.date_limite}
             helperText={errors.date_limite?.message}
-            sx={{
-              "& .MuiOutlinedInput-root": {
-                borderRadius: 2,
-                "&:hover fieldset": { borderColor: "#d4af37" },
-                "&.Mui-focused fieldset": { borderColor: "#1e3a8a" },
-              },
-            }}
           />
 
           {/* Département */}
-          <FormControl
+          <StyledFormControl
             fullWidth
             margin="dense"
             error={!!errors.departement}
             disabled={depLoading || !departments?.length}
           >
-            <InputLabel sx={{ "&.Mui-focused": { color: "#1e3a8a" } }}>
-              Département
-            </InputLabel>
+            <InputLabel>Département</InputLabel>
             <Controller
               name="departement"
               control={control}
@@ -274,19 +331,10 @@ const UpdateOffre = ({ open, handleClose, offre }) => {
                 <Select
                   value={value || ""}
                   onChange={onChange}
-                  sx={{
-                    borderRadius: 2,
-                    "&:hover .MuiOutlinedInput-notchedOutline": {
-                      borderColor: "#d4af37",
-                    },
-                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                      borderColor: "#1e3a8a",
-                    },
-                  }}
                 >
                   {depLoading ? (
                     <MenuItem disabled>
-                      <CircularProgress size={20} sx={{ mr: 1 }} />
+                      <CircularProgress size={20} sx={{ mr: 1, color: "#1E3A8A" }} />
                       Chargement...
                     </MenuItem>
                   ) : departments?.length > 0 ? (
@@ -302,36 +350,43 @@ const UpdateOffre = ({ open, handleClose, offre }) => {
               )}
             />
             <FormHelperText>{errors.departement?.message}</FormHelperText>
-          </FormControl>
+          </StyledFormControl>
         </Box>
       </DialogContent>
 
-      <DialogActions sx={{ px: 3, py: 2 }}>
-        <Button
+      <DialogActions sx={{ px: 3, py: 2, justifyContent: "space-between" }}>
+        <StyledButton
           onClick={handleClose}
+          variant="outlined"
           disabled={isSubmitting}
           sx={{
-            color: "#1e3a8a",
-            textTransform: "none",
-            "&:hover": { color: "#d4af37" },
+            borderColor: "#1E3A8A",
+            color: "#1E3A8A",
+            "&:hover": {
+              backgroundColor: "#EDE9FE",
+              borderColor: "#914091",
+              color: "#914091",
+            },
           }}
         >
           Annuler
-        </Button>
-        <Button
+        </StyledButton>
+        <StyledButton
           onClick={handleSubmit(onSubmit)}
           variant="contained"
           disabled={isSubmitting}
+          startIcon={isSubmitting ? <CircularProgress size={20} sx={{ color: "#FFFFFF" }} /> : null}
           sx={{
-            bgcolor: "#1e3a8a",
-            textTransform: "none",
-            borderRadius: 20,
-            px: 4,
-            "&:hover": { bgcolor: "#d4af37", color: "#1e3a8a" },
+            backgroundColor: "#914091",
+            color: "#FFFFFF",
+            "&:hover": {
+              backgroundColor: "#7E3A8A",
+              boxShadow: "0 4px 8px rgba(145, 64, 145, 0.3)",
+            },
           }}
         >
           Enregistrer
-        </Button>
+        </StyledButton>
       </DialogActions>
     </Dialog>
   );

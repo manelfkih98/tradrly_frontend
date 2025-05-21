@@ -17,11 +17,12 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { useForm, Controller } from 'react-hook-form';
 import { loginCondidat } from '../store/services/postsService';
 
+// Liens de navigation
 const navLinks = [
-  { label: 'Who are we', path: '/about' },
-  { label: 'Our work', path: '/home#work' },
-  { label: 'Our team', path: '/home#team' },
-  { label: 'Careers', path: '/careers' },
+  { label: 'Qui sommes-nous', path: '/about' },
+  { label: 'Nos réalisations', path: '/home#work' },
+  { label: 'Notre équipe', path: '/home#team' },
+  { label: 'Carrières', path: '/careers' },
   { label: 'Blog', path: '/blog' },
 ];
 
@@ -30,15 +31,14 @@ const Navbar = () => {
   const [error, setError] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('email'));
   const navigate = useNavigate();
+
   const { control, handleSubmit, formState: { errors }, reset } = useForm({
-    defaultValues: {
-      email: '',
-    },
+    defaultValues: { email: '' },
   });
 
   const candidateName = localStorage.getItem('name') || 'Candidat';
+  const candidatePrenom = localStorage.getItem('prenom') || 'Candidat';
 
- 
   useEffect(() => {
     const checkLoginStatus = () => {
       setIsLoggedIn(!!localStorage.getItem('email'));
@@ -51,12 +51,14 @@ const Navbar = () => {
   const onSubmit = async (data) => {
     try {
       const response = await loginCondidat(data.email);
+      console.log('Réponse de connexion:', response.data);
       localStorage.setItem('email', response.data.email);
       localStorage.setItem('name', response.data.nom);
+      localStorage.setItem('prenom', response.data.prenom);
+
       setIsLoggedIn(true);
       setOpen(false);
       reset();
-     
     } catch (err) {
       setError(err.response?.data?.message || 'Erreur lors de la connexion.');
       console.error('Erreur de connexion:', err);
@@ -76,9 +78,8 @@ const Navbar = () => {
     navigate('/home', { replace: true });
   };
 
-  // Liste des liens avec "Candidatures" ajouté si connecté
   const links = isLoggedIn
-    ? [...navLinks, { label: 'Candidatures', path: '/dashboardcon' }]
+    ? [...navLinks, { label: 'Mes candidatures', path: '/dashboardcon' }]
     : navLinks;
 
   return (
@@ -132,19 +133,19 @@ const Navbar = () => {
                   mr: 2,
                 }}
               >
-                {candidateName}
+                {candidateName} {candidatePrenom}
               </Typography>
               <Button
                 onClick={handleLogout}
                 sx={{
                   textTransform: 'none',
                   fontSize: '1rem',
-                  background: 'linear-gradient(90deg, rgba(30, 59, 138, 0.45), rgba(212, 175, 55, 0.45))',
+                  background: 'linear-gradient(90deg, #914091, #1E3A8A)',
                   color: 'white',
                   px: 3,
                   py: 1,
                   borderRadius: '8px',
-                  '&:hover': { background: 'linear-gradient(90deg, #1e3a8a, #d4af37)' },
+                  '&:hover': { background: 'linear-gradient(90deg, #1e3a8a,rgb(144, 82, 144))' },
                 }}
               >
                 Déconnexion
@@ -156,12 +157,12 @@ const Navbar = () => {
               sx={{
                 textTransform: 'none',
                 fontSize: '1rem',
-                background: 'linear-gradient(90deg, rgba(30, 59, 138, 0.45), rgba(212, 175, 55, 0.45))',
+                background: 'linear-gradient(90deg,rgba(145, 64, 145, 0.71), #1E3A8A)',
                 color: 'white',
                 px: 3,
                 py: 1,
                 borderRadius: '8px',
-                '&:hover': { background: 'linear-gradient(90deg, #1e3a8a, #d4af37)' },
+                '&:hover': { background: 'linear-gradient(90deg, #1E3A8A , #914091)' },
               }}
             >
               Connexion
@@ -184,7 +185,7 @@ const Navbar = () => {
         >
           <SearchIcon sx={{ color: 'white', mr: 1 }} />
           <InputBase
-            placeholder='Search for something…'
+            placeholder='Rechercher...'
             inputProps={{ 'aria-label': 'search' }}
             sx={{ color: 'white', width: '100%' }}
           />
@@ -245,7 +246,7 @@ const Navbar = () => {
                   <TextField
                     {...field}
                     fullWidth
-                    label='Email'
+                    label='Adresse e-mail'
                     margin='normal'
                     variant='outlined'
                     error={!!errors.email}
@@ -276,12 +277,12 @@ const Navbar = () => {
                 sx={{
                   mt: 2,
                   py: 1.5,
-                  background: 'linear-gradient(90deg, rgba(30, 59, 138, 0.49), rgba(212, 175, 55, 0.47))',
+                  background: 'linear-gradient(90deg, rgba(30, 59, 138, 0.49), rgba(167, 55, 212, 0.47))',
                   color: '#F3F4F6',
                   borderRadius: '8px',
                   textTransform: 'none',
                   fontWeight: 500,
-                  '&:hover': { background: 'linear-gradient(90deg, #1e3a8a, #d4af37)' },
+                  '&:hover': { background: 'linear-gradient(90deg, #1e3a8a,rgb(204, 90, 206))' },
                 }}
               >
                 Se connecter

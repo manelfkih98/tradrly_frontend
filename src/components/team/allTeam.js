@@ -21,6 +21,7 @@ import {
   TextField,
   Grid,
   Pagination,
+  InputAdornment,
 } from "@mui/material";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -32,24 +33,22 @@ import AddTeamMember from "./AddTeamMember";
 import EditTeamMember from "./EditTeamMember";
 import { styled } from "@mui/material/styles";
 
-// Bouton animé pour les actions
-const AnimatedIconButton = styled(IconButton)(({ theme }) => ({
-  transition: "transform 0.2s ease-in-out, color 0.3s ease",
+const StyledIconButton = styled(IconButton)(({ theme }) => ({
+  color: "#1E3A8A",
+  transition: "all 0.3s ease",
   "&:hover": {
+    color: "#914091",
+    backgroundColor: "#EDE9FE",
     transform: "scale(1.2)",
-    color: "#d4af37",
   },
 }));
 
-// Dialog stylisé avec effet de verre dépoli
 const StyledDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiPaper-root": {
-    borderRadius: 20,
-    backdropFilter: "blur(8px)",
-    background: "rgba(255, 255, 255, 0.95)",
-    boxShadow: "0 12px 40px rgba(0,0,0,0.15)",
-    border: `1px solid ${theme.palette.grey[200]}`,
-    transition: "all 0.4s ease-in-out",
+    backgroundColor: "#F8FAFC",
+    border: "1px solid #E5E7EB",
+    borderRadius: 3,
+    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
     maxWidth: "450px",
     margin: "auto",
   },
@@ -58,16 +57,15 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
 const StyledDialogTitle = styled(DialogTitle)(({ theme }) => ({
   fontWeight: 800,
   fontSize: "1.4rem",
-  backgroundColor: "#1e3a8a",
-  color: "#fff",
-  borderTopLeftRadius: 20,
-  borderTopRightRadius: 20,
+  backgroundColor: "#EDE9FE",
+  color: "#1E3A8A",
+  borderRadius: "8px 8px 0 0",
   padding: "16px 24px",
   textAlign: "center",
 }));
 
 const StyledButton = styled(Button)(({ theme }) => ({
-  borderRadius: 8,
+  borderRadius: 20,
   textTransform: "none",
   padding: "10px 24px",
   fontWeight: 600,
@@ -78,14 +76,37 @@ const StyledButton = styled(Button)(({ theme }) => ({
   },
 }));
 
+const StyledTextField = styled(TextField)(({ theme }) => ({
+  "& .MuiOutlinedInput-root": {
+    borderRadius: 2,
+    backgroundColor: "#F8FAFC",
+    transition: "all 0.3s ease",
+    "& fieldset": {
+      borderColor: "#1E3A8A",
+    },
+    "&:hover fieldset": {
+      borderColor: "#914091",
+    },
+    "&.Mui-focused fieldset": {
+      borderColor: "#914091",
+    },
+  },
+  "& .MuiInputLabel-root": {
+    color: "#1E3A8A",
+    "&.Mui-focused": {
+      color: "#914091",
+    },
+  },
+}));
+
 const LinkedInLink = styled("a")(({ theme }) => ({
   display: "flex",
   alignItems: "center",
-  color: "#0a66c2",
+  color: "#1E3A8A",
   textDecoration: "none",
   transition: "color 0.3s ease, transform 0.2s ease-in-out",
   "&:hover": {
-    color: "#d4af37",
+    color: "#914091",
     transform: "scale(1.1)",
   },
 }));
@@ -94,54 +115,50 @@ function AllTeam() {
   const dispatch = useDispatch();
   const { teams = [], loading } = useSelector((state) => state.teams);
 
-  // Dialog & edit state
   const [openDialog, setOpenDialog] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [selectedTeam, setSelectedTeam] = useState(null);
-
- 
   const [page, setPage] = useState(1);
-  const rowsPerPage = 4; 
-
-  
   const [searchTerm, setSearchTerm] = useState("");
+  const [isDeleting, setIsDeleting] = useState(null);
+  const rowsPerPage = 4;
 
   useEffect(() => {
     dispatch(fetchTeam());
   }, [dispatch]);
 
-  
   const filteredTeams = teams.filter(
     (team) =>
       (team.name && team.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
       (team.title && team.title.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
- 
   useEffect(() => {
     setPage(1);
   }, [searchTerm]);
 
-  const handleDelete = (id) => {
+  const handleDelete = (id, name) => {
     Swal.fire({
-      title: "Supprimer ce membre ?",
-      text: "Cette action est irréversible",
+      title: `Supprimer ${name} ?`,
+      text: "Cette action est irréversible.",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#b91c1c",
-      cancelButtonColor: "#1e3a8a",
+      confirmButtonColor: "#EF4444",
+      cancelButtonColor: "#1E3A8A",
       confirmButtonText: "Oui, supprimer",
       cancelButtonText: "Annuler",
-    }).then((result) => {
+      background: "#EDE9FE",
+      customClass: {
+        confirmButton: "swal-confirm-button",
+        cancelButton: "swal-cancel-button",
+      },
+    }).then(async (result) => {
       if (result.isConfirmed) {
-        dispatch(deleteTeam(id));
-        Swal.fire({
-          position: "top-end",
-          icon: "success",
-          title: "Membre supprimé avec succès",
-          showConfirmButton: false,
-          timer: 1000,
-        });
+        setIsDeleting(id);
+        const response = await dispatch(deleteTeam(id));
+        setIsDeleting(null);
+        console.log("Delete response:", response);
+      
       }
     });
   };
@@ -159,12 +176,10 @@ function AllTeam() {
   const handleOpenDialog = () => setOpenDialog(true);
   const handleCloseDialog = () => setOpenDialog(false);
 
- 
   const handlePageChange = (event, value) => {
     setPage(value);
   };
 
-  
   const paginatedTeams = filteredTeams.slice(
     (page - 1) * rowsPerPage,
     page * rowsPerPage
@@ -173,15 +188,42 @@ function AllTeam() {
   return (
     <Box
       sx={{
-        p: { xs: 3, md: 6 },
+        p: { xs: 3, md: 4 },
         borderRadius: 4,
-        backgroundColor: "#ffffff",
-        boxShadow: "0 4px 20px rgba(0,0,0,0.05)",
+        backgroundColor: "#F8FAFC",
         maxWidth: "1200px",
         mx: "auto",
         my: 4,
       }}
     >
+      <style>
+        {`
+          .swal-confirm-button {
+            background-color: #914091 !important;
+            color: #FFFFFF !important;
+            border-radius: 8px !important;
+            transition: all 0.3s ease !important;
+          }
+          .swal-confirm-button:hover {
+            background-color: #7E3A8A !important;
+            boxShadow: 0 4px 8px rgba(145, 64, 145, 0.3) !important;
+            transform: translateY(-2px) !important;
+          }
+          .swal-cancel-button {
+            border: 1px solid #1E3A8A !important;
+            color: #1E3A8A !important;
+            border-radius: 8px !important;
+            transition: all 0.3s ease !important;
+          }
+          .swal-cancel-button:hover {
+            background-color: #EDE9FE !important;
+            color: #914091 !important;
+            border-color: #914091 !important;
+            transform: translateY(-2px) !important;
+          }
+        `}
+      </style>
+
       <Grid
         container
         justifyContent="space-between"
@@ -191,7 +233,7 @@ function AllTeam() {
         gap={2}
       >
         <Grid item sx={{ flexGrow: 1, maxWidth: { xs: "100%", sm: "400px" } }}>
-          <TextField
+          <StyledTextField
             fullWidth
             variant="outlined"
             placeholder="Rechercher un membre..."
@@ -199,37 +241,24 @@ function AllTeam() {
             onChange={(e) => setSearchTerm(e.target.value)}
             InputProps={{
               startAdornment: (
-                <SearchIcon sx={{ color: "#1e3a8a", mr: 1 }} />
+                <InputAdornment position="start">
+                  <SearchIcon sx={{ color: "#1E3A8A", transition: "color 0.3s" }} />
+                </InputAdornment>
               ),
-            }}
-            sx={{
-              backgroundColor: "#f4f6f8",
-              borderRadius: 2,
-              "& .MuiOutlinedInput-root": {
-                "&:hover fieldset": {
-                  borderColor: "#d4af37",
-                },
-                "&.Mui-focused fieldset": {
-                  borderColor: "#1e3a8a",
-                },
-              },
-              transition: "all 0.3s ease",
             }}
           />
         </Grid>
         <Grid item>
           <StyledButton
             variant="contained"
-            startIcon={<AddIcon sx={{ fontSize: "1.5rem" }} />}
+            startIcon={<AddIcon />}
             onClick={handleOpenDialog}
             sx={{
-              backgroundColor: "#1e3a8a",
-              color: "#ffffff",
-              borderRadius: 2,
-              px: 4,
-              py: 1.5,
+              backgroundColor: "#914091",
+              color: "#FFFFFF",
               "&:hover": {
-                backgroundColor: "#d4af37",
+                backgroundColor: "#7E3A8A",
+                boxShadow: "0 4px 8px rgba(145, 64, 145, 0.3)",
               },
             }}
           >
@@ -238,10 +267,9 @@ function AllTeam() {
         </Grid>
       </Grid>
 
-      {/* Add Member Dialog */}
       <StyledDialog open={openDialog} onClose={handleCloseDialog} maxWidth="xs" fullWidth>
         <StyledDialogTitle>Ajouter un membre</StyledDialogTitle>
-        <DialogContent dividers sx={{ px: { xs: 3, sm: 4 }, pt: { xs: 2, sm: 3 } }}>
+        <DialogContent sx={{ px: { xs: 3, sm: 4 }, pt: 2, mt: 1 }}>
           <AddTeamMember
             onMemberAdded={() => {
               dispatch(fetchTeam());
@@ -253,7 +281,7 @@ function AllTeam() {
 
       {loading ? (
         <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
-          <CircularProgress sx={{ color: "#1e3a8a" }} />
+          <CircularProgress sx={{ color: "#1E3A8A" }} />
         </Box>
       ) : (
         <>
@@ -261,31 +289,32 @@ function AllTeam() {
             component={Paper}
             sx={{
               borderRadius: 3,
-              boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+              backgroundColor: "#F8FAFC",
+              boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
               overflowX: "auto",
             }}
           >
             <Table>
               <TableHead>
-                <TableRow sx={{ backgroundColor: "#1e3a8a" }}>
-                  <TableCell sx={{ color: "#ffffff", fontWeight: 700, fontSize: "1rem", py: 3 }}>
+                <TableRow sx={{ backgroundColor: "#EDE9FE" }}>
+                  <TableCell sx={{ color: "#1E3A8A", fontWeight: 700, fontSize: "1rem", py: 3 }}>
                     Nom
                   </TableCell>
-                  <TableCell sx={{ color: "#ffffff", fontWeight: 700, fontSize: "1rem", py: 3 }}>
+                  <TableCell sx={{ color: "#1E3A8A", fontWeight: 700, fontSize: "1rem", py: 3 }}>
                     Poste
                   </TableCell>
-                  <TableCell sx={{ color: "#ffffff", fontWeight: 700, fontSize: "1rem", py: 3 }}>
+                  <TableCell sx={{ color: "#1E3A8A", fontWeight: 700, fontSize: "1rem", py: 3 }}>
                     Citation
                   </TableCell>
-                  <TableCell sx={{ color: "#ffffff", fontWeight: 700, fontSize: "1rem", py: 3 }}>
+                  <TableCell sx={{ color: "#1E3A8A", fontWeight: 700, fontSize: "1rem", py: 3 }}>
                     LinkedIn
                   </TableCell>
-                  <TableCell sx={{ color: "#ffffff", fontWeight: 700, fontSize: "1rem", py: 3 }}>
+                  <TableCell sx={{ color: "#1E3A8A", fontWeight: 700, fontSize: "1rem", py: 3 }}>
                     Image
                   </TableCell>
                   <TableCell
                     align="center"
-                    sx={{ color: "#ffffff", fontWeight: 700, fontSize: "1rem", py: 3 }}
+                    sx={{ color: "#1E3A8A", fontWeight: 700, fontSize: "1rem", py: 3 }}
                   >
                     Actions
                   </TableCell>
@@ -298,17 +327,17 @@ function AllTeam() {
                       key={team._id}
                       hover
                       sx={{
-                        backgroundColor: index % 2 === 0 ? "#ffffff" : "#f9fafb",
-                        "&:hover": { backgroundColor: "#f1f5f9" },
+                        backgroundColor: "#F8FAFC",
+                        "&:hover": { backgroundColor: "#EDE9FE" },
                       }}
                     >
-                      <TableCell sx={{ py: 2, px: 3, fontSize: "0.9rem" }}>
+                      <TableCell sx={{ py: 2, px: 3, fontSize: "0.9rem", color: "#1E3A8A" }}>
                         {team.name}
                       </TableCell>
-                      <TableCell sx={{ py: 2, px: 3, fontSize: "0.9rem" }}>
+                      <TableCell sx={{ py: 2, px: 3, fontSize: "0.9rem", color: "#1E3A8A" }}>
                         {team.title}
                       </TableCell>
-                      <TableCell sx={{ py: 2, px: 3, fontSize: "0.9rem" }}>
+                      <TableCell sx={{ py: 2, px: 3, fontSize: "0.9rem", color: "#1E3A8A" }}>
                         {team.quote}
                       </TableCell>
                       <TableCell sx={{ py: 2, px: 3 }}>
@@ -326,54 +355,48 @@ function AllTeam() {
                             LinkedIn
                           </LinkedInLink>
                         ) : (
-                          <Typography sx={{ color: "#6b7280" }}>—</Typography>
+                          <Typography sx={{ color: "#1E3A8A", opacity: 0.7 }}>—</Typography>
                         )}
                       </TableCell>
                       <TableCell sx={{ py: 2, px: 3 }}>
-                        <img
-                          src={team.image}
-                          alt={team.name}
-                          style={{
-                            width: 50,
-                            height: 50,
-                            objectFit: "cover",
-                            borderRadius: "50%",
-                            border: "1px solid #e5e7eb",
-                          }}
-                        />
+                        {team.image ? (
+                          <img
+                            src={team.image}
+                            alt={team.name}
+                            style={{
+                              width: 50,
+                              height: 50,
+                              objectFit: "cover",
+                              borderRadius: "50%",
+                              border: "1px solid #E5E7EB",
+                            }}
+                            onError={(e) => (e.target.src = "/fallback-image.png")}
+                          />
+                        ) : (
+                          <Typography sx={{ color: "#1E3A8A", opacity: 0.7 }}>—</Typography>
+                        )}
                       </TableCell>
                       <TableCell align="center" sx={{ py: 2, px: 3 }}>
-                        <Tooltip
-                          title="Modifier"
-                          sx={{
-                            "& .MuiTooltip-tooltip": {
-                              backgroundColor: "#1e3a8a",
-                              color: "#ffffff",
-                            },
-                          }}
-                        >
-                          <AnimatedIconButton
+                        <Tooltip title="Modifier">
+                          <StyledIconButton
                             onClick={() => handleEdit(team)}
-                            sx={{ color: "#1e3a8a" }}
+                            disabled={isDeleting === team._id}
                           >
                             <EditIcon />
-                          </AnimatedIconButton>
+                          </StyledIconButton>
                         </Tooltip>
-                        <Tooltip
-                          title="Supprimer"
-                          sx={{
-                            "& .MuiTooltip-tooltip": {
-                              backgroundColor: "#1e3a8a",
-                              color: "#ffffff",
-                            },
-                          }}
-                        >
-                          <AnimatedIconButton
-                            onClick={() => handleDelete(team._id)}
-                            sx={{ color: "#b91c1c" }}
+                        <Tooltip title="Supprimer">
+                          <StyledIconButton
+                            onClick={() => handleDelete(team._id, team.name)}
+                            disabled={isDeleting === team._id}
+                            sx={{ color: "#EF4444", "&:hover": { color: "#EF4444" } }}
                           >
-                            <DeleteIcon />
-                          </AnimatedIconButton>
+                            {isDeleting === team._id ? (
+                              <CircularProgress size={20} sx={{ color: "#EF4444" }} />
+                            ) : (
+                              <DeleteIcon />
+                            )}
+                          </StyledIconButton>
                         </Tooltip>
                       </TableCell>
                     </TableRow>
@@ -382,7 +405,7 @@ function AllTeam() {
                   <TableRow>
                     <TableCell colSpan={6} align="center">
                       <Box display="flex" alignItems="center" justifyContent="center" py={4} gap={1}>
-                        <Typography sx={{ color: "#1e3a8a", fontWeight: 500 }}>
+                        <Typography sx={{ color: "#1E3A8A", fontWeight: 500 }}>
                           Aucun membre trouvé.
                         </Typography>
                       </Box>
@@ -393,27 +416,27 @@ function AllTeam() {
             </Table>
           </TableContainer>
 
-          {/* Pagination */}
           {filteredTeams.length > rowsPerPage && (
             <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
               <Pagination
                 count={Math.ceil(filteredTeams.length / rowsPerPage)}
                 page={page}
                 onChange={handlePageChange}
-                color="primary"
                 shape="rounded"
                 sx={{
                   "& .MuiPaginationItem-root": {
-                    color: "#1e3a8a",
+                    color: "#1E3A8A",
+                    fontWeight: "bold",
                     "&:hover": {
-                      bgcolor: "#d4af37",
-                      color: "#fff",
+                      backgroundColor: "#EDE9FE",
+                      color: "#914091",
                     },
                     "&.Mui-selected": {
-                      bgcolor: "#1e3a8a",
-                      color: "#fff",
+                      backgroundColor: "#DBEAFE",
+                      color: "#1E3A8A",
                       "&:hover": {
-                        bgcolor: "#d4af37",
+                        backgroundColor: "#EDE9FE",
+                        color: "#914091",
                       },
                     },
                   },
@@ -424,10 +447,9 @@ function AllTeam() {
         </>
       )}
 
-      {/* Edit Member Dialog */}
       <StyledDialog open={editMode} onClose={handleCancelEdit} maxWidth="xs" fullWidth>
         <StyledDialogTitle>Modifier un membre</StyledDialogTitle>
-        <DialogContent dividers sx={{ px: { xs: 3, sm: 4 }, pt: { xs: 2, sm: 3 } }}>
+        <DialogContent sx={{ px: { xs: 3, sm: 4 }, pt: 2, mt: 1 }}>
           <EditTeamMember
             selectedTeam={selectedTeam}
             onCancel={handleCancelEdit}

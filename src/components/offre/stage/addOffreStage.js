@@ -23,6 +23,72 @@ import {
 import { useForm, Controller } from "react-hook-form";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
+import { styled } from "@mui/material/styles";
+
+const StyledTextField = styled(TextField)(({ theme }) => ({
+  "& .MuiOutlinedInput-root": {
+    borderRadius: 2,
+    backgroundColor: "#F8FAFC",
+    transition: "all 0.3s ease",
+    "& fieldset": {
+      borderColor: "#1E3A8A",
+    },
+    "&:hover fieldset": {
+      borderColor: "#914091",
+    },
+    "&.Mui-focused fieldset": {
+      borderColor: "#914091",
+    },
+  },
+  "& .MuiInputLabel-root": {
+    color: "#1E3A8A",
+    "&.Mui-focused": {
+      color: "#914091",
+    },
+  },
+}));
+
+const StyledFormControl = styled(FormControl)(({ theme }) => ({
+  "& .MuiOutlinedInput-root": {
+    borderRadius: 2,
+    backgroundColor: "#F8FAFC",
+    transition: "all 0.3s ease",
+    "& fieldset": {
+      borderColor: "#1E3A8A",
+    },
+    "&:hover fieldset": {
+      borderColor: "#914091",
+    },
+    "&.Mui-focused fieldset": {
+      borderColor: "#914091",
+    },
+  },
+  "& .MuiInputLabel-root": {
+    color: "#1E3A8A",
+    "&.Mui-focused": {
+      color: "#914091",
+    },
+  },
+}));
+
+const StyledButton = styled(Button)(({ theme }) => ({
+  borderRadius: 20,
+  textTransform: "none",
+  transition: "all 0.3s ease",
+  "&:hover": {
+    transform: "translateY(-2px)",
+    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+  },
+}));
+
+const StyledIconButton = styled(IconButton)(({ theme }) => ({
+  color: "#1E3A8A",
+  transition: "all 0.3s ease",
+  "&:hover": {
+    color: "#914091",
+    backgroundColor: "#EDE9FE",
+  },
+}));
 
 const AddOffreStage = ({ open, handleClose }) => {
   const dispatch = useDispatch();
@@ -57,7 +123,7 @@ const AddOffreStage = ({ open, handleClose }) => {
       ...data,
       status: true,
       date_publi: new Date().toISOString(),
-      requirements: data.requirements.filter((req) => req.trim() !== ""), // Filter out empty requirements
+      requirements: data.requirements.filter((req) => req.trim() !== ""),
     };
     await dispatch(createOffreStage(newOffre));
     handleClose();
@@ -71,24 +137,37 @@ const AddOffreStage = ({ open, handleClose }) => {
       maxWidth="sm"
       TransitionComponent={Fade}
       TransitionProps={{ timeout: 300 }}
+      sx={{
+        "& .MuiDialog-paper": {
+          backgroundColor: "#F8FAFC",
+          border: "1px solid #E5E7EB",
+          borderRadius: 3,
+        },
+      }}
     >
       <DialogTitle
         sx={{
           fontWeight: "bold",
           textAlign: "center",
-          color: "#1976d2",
-          py: 1,
+          color: "#1E3A8A",
+          backgroundColor: "#EDE9FE",
+          py: 2,
           borderRadius: "8px 8px 0 0",
         }}
       >
         Nouvelle Offre de Stage
       </DialogTitle>
-      <DialogContent sx={{ pt: 3, pb: 2 }}>
+      <DialogContent
+        sx={{
+         
+          mt: 1, // Added small space between DialogTitle and DialogContent
+        }}
+      >
         <Box component="form" noValidate autoComplete="off">
           <Grid container spacing={2}>
             {/* Title Field */}
             <Grid item xs={12}>
-              <TextField
+              <StyledTextField
                 label="Titre de l'offre"
                 fullWidth
                 variant="outlined"
@@ -101,18 +180,11 @@ const AddOffreStage = ({ open, handleClose }) => {
                 })}
                 error={!!errors.titre}
                 helperText={errors.titre?.message}
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    borderRadius: 2,
-                    transition: "all 0.3s",
-                    "&:hover": { boxShadow: "0 0 8px rgba(25, 118, 210, 0.2)" },
-                  },
-                }}
               />
             </Grid>
             {/* Description Field */}
             <Grid item xs={12}>
-              <TextField
+              <StyledTextField
                 label="Description"
                 multiline
                 rows={4}
@@ -127,18 +199,11 @@ const AddOffreStage = ({ open, handleClose }) => {
                 })}
                 error={!!errors.description}
                 helperText={errors.description?.message}
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    borderRadius: 2,
-                    transition: "all 0.3s",
-                    "&:hover": { boxShadow: "0 0 8px rgba(25, 118, 210, 0.2)" },
-                  },
-                }}
               />
             </Grid>
             {/* Requirements Field */}
             <Grid item xs={12}>
-              <FormControl fullWidth error={!!errors.requirements}>
+              <StyledFormControl fullWidth error={!!errors.requirements}>
                 <InputLabel shrink>Exigences</InputLabel>
                 <Controller
                   name="requirements"
@@ -157,7 +222,7 @@ const AddOffreStage = ({ open, handleClose }) => {
                           key={index}
                           sx={{ display: "flex", alignItems: "center", mb: 1 }}
                         >
-                          <TextField
+                          <StyledTextField
                             fullWidth
                             label={`Exigence ${index + 1}`}
                             value={req}
@@ -168,32 +233,23 @@ const AddOffreStage = ({ open, handleClose }) => {
                             }}
                             error={!!errors.requirements?.[index]}
                             helperText={errors.requirements?.[index]?.message}
-                            sx={{
-                              "& .MuiOutlinedInput-root": {
-                                borderRadius: 2,
-                                transition: "all 0.3s",
-                                "&:hover": {
-                                  boxShadow: "0 0 8px rgba(25, 118, 210, 0.2)",
-                                },
-                              },
-                            }}
                           />
                           {value.length > 1 && (
-                            <IconButton
+                            <StyledIconButton
                               onClick={() => {
                                 const newValue = value.filter((_, i) => i !== index);
                                 onChange(newValue);
                               }}
                             >
-                              <RemoveCircleOutlineIcon sx={{ color: "#1976d2" }} />
-                            </IconButton>
+                              <RemoveCircleOutlineIcon />
+                            </StyledIconButton>
                           )}
                           {index === value.length - 1 && (
-                            <IconButton
+                            <StyledIconButton
                               onClick={() => onChange([...value, ""])}
                             >
-                              <AddCircleOutlineIcon sx={{ color: "#1976d2" }} />
-                            </IconButton>
+                              <AddCircleOutlineIcon />
+                            </StyledIconButton>
                           )}
                         </Box>
                       ))}
@@ -201,11 +257,11 @@ const AddOffreStage = ({ open, handleClose }) => {
                   )}
                 />
                 <FormHelperText>{errors.requirements?.message}</FormHelperText>
-              </FormControl>
+              </StyledFormControl>
             </Grid>
             {/* Closing Date Field */}
             <Grid item xs={12} sm={6}>
-              <TextField
+              <StyledTextField
                 label="Date de clôture"
                 type="date"
                 fullWidth
@@ -219,18 +275,11 @@ const AddOffreStage = ({ open, handleClose }) => {
                 })}
                 error={!!errors.date_limite}
                 helperText={errors.date_limite?.message}
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    borderRadius: 2,
-                    transition: "all 0.3s",
-                    "&:hover": { boxShadow: "0 0 8px rgba(25, 118, 210, 0.2)" },
-                  },
-                }}
               />
             </Grid>
             {/* Department Field */}
             <Grid item xs={12} sm={6}>
-              <FormControl
+              <StyledFormControl
                 fullWidth
                 variant="outlined"
                 error={!!errors.departement_name}
@@ -241,11 +290,10 @@ const AddOffreStage = ({ open, handleClose }) => {
                   {...register("departement_name", {
                     required: "Le département est requis",
                   })}
-                  sx={{ borderRadius: 2 }}
                 >
                   {depLoading ? (
                     <MenuItem disabled>
-                      <CircularProgress size={20} sx={{ mr: 1 }} />
+                      <CircularProgress size={20} sx={{ mr: 1, color: "#1E3A8A" }} />
                       Chargement...
                     </MenuItem>
                   ) : departments?.length > 0 ? (
@@ -259,43 +307,44 @@ const AddOffreStage = ({ open, handleClose }) => {
                   )}
                 </Select>
                 <FormHelperText>{errors.departement_name?.message}</FormHelperText>
-              </FormControl>
+              </StyledFormControl>
             </Grid>
           </Grid>
         </Box>
       </DialogContent>
       <DialogActions sx={{ px: 3, py: 2, justifyContent: "space-between" }}>
-        <Button
+        <StyledButton
           onClick={handleClose}
           variant="outlined"
-          color="inherit"
           disabled={isSubmitting}
           sx={{
-            borderRadius: 20,
-            textTransform: "none",
-            px: 3,
-            transition: "all 0.3s",
-            "&:hover": { bgcolor: "grey.100" },
+            borderColor: "#1E3A8A",
+            color: "#1E3A8A",
+            "&:hover": {
+              backgroundColor: "#EDE9FE",
+              borderColor: "#914091",
+              color: "#914091",
+            },
           }}
         >
           Annuler
-        </Button>
-        <Button
+        </StyledButton>
+        <StyledButton
           onClick={handleSubmit(onSubmit)}
           variant="contained"
-          color="primary"
           disabled={isSubmitting}
-          startIcon={isSubmitting ? <CircularProgress size={20} /> : null}
+          startIcon={isSubmitting ? <CircularProgress size={20} sx={{ color: "#FFFFFF" }} /> : null}
           sx={{
-            borderRadius: 20,
-            textTransform: "none",
-            px: 4,
-            transition: "all 0.3s",
-            "&:hover": { boxShadow: "0 4px 12px rgba(25, 118, 210, 0.3)" },
+            backgroundColor: "#914091",
+            color: "#FFFFFF",
+            "&:hover": {
+              backgroundColor: "#7E3A8A",
+              boxShadow: "0 4px 8px rgba(145, 64, 145, 0.3)",
+            },
           }}
         >
           Enregistrer
-        </Button>
+        </StyledButton>
       </DialogActions>
     </Dialog>
   );

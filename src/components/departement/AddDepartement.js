@@ -12,14 +12,12 @@ import {
 import { useForm } from "react-hook-form";
 import { styled } from "@mui/material/styles";
 
-// Dialog Style with modern glass look
 const StyledDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiPaper-root": {
     borderRadius: 20,
-    backdropFilter: "blur(8px)",
-    background: "rgba(255, 255, 255, 0.95)",
+    backgroundColor: "#F8FAFC",
     boxShadow: "0 12px 40px rgba(0,0,0,0.15)",
-    border: `1px solid ${theme.palette.grey[200]}`,
+    border: "1px solid #E5E7EB",
     transition: "all 0.4s ease-in-out",
     maxWidth: "450px",
     margin: "auto",
@@ -29,8 +27,8 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
 const StyledTitle = styled(DialogTitle)(({ theme }) => ({
   fontWeight: 800,
   fontSize: "1.4rem",
-  backgroundColor: "#1e3a8a",
-  color: "#fff",
+  backgroundColor: "#EDE9FE",
+  color: "#1E3A8A",
   borderTopLeftRadius: 20,
   borderTopRightRadius: 20,
   padding: "16px 24px",
@@ -41,28 +39,28 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
   marginBottom: "20px",
   "& .MuiOutlinedInput-root": {
     borderRadius: 10,
-    backgroundColor: "#f4f6f8",
+    backgroundColor: "#F8FAFC",
     transition: "all 0.3s ease",
     "& fieldset": {
-      borderColor: theme.palette.grey[300],
+      borderColor: "#1E3A8A",
     },
     "&:hover fieldset": {
-      borderColor: "#d4af37",
+      borderColor: "#914091",
     },
     "&.Mui-focused fieldset": {
-      borderColor: "#1e3a8a",
+      borderColor: "#914091",
     },
   },
   "& .MuiInputLabel-root": {
-    color: theme.palette.grey[600],
+    color: "#1E3A8A",
     "&.Mui-focused": {
-      color: "#1e3a8a",
+      color: "#914091",
     },
   },
 }));
 
 const ErrorText = styled(Typography)(({ theme }) => ({
-  color: "#b91c1c",
+  color: "#EF4444", // Rouge subtil pour les erreurs, peut être changé à #914091 si préféré
   fontSize: "0.85rem",
   marginTop: "-16px",
   marginBottom: "12px",
@@ -118,7 +116,7 @@ function AddDepartement({ open, handleClose, handleSubmit, editingDepartment }) 
       <DialogContent sx={{ px: { xs: 3, sm: 4 }, pt: { xs: 2, sm: 3 } }}>
         <Typography
           variant="body2"
-          sx={{   mt: 2, mb: 1, color: "#4b5563", fontStyle: "italic", fontSize: "0.9rem" }}
+          sx={{ mt: 2, mb: 1, color: "#1E3A8A", fontStyle: "italic", fontSize: "0.9rem" }}
         >
           {editingDepartment
             ? "Modifiez les informations pour mettre à jour le département."
@@ -146,18 +144,19 @@ function AddDepartement({ open, handleClose, handleSubmit, editingDepartment }) 
           />
           {errors.DescrpDetp && <ErrorText>{errors.DescrpDetp.message}</ErrorText>}
 
-          <Divider sx={{ my: 3, borderColor: "#e5e7eb" }} />
+          <Divider sx={{ my: 3, borderColor: "#E5E7EB" }} />
 
           <DialogActions sx={{ justifyContent: "flex-end", flexWrap: "wrap", gap: 1 }}>
             <StyledButton
               onClick={handleClose}
               variant="outlined"
               sx={{
-                borderColor: "#1e3a8a",
-                color: "#1e3a8a",
+                borderColor: "#1E3A8A",
+                color: "#1E3A8A",
                 "&:hover": {
-                  borderColor: "#d4af37",
-                  color: "#d4af37",
+                  borderColor: "#914091",
+                  color: "#914091",
+                  backgroundColor: "#EDE9FE",
                 },
               }}
             >
@@ -167,10 +166,11 @@ function AddDepartement({ open, handleClose, handleSubmit, editingDepartment }) 
               type="submit"
               variant="contained"
               sx={{
-                backgroundColor: "#1e3a8a",
-                color: "#fff",
+                backgroundColor: "#914091",
+                color: "#FFFFFF",
                 "&:hover": {
-                  backgroundColor: "#d4af37",
+                  backgroundColor: "#7E3A8A",
+                  boxShadow: "0 4px 8px rgba(145, 64, 145, 0.3)",
                 },
               }}
             >

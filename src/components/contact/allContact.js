@@ -33,10 +33,10 @@ function AllContact() {
   }, [dispatch]);
 
   return (
-    <Box sx={{ p: 4, minHeight: "100vh" }}>
+    <Box sx={{ p: 4, minHeight: "100vh",  }}>
       {loading && (
         <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
-          <CircularProgress color="primary" />
+          <CircularProgress sx={{ color: "#914091" }} />
         </Box>
       )}
 
@@ -46,54 +46,72 @@ function AllContact() {
         </Alert>
       )}
 
-      <Grid container spacing={3}>
+      <Grid container spacing={4}>
         {contacts && contacts.length > 0 ? (
           contacts.map((contact, index) => (
             <Grid item xs={12} sm={6} md={4} key={contact._id || index}>
               <Card
                 sx={{
-                  borderRadius: 3,
-                  boxShadow: 2,
-                  transition: "0.3s",
+                  borderRadius: "20px",
+                  boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
+                  overflow: "hidden",
+                  transition: "transform 0.3s ease",
                   bgcolor: "#fff",
                   "&:hover": {
-                    boxShadow: 6,
+                    transform: "translateY(-5px)",
+                    boxShadow: "0 6px 30px rgba(0,0,0,0.1)",
                   },
                 }}
               >
-                <CardContent>
-                  <Stack direction="row" spacing={2} alignItems="center" mb={2}>
-                    <Avatar
-                      sx={{
-                        bgcolor: "#1e3a8a",
-                        width: 44,
-                        height: 44,
-                        fontSize: "1rem",
-                      }}
-                    >
-                      {contact.email.charAt(0).toUpperCase()}
-                    </Avatar>
-                    <Box>
-                      <Typography variant="subtitle1" fontWeight="bold">
-                        {contact.object}
-                      </Typography>
-                    </Box>
-                  </Stack>
+                <Box
+                  sx={{
+                    bgcolor: "linear-gradient(135deg,rgba(145, 64, 145, 0.4) 0%,rgba(30, 59, 138, 0.42) 100%)",
+                    background: "linear-gradient(135deg,rgba(145, 64, 145, 0.62),rgba(30, 59, 138, 0.38))",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    height: 80,
+                  }}
+                >
+                  <Avatar
+                    sx={{
+                      bgcolor: "#fff",
+                      color: "#914091",
+                      width: 50,
+                      height: 50,
+                      fontWeight: "bold",
+                      fontSize: "1.2rem",
+                    }}
+                  >
+                    {contact.email.charAt(0).toUpperCase()}
+                  </Avatar>
+                </Box>
 
-                  <Divider sx={{ mb: 2 }} />
+                <CardContent>
+                  <Typography
+                    variant="subtitle1"
+                    fontWeight="bold"
+                    color="#1E3A8A"
+                    textAlign="center"
+                    gutterBottom
+                  >
+                    {contact.object}
+                  </Typography>
+
+                  <Divider sx={{ my: 2 }} />
 
                   <Stack direction="row" alignItems="center" spacing={1} mb={1}>
-                    <EmailOutlined fontSize="small" color="primary" />
+                    <EmailOutlined sx={{ color: "#914091" }} fontSize="small" />
                     <Typography variant="body2" color="text.secondary">
                       {contact.email}
                     </Typography>
                   </Stack>
 
                   <Stack direction="row" alignItems="flex-start" spacing={1}>
-                    <SubjectOutlined fontSize="small" color="action" sx={{ mt: 0.3 }} />
+                    <SubjectOutlined sx={{ color: "#1E3A8A", mt: 0.3 }} fontSize="small" />
                     <Tooltip title={contact.subject}>
-                      <Typography variant="body2">
-                        {truncateText(contact.subject, 30)}
+                      <Typography variant="body2" color="text.primary">
+                        {truncateText(contact.subject, 20)}
                       </Typography>
                     </Tooltip>
                   </Stack>

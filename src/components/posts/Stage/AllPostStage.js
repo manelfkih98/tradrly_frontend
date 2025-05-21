@@ -60,7 +60,8 @@ const AllPostStage = () => {
   const offres = useSelector((state) => state.offres?.offres?.offreByStage ) || []; // Récupérer les offres depuis le store
   const loadingPosts = useSelector((state) => state.posts.loading);
   const loadingOffres = useSelector((state) => state.offres?.loading);
-
+  const [resultats, setResultats] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [rowsPerPage] = useState(4);
   const [selectedOffre, setSelectedOffre] = useState(""); // État pour le filtre par offre
@@ -70,6 +71,42 @@ const AllPostStage = () => {
     dispatch(fetchPostsStage());
     dispatch(fetchOffresStage()); // Charger les offres
   }, [dispatch]);
+    useEffect(() => {
+      if (posts.length > 0) {
+        analyserCandidatures();
+      }
+    }, [posts]);
+  
+    const analyserCandidatures = async () => {
+      const data = posts.map((post) => ({
+        cv_filename: post.fileName,
+        description: post.jobId?.description || "Aucune description",
+        requirements: post.jobId?.requirements || [],
+      }));
+  
+      setLoading(true);
+  
+      try {
+        const response = await fetch("https://7cdf-35-236-168-12.ngrok-free.app/analyser", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        });
+  
+        if (!response.ok) {
+          throw new Error("Erreur lors de l'appel à l'API Flask");
+        }
+  
+        const json = await response.json();
+        setResultats(json);
+      } catch (error) {
+        console.error("Erreur lors de la requête :", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
   // Gérer le refus d'une candidature
   const handleRefuser = (id) => {
@@ -117,10 +154,10 @@ const AllPostStage = () => {
             sx={{
               borderRadius: 2,
               "&:hover .MuiOutlinedInput-notchedOutline": {
-                borderColor: "#d4af37",
+                borderColor: "#1E3A8A",
               },
               "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                borderColor: "#1e3a8a",
+                borderColor: "#E5E7EB",
               },
             }}
           >
@@ -156,39 +193,74 @@ const AllPostStage = () => {
         ) : (
           <Table>
             <TableHead>
-              <TableRow sx={{ backgroundColor: "#1e3a8a" }}>
-                <TableCell align="center" sx={{ fontWeight: "bold", color: "white" }}>
-                  Nom
+              <TableRow sx={{ backgroundColor: "#EDE9FE" }}>
+                <TableCell align="center"  sx={{
+                      color: "#1E3A8A",
+                      fontWeight: 700,
+                      fontSize: "1rem",
+                      py: 3,
+                    }}>
+                  Candidat
                 </TableCell>
-                <TableCell align="center" sx={{ fontWeight: "bold", color: "white" }}>
+                <TableCell align="center"  sx={{
+                      color: "#1E3A8A",
+                      fontWeight: 700,
+                      fontSize: "1rem",
+                      py: 3,
+                    }}>
                   Email
                 </TableCell>
-                <TableCell align="center" sx={{ fontWeight: "bold", color: "white" }}>
+                <TableCell align="center"  sx={{
+                      color: "#1E3A8A",
+                      fontWeight: 700,
+                      fontSize: "1rem",
+                      py: 3,
+                    }}>
                   Téléphone
                 </TableCell>
-                <TableCell align="center" sx={{ fontWeight: "bold", color: "white" }}>
-                  Niveau
-                </TableCell>
-                <TableCell align="center" sx={{ fontWeight: "bold", color: "white" }}>
+              
+                <TableCell align="center"  sx={{
+                      color: "#1E3A8A",
+                      fontWeight: 700,
+                      fontSize: "1rem",
+                      py: 3,
+                    }}>
                   Offre
                 </TableCell>
-                <TableCell align="center" sx={{ fontWeight: "bold", color: "white" }}>
+                <TableCell align="center"  sx={{
+                      color: "#1E3A8A",
+                      fontWeight: 700,
+                      fontSize: "1rem",
+                      py: 3,
+                    }}>
                   CV
                 </TableCell>
-                <TableCell align="center" sx={{ fontWeight: "bold", color: "white" }}>
+                <TableCell align="center"  sx={{
+                      color: "#1E3A8A",
+                      fontWeight: 700,
+                      fontSize: "1rem",
+                      py: 3,
+                    }}>
                   Statut
                 </TableCell>
-                <TableCell align="center" sx={{ fontWeight: "bold", color: "white" }}>
+                <TableCell align="center"  sx={{
+                      color: "#1E3A8A",
+                      fontWeight: 700,
+                      fontSize: "1rem",
+                      py: 3,
+                    }}>
                   Actions
                 </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {paginatedPosts.length > 0 ? (
-                paginatedPosts.map((post) => {
+                paginatedPosts.map((post,index) => {
                   const isFinalized =
                     post.status === "refused" || post.status === "testPassed";
-                  return (
+                    const matchScore = resultats[index]?.score;
+
+                    return (
                     <TableRow
                       key={post._id}
                       hover
@@ -198,17 +270,16 @@ const AllPostStage = () => {
                         },
                       }}
                     >
-                      <TableCell>{post.name}</TableCell>
+                      <TableCell>{post.nom} {post.prenom}</TableCell>
                       <TableCell>{post.email}</TableCell>
                       <TableCell>{post.number}</TableCell>
-                      <TableCell>{post.niveau}</TableCell>
                       <TableCell>{post.jobId?.titre}</TableCell>
                       <TableCell>
                         <Button
                           variant="outlined"
                           size="small"
                           startIcon={<DownloadIcon />}
-                          href={post.cv_local_url}
+                          href={post.cv_google_drive_url}
                           target="_blank"
                           rel="noopener noreferrer"
                           sx={{
@@ -238,6 +309,13 @@ const AllPostStage = () => {
                           }
                           status={post.status || "pending"}
                         />
+                           {matchScore !== undefined && (
+                                                      <Chip
+                                                        label={`Match : ${matchScore}%`}
+                                                        color="success"
+                                                        size="small"
+                                                      />
+                                                    )}
                       </TableCell>
                       <TableCell align="center">
                         {!isFinalized ? (

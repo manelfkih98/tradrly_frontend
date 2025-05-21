@@ -1,24 +1,24 @@
 import React from 'react';
-import { AppBar, Toolbar, Box, Typography, IconButton, Link, alpha, InputBase, InputAdornment } from '@mui/material';
+import {
+  AppBar, Toolbar, Box, Typography, IconButton, Link, alpha, InputBase, InputAdornment
+} from '@mui/material';
 import { Facebook, Twitter, LinkedIn, Instagram, ArrowForward } from '@mui/icons-material';
 
 const Footer = () => {
   return (
     <AppBar
-   
-    sx={{
-      position: "relative",
-      display: "flex",
-      color: "#ffffff",
-      boxSizing: "border-box",
-     backgroundColor: "#0a0a0a",
-      flexDirection: "column",
-      justifyContent: "center",
-      alignItems: "center",
-      overflow: " hidden",
-    
-    }}
-  >
+      sx={{
+        position: "relative",
+        display: "flex",
+        color: "#ffffff",
+        boxSizing: "border-box",
+        backgroundColor: "#0a0a0a",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        overflow: "hidden",
+      }}
+    >
       <Toolbar
         sx={{
           flexDirection: 'column',
@@ -28,7 +28,7 @@ const Footer = () => {
           py: 2,
         }}
       >
-        {/* Première ligne : Newsletter (sans les icônes) et liens de navigation */}
+        {/* Première ligne : Newsletter et liens de navigation */}
         <Box
           sx={{
             display: 'flex',
@@ -38,7 +38,7 @@ const Footer = () => {
             width: '100%',
           }}
         >
-          {/* Section Newsletter (sans les icônes) */}
+          {/* Section Newsletter */}
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1rem', minWidth: '250px' }}>
             <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
               NEWSLETTER
@@ -58,12 +58,8 @@ const Footer = () => {
                 py: 0.5,
               }}
             >
-           
-              <IconButton sx={{ color: 'white', p: 0, mr: 1 }}>
-                {/* Vous pouvez remplacer par une icône d'email si vous en avez une */}
-              </IconButton>
               <InputBase
-                placeholder="Enter your email"
+                placeholder="Entrez votre email"
                 inputProps={{ 'aria-label': 'email' }}
                 sx={{ color: 'white', width: '100%' }}
                 endAdornment={
@@ -87,23 +83,23 @@ const Footer = () => {
               />
             </Box>
             <Typography variant="body2" sx={{ fontStyle: 'italic' }}>
-              Nisi rhoncus mattis rhoncus urna neque viverra. UNSUBSCRIBE
+              Inscrivez-vous à notre newsletter pour ne rien manquer. <strong>Désinscription</strong> possible à tout moment.
             </Typography>
           </Box>
 
           {/* Liens de navigation */}
           <Box sx={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
             <Link href="#" color="inherit" underline="hover">
-              Who are we
+              Qui sommes-nous
             </Link>
             <Link href="#" color="inherit" underline="hover">
-              Our work
+              Nos réalisations
             </Link>
             <Link href="#" color="inherit" underline="hover">
-              Our team
+              Notre équipe
             </Link>
             <Link href="#" color="inherit" underline="hover">
-               Careers
+              Carrières
             </Link>
             <Link href="#" color="inherit" underline="hover">
               Blog
@@ -111,7 +107,7 @@ const Footer = () => {
           </Box>
         </Box>
 
-        {/* Deuxième ligne : Icônes des réseaux sociaux et Copyright */}
+        {/* Deuxième ligne : Réseaux sociaux et droits d’auteur */}
         <Box
           sx={{
             display: 'flex',
@@ -120,73 +116,31 @@ const Footer = () => {
             width: '100%',
           }}
         >
-          {/* Icônes des réseaux sociaux */}
+          {/* Réseaux sociaux */}
           <Box sx={{ display: 'flex', gap: '1rem' }}>
-            <IconButton
-              sx={{
-                color: '#fff',
-                backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                border: '1px solid #fff',
-                borderRadius: '50%',
-                width: '40px',
-                height: '40px',
-                '&:hover': {
-                  backgroundColor: 'rgba(255, 255, 255, 0.2)',
-                },
-              }}
-            >
-              <Facebook />
-            </IconButton>
-            <IconButton
-              sx={{
-                color: '#fff',
-                backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                border: '1px solid #fff',
-                borderRadius: '50%',
-                width: '40px',
-                height: '40px',
-                '&:hover': {
-                  backgroundColor: 'rgba(255, 255, 255, 0.2)',
-                },
-              }}
-            >
-              <Twitter />
-            </IconButton>
-            <IconButton
-              sx={{
-                color: '#fff',
-                backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                border: '1px solid #fff',
-                borderRadius: '50%',
-                width: '40px',
-                height: '40px',
-                '&:hover': {
-                  backgroundColor: 'rgba(255, 255, 255, 0.2)',
-                },
-              }}
-            >
-              <LinkedIn />
-            </IconButton>
-            <IconButton
-              sx={{
-                color: '#fff',
-                backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                border: '1px solid #fff',
-                borderRadius: '50%',
-                width: '40px',
-                height: '40px',
-                '&:hover': {
-                  backgroundColor: 'rgba(255, 255, 255, 0.2)',
-                },
-              }}
-            >
-              <Instagram />
-            </IconButton>
+            {[Facebook, Twitter, LinkedIn, Instagram].map((Icon, index) => (
+              <IconButton
+                key={index}
+                sx={{
+                  color: '#fff',
+                  backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                  border: '1px solid #fff',
+                  borderRadius: '50%',
+                  width: '40px',
+                  height: '40px',
+                  '&:hover': {
+                    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                  },
+                }}
+              >
+                <Icon />
+              </IconButton>
+            ))}
           </Box>
 
-          {/* Copyright */}
+          {/* Droits d’auteur */}
           <Typography variant="body2">
-            © COPYRIGHT - ALL RIGHT RESERVED.
+            © COPYRIGHT - TOUS DROITS RÉSERVÉS.
           </Typography>
         </Box>
       </Toolbar>

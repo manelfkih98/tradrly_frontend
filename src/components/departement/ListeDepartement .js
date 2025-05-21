@@ -35,10 +35,11 @@ import AddDepartement from "./AddDepartement";
 import { styled } from "@mui/material/styles";
 
 const AnimatedIconButton = styled(IconButton)(({ theme }) => ({
-  transition: "transform 0.2s ease-in-out, color 0.3s ease",
+  transition: "transform 0.2s ease-in-out, color 0.3s ease, background-color 0.3s ease",
   "&:hover": {
     transform: "scale(1.2)",
-    color: "#d4af37",
+    color: "#914091",
+    backgroundColor: "#EDE9FE",
   },
 }));
 
@@ -52,7 +53,7 @@ const ListesDepartement = () => {
   const [editingDepartment, setEditingDepartment] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5; // Afficher 5 départements par page
+  const itemsPerPage = 5;
 
   useEffect(() => {
     dispatch(fetchDepartments());
@@ -66,8 +67,8 @@ const ListesDepartement = () => {
       showCancelButton: true,
       confirmButtonText: "Supprimer",
       cancelButtonText: "Annuler",
-      confirmButtonColor: "#b91c1c",
-      cancelButtonColor: "#1e3a8a",
+      confirmButtonColor: "#914091",
+      cancelButtonColor: "#1E3A8A",
     }).then((result) => {
       if (result.isConfirmed) {
         dispatch(deleteDepartments(id));
@@ -104,10 +105,12 @@ const ListesDepartement = () => {
       .includes(searchTerm.toLowerCase())
   );
 
-  // Pagination logic
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentDepartments = filteredDepartments.slice(indexOfFirstItem, indexOfLastItem);
+  const currentDepartments = filteredDepartments.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
 
   return (
     <Box>
@@ -124,15 +127,15 @@ const ListesDepartement = () => {
           startIcon={<AddIcon sx={{ fontSize: "1.5rem" }} />}
           onClick={handleOpen}
           sx={{
-            backgroundColor: "#1e3a8a",
-            color: "#ffffff",
+            backgroundColor: "#914091",
+            color: "#FFFFFF",
             borderRadius: 2,
             px: 4,
             py: 1.5,
             fontWeight: 600,
             "&:hover": {
-              backgroundColor: "#d4af37",
-              boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
+              backgroundColor: "#7E3A8A",
+              boxShadow: "0 4px 8px rgba(145, 64, 145, 0.3)",
             },
             transition: "all 0.3s ease",
           }}
@@ -140,7 +143,12 @@ const ListesDepartement = () => {
           Nouveau Département
         </Button>
 
-        <Box display="flex" alignItems="center" gap={1} sx={{ width: { xs: "100%", sm: "auto" } }}>
+        <Box
+          display="flex"
+          alignItems="center"
+          gap={1}
+          sx={{ width: { xs: "100%", sm: "auto" } }}
+        >
           <TextField
             variant="outlined"
             size="small"
@@ -150,18 +158,21 @@ const ListesDepartement = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
             InputProps={{
               startAdornment: (
-                <SearchIcon sx={{ color: "#1e3a8a", mr: 1 }} />
+                <SearchIcon sx={{ color: "#1E3A8A", mr: 1, transition: "color 0.3s" }} />
               ),
             }}
             sx={{
-              backgroundColor: "#f4f6f8",
+              backgroundColor: "#F8FAFC",
               borderRadius: 2,
               "& .MuiOutlinedInput-root": {
+                "& fieldset": {
+                  borderColor: "#1E3A8A",
+                },
                 "&:hover fieldset": {
-                  borderColor: "#d4af37",
+                  borderColor: "#914091",
                 },
                 "&.Mui-focused fieldset": {
-                  borderColor: "#1e3a8a",
+                  borderColor: "#914091",
                 },
               },
               transition: "all 0.3s ease",
@@ -170,16 +181,24 @@ const ListesDepartement = () => {
         </Box>
       </Box>
 
-      <Divider sx={{ mb: 4, borderColor: "#e5e7eb" }} />
+      <Divider sx={{ mb: 4, borderColor: "#E5E7EB" }} />
 
       {loading ? (
         <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
-          <CircularProgress sx={{ color: "#1e3a8a" }} />
+          <CircularProgress sx={{ color: "#1E3A8A" }} />
         </Box>
       ) : error ? (
-        <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", py: 4, gap: 1 }}>
-          <ErrorOutlineIcon sx={{ color: "#b91c1c" }} />
-          <Typography color="#b91c1c" align="center">
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            py: 4,
+            gap: 1,
+          }}
+        >
+          <ErrorOutlineIcon sx={{ color: "#1E3A8A" }} />
+          <Typography color="#1E3A8A" align="center">
             Erreur : {error}
           </Typography>
         </Box>
@@ -189,22 +208,42 @@ const ListesDepartement = () => {
             component={Paper}
             sx={{
               borderRadius: 3,
-              boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+              boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+              backgroundColor: "#FFFFFF",
               overflowX: "auto",
             }}
           >
             <Table>
               <TableHead>
-                <TableRow sx={{ backgroundColor: "#1e3a8a" }}>
-                  <TableCell sx={{ color: "#ffffff", fontWeight: 700, fontSize: "1rem", py: 3 }}>
+                <TableRow sx={{ backgroundColor: "#EDE9FE" }}>
+                  <TableCell
+                    sx={{
+                      color: "#1E3A8A",
+                      fontWeight: 700,
+                      fontSize: "1rem",
+                      py: 3,
+                    }}
+                  >
                     Nom
                   </TableCell>
-                  <TableCell sx={{ color: "#ffffff", fontWeight: 700, fontSize: "1rem", py: 3 }}>
+                  <TableCell
+                    sx={{
+                      color: "#1E3A8A",
+                      fontWeight: 700,
+                      fontSize: "1rem",
+                      py: 3,
+                    }}
+                  >
                     Description
                   </TableCell>
                   <TableCell
                     align="center"
-                    sx={{ color: "#ffffff", fontWeight: 700, fontSize: "1rem", py: 3 }}
+                    sx={{
+                      color: "#1E3A8A",
+                      fontWeight: 700,
+                      fontSize: "1rem",
+                      py: 3,
+                    }}
                   >
                     Actions
                   </TableCell>
@@ -217,21 +256,22 @@ const ListesDepartement = () => {
                       key={dep._id}
                       hover
                       sx={{
-                        backgroundColor: index % 2 === 0 ? "#ffffff" : "#f9fafb",
-                        "&:hover": { backgroundColor: "#f1f5f9" },
+                        backgroundColor: index % 2 === 0 ? "#FFFFFF" : "#F8FAFC",
+                        "&:hover": { backgroundColor: "#DBEAFE" },
+                        transition: "all 0.3s ease",
                       }}
                     >
-                      <TableCell sx={{ py: 2, px: 3, fontSize: "0.9rem" }}>
+                      <TableCell sx={{ py: 2, px: 3, fontSize: "0.9rem", color: "#1E3A8A" }}>
                         {dep.NameDep}
                       </TableCell>
-                      <TableCell sx={{ py: 2, px: 3, fontSize: "0.9rem" }}>
+                      <TableCell sx={{ py: 2, px: 3, fontSize: "0.9rem", color: "#1E3A8A" }}>
                         {dep.DescrpDetp}
                       </TableCell>
                       <TableCell align="center" sx={{ py: 2, px: 3 }}>
                         <Tooltip title="Modifier">
                           <AnimatedIconButton
                             onClick={() => handleEdit(dep)}
-                            sx={{ color: "#1e3a8a" }}
+                            sx={{ color: "#1E3A8A" }}
                           >
                             <EditIcon />
                           </AnimatedIconButton>
@@ -239,7 +279,7 @@ const ListesDepartement = () => {
                         <Tooltip title="Supprimer">
                           <AnimatedIconButton
                             onClick={() => handleDelete(dep._id)}
-                            sx={{ color: "#b91c1c" }}
+                            sx={{ color: "red" }}
                           >
                             <DeleteIcon />
                           </AnimatedIconButton>
@@ -250,9 +290,17 @@ const ListesDepartement = () => {
                 ) : (
                   <TableRow>
                     <TableCell colSpan={3} align="center">
-                      <Box display="flex" alignItems="center" justifyContent="center" py={4} gap={1}>
-                        <InfoOutlinedIcon sx={{ color: "#1e3a8a" }} />
-                        <Typography sx={{ color: "#1e3a8a", fontWeight: 500 }}>
+                      <Box
+                        display="flex"
+                        alignItems="center"
+                        justifyContent="center"
+                        py={4}
+                        gap={1}
+                      >
+                        <InfoOutlinedIcon sx={{ color: "#1E3A8A" }} />
+                        <Typography
+                          sx={{ color: "#1E3A8A", fontWeight: 500 }}
+                        >
                           Aucun département trouvé.
                         </Typography>
                       </Box>
@@ -263,29 +311,28 @@ const ListesDepartement = () => {
             </Table>
           </TableContainer>
 
-        
           {filteredDepartments.length > itemsPerPage && (
             <Box display="flex" justifyContent="center" mt={4}>
               <Pagination
                 count={Math.ceil(filteredDepartments.length / itemsPerPage)}
                 page={currentPage}
                 onChange={(event, value) => setCurrentPage(value)}
-                color="primary"
                 shape="rounded"
                 size="medium"
                 sx={{
                   "& .MuiPaginationItem-root": {
-                    color: "#1e3a8a",
+                    color: "#1E3A8A",
                     fontWeight: "bold",
                     "&:hover": {
-                      backgroundColor: "#d4af37",
-                      color: "#ffffff",
+                      backgroundColor: "#EDE9FE",
+                      color: "#914091",
                     },
                     "&.Mui-selected": {
-                      backgroundColor: "#1e3a8a",
-                      color: "#ffffff",
+                      backgroundColor: "#DBEAFE",
+                      color: "#1E3A8A",
                       "&:hover": {
-                        backgroundColor: "#d4af37",
+                        backgroundColor: "#EDE9FE",
+                        color: "#914091",
                       },
                     },
                   },
