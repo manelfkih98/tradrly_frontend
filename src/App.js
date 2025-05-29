@@ -11,7 +11,15 @@ import Question from "./pages/question";
 import Posts from "./pages/postsEmploi";
 import PostWithoutOffre from "./pages/postWithoutOffre";
 import Login from "./pages/login";
-import Qcm from "./pages/Qcm";
+import QcmStage from "./pages/QcmStage";
+import QcmEmploi from "./pages/QcmEmploi";
+import Rh from "./pages/rh";
+
+
+
+
+
+
 import Test from "./pages/test";
 import LoginCandidatPage from "./pages/loginCandidatPage";
 import PostStage from "./pages/postStage";
@@ -27,6 +35,7 @@ import Careers from "./pages/careers";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Postcandidat from "./pages/candidat"
+import QuestionPsy from "./pages/questionPsy";
 
 const App = () => {
   const location = useLocation();
@@ -87,11 +96,15 @@ const App = () => {
           <Route path="/post/emploi" element={<Posts />} />
           <Route path="/post/stage" element={<PostStage />} />
           <Route path="/postwithoutoffre" element={<PostWithoutOffre />} />
-          <Route path="/QCM" element={<Qcm />} />
+          <Route path="/qcm/stage" element={<QcmStage />} />
+          <Route path="/qcm/emploi" element={<QcmEmploi />} />
           <Route path="/test/:id" element={<Test />} />
           <Route path="/loginCandidat/:id" element={<LoginCandidatPage />} />
           <Route path="/team" element={<Team />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/questionPsy" element={<QuestionPsy />} />
+          <Route path="/rh" element={<Rh />} />
+
         </Routes>
         <ToastContainer
           position="bottom-right"

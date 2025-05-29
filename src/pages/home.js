@@ -40,6 +40,10 @@ const Home = () => {
       <HeroSection />
       <TrustedSection />
       <WhoAreWe />
+      <div id="work" ref={workShowcaseRef}>
+        <WorkShowcase />
+      </div>
+    
       <div id="team" ref={teamSectionRef}>
         <TeamSection />
       </div>
@@ -47,9 +51,7 @@ const Home = () => {
         <CareerOpportunities />
       </Box>
       <TestimonialsSection />
-      <div id="work" ref={workShowcaseRef}>
-        <WorkShowcase />
-      </div>
+      
       <ContactSection />
       <Footer />
     </div>

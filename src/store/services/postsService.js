@@ -51,16 +51,7 @@ export const refuserJob = (id) => async (dispatch) => {
     dispatch(setError(error)); 
   }
 };
- export const refuserDemande=(id)=> async (dispatch) =>
- {
-  dispatch(setLoading());
-  try{
-    const response = await api.post(`${PATHS.POST.REFUSER_DEMANDE}/${id}`);
-    dispatch(postWithoutOffre());
-  }catch(error){
-    dispatch(setError(error))
-  }
- }
+
 export const accepter = (id) => async (dispatch) => {
   try {
     const response = await api.post(`${PATHS.POST.ACCEPTER_POST}/${id}`);
@@ -138,19 +129,25 @@ export const verifier = (id) => async (dispatch) => {
 export const postuler = (data) => async (dispatch) => {
   dispatch(setLoading());
   try {
-    const response = await axios.post(PATHS.POST.POSTULER, data );
+    const response = await axios.post(PATHS.POST.POSTULER, data);
     console.log("Postulation réussie :", response.data);
+    return response.data; // Return the full response including the message
   } catch (error) {
-    dispatch(setError(error.message));
+    const errorMsg = error.response?.data?.error || error.response?.data?.message || 'Une erreur s\'est produite.';
+    dispatch(setError(errorMsg));
+    throw error;
   }
 };
 export const postulerSansOffre = (data) => async (dispatch) => {
   dispatch(setLoading());
   try {
-    const response = await axios.post(PATHS.POST.POST_SPONPONTANE, data );
-    console.log("Postulation réussie :", response.data);
+    const response = await axios.post(PATHS.POST.POST_SPONPONTANE, data);
+    console.log("Postulation spontanée réussie :", response.data);
+    return response.data;
   } catch (error) {
-    dispatch(setError(error.message));
+    const errorMsg = error.response?.data?.error || error.response?.data?.message || 'Une erreur s\'est produite.';
+    dispatch(setError(errorMsg));
+    throw error;
   }
 };
 

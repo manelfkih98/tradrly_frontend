@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchTeam } from "../../store/services/teamService";
 import {
@@ -9,19 +9,21 @@ import {
   Card,
   CardMedia,
   CardContent,
-  TableCell,
+  useTheme,
+  useMediaQuery,
 } from "@mui/material";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import FacebookIcon from "@mui/icons-material/Facebook";
-import TwitterIcon from "@mui/icons-material/Twitter";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 
 const TeamSection = () => {
   const dispatch = useDispatch();
   const { teams, loading } = useSelector((state) => state.teams);
-  const scrollRef = useRef(null); 
+  const scrollRef = useRef(null);
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   useEffect(() => {
     dispatch(fetchTeam());
@@ -42,7 +44,7 @@ const TeamSection = () => {
       sx={{
         backgroundColor: "#f5edff",
         py: 6,
-        px: 4,
+        px: { xs: 2, sm: 4 },
         borderTopLeftRadius: 100,
         borderBottomRightRadius: 100,
       }}
@@ -50,13 +52,15 @@ const TeamSection = () => {
       <Box
         sx={{
           display: "flex",
+          flexDirection: { xs: "column", sm: "row" },
           justifyContent: "space-between",
           alignItems: "center",
           mb: 4,
+          gap: 2,
         }}
       >
-        <Typography variant="h4" fontWeight="bold">
-          Our beloved team
+        <Typography variant="h4" fontWeight="bold" textAlign={{ xs: "center", sm: "left" }}>
+          Notre équipe dévouée
         </Typography>
         <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
           <Button
@@ -69,14 +73,18 @@ const TeamSection = () => {
               color: "#fff",
             }}
           >
-            Wanna know more
+            En savoir plus
           </Button>
-          <IconButton onClick={() => handleScroll("left")}>
-            <ArrowBackIosNewIcon />
-          </IconButton>
-          <IconButton onClick={() => handleScroll("right")}>
-            <ArrowForwardIosIcon />
-          </IconButton>
+          {!isMobile && (
+            <>
+              <IconButton onClick={() => handleScroll("left")}>
+                <ArrowBackIosNewIcon />
+              </IconButton>
+              <IconButton onClick={() => handleScroll("right")}>
+                <ArrowForwardIosIcon />
+              </IconButton>
+            </>
+          )}
         </Box>
       </Box>
 
@@ -95,81 +103,92 @@ const TeamSection = () => {
         {teams && teams.length > 0 ? (
           teams.map((member, index) => (
             <Card
-            key={index}
-            sx={{
-              width: 250, // largeur fixe
-              height: 400, // hauteur fixe
-              flexShrink: 0,
-              borderRadius: 5,
-              boxShadow: 3,
-              backgroundColor: "#fff",
-              p: 2,
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "space-between",
-            }}
-          >
-            <CardContent sx={{ p: 0, display: "flex", flexDirection: "column", flexGrow: 1 }}>
-              <Typography variant="subtitle2" fontWeight="bold">
-                {member.title}
-              </Typography>
-              <Typography variant="h6" mb={1}>
-                {member.name}
-              </Typography>
-              <CardMedia
-                component="img"
-                image={member.image}
-                alt={member.name}
+              key={index}
+              sx={{
+                minWidth: { xs: "70%", sm: 280 },
+                maxWidth: 280,
+                height: { xs: "auto", sm: 350 },
+                flexShrink: 0,
+                borderRadius: 5,
+                boxShadow: 3,
+                backgroundColor: "#fff",
+                p: 2,
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+              }}
+            >
+              <CardContent
                 sx={{
-                  borderRadius: 3,
-                  height: 180,
-                  objectFit: "cover",
-                  mb: 1,
-                }}
-              />
-              <Typography
-                variant="body2"
-                sx={{ flexGrow: 1, overflow: "hidden", textOverflow: "ellipsis" }}
-              >
-                "{member.quote}"
-              </Typography>
-              <Box
-                sx={{
+                  p: 0,
                   display: "flex",
-                  justifyContent: "center",
-                  gap: 1,
-                  mt: 1,
+                  flexDirection: "column",
+                  flexGrow: 1,
                 }}
               >
-                {member.linkedin ? (
-                  <a
-                    href={
-                      member.linkedin.startsWith("http")
-                        ? member.linkedin
-                        : `https://${member.linkedin}`
-                    }
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{
+                <Typography variant="subtitle2" fontWeight="bold">
+                  {member.title}
+                </Typography>
+                <Typography variant="h6" mb={1}>
+                  {member.name}
+                </Typography>
+                <CardMedia
+                  component="img"
+                  image={member.image}
+                  alt={member.name}
+                  sx={{
+                    
+                    borderRadius: 3,
+                    height: 180,
+                    width: 250,
+                    objectFit: "cover",
+                    mb: 1,
+                  }}
+                />
+                <Typography
+                  variant="body2"
+                  sx={{
+                    flexGrow: 1,
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                  }}
+                >
+                  "{member.quote}"
+                </Typography>
+
+                {member.linkedin && (
+                  <Box
+                    sx={{
                       display: "flex",
-                      alignItems: "center",
-                      textDecoration: "none",
-                      color: "#0a66c2",
-                      gap: "6px",
+                      justifyContent: "center",
+                      gap: 1,
+                      mt: 1,
                     }}
                   >
-                    <LinkedInIcon fontSize="small" sx={{ color: "#0a66c2" }} />
-                  </a>
-                ) : (
-                  "—"
+                    <a
+                      href={
+                        member.linkedin.startsWith("http")
+                          ? member.linkedin
+                          : `https://${member.linkedin}`
+                      }
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        textDecoration: "none",
+                        color: "#0a66c2",
+                      }}
+                    >
+                      <LinkedInIcon fontSize="small" />
+                    </a>
+                  </Box>
                 )}
-              </Box>
-            </CardContent>
-          </Card>
-          
+              </CardContent>
+            </Card>
           ))
         ) : (
-          <Typography>Loading or no team members found...</Typography>
+          <Typography>Chargement ou aucun membre trouvé...</Typography>
         )}
       </Box>
     </Box>

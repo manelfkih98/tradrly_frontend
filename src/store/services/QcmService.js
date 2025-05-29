@@ -7,7 +7,20 @@ import { setQCM, setLoading, setError } from "../slices/QcmSlice";
 export const fetchQcm = () => async (dispatch) => {
   dispatch(setLoading());
   try {
-    const response = await api.get(PATHS.QCM.ALL_QCM);
+    const response = await api.get(PATHS.QCM.ALL_QCM_Stage);
+    console.log("QCM récupérés :", response.data);
+    dispatch(setQCM(response.data));
+  } catch (error) {
+    dispatch(setError(error.message));
+  }
+};
+
+
+export const fetchQcmJob = () => async (dispatch) => {
+  dispatch(setLoading());
+  try {
+    const response = await api.get(PATHS.QCM.ALL_QCM_JOB);
+    console.log("QCM récupérés :", response.data);
     dispatch(setQCM(response.data));
   } catch (error) {
     dispatch(setError(error.message));

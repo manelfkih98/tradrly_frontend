@@ -11,6 +11,8 @@ import {
 } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { styled } from "@mui/material/styles";
+import { ToastContainer, toast } from 'react-toastify';
+
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiPaper-root": {
@@ -103,6 +105,15 @@ function AddDepartement({ open, handleClose, handleSubmit, editingDepartment }) 
 
   const handleFormSubmit = (data) => {
     handleSubmit(data);
+    toast.success(editingDepartment ? "Département mis à jour avec succès!" : "Département créé avec succès!", {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
     reset();
     handleClose();
   };

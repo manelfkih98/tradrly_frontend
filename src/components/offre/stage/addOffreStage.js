@@ -24,6 +24,7 @@ import { useForm, Controller } from "react-hook-form";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import { styled } from "@mui/material/styles";
+import { ToastContainer, toast } from 'react-toastify';
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
   "& .MuiOutlinedInput-root": {
@@ -126,6 +127,17 @@ const AddOffreStage = ({ open, handleClose }) => {
       requirements: data.requirements.filter((req) => req.trim() !== ""),
     };
     await dispatch(createOffreStage(newOffre));
+    toast.success("Offre de stage créée avec succès !", {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+
+    reset();
     handleClose();
   };
 
@@ -173,10 +185,7 @@ const AddOffreStage = ({ open, handleClose }) => {
                 variant="outlined"
                 {...register("titre", {
                   required: "Le titre est requis",
-                  minLength: {
-                    value: 3,
-                    message: "Minimum 3 caractères",
-                  },
+                
                 })}
                 error={!!errors.titre}
                 helperText={errors.titre?.message}
@@ -192,10 +201,7 @@ const AddOffreStage = ({ open, handleClose }) => {
                 variant="outlined"
                 {...register("description", {
                   required: "La description est requise",
-                  minLength: {
-                    value: 10,
-                    message: "Minimum 10 caractères",
-                  },
+                 
                 })}
                 error={!!errors.description}
                 helperText={errors.description?.message}
@@ -261,22 +267,27 @@ const AddOffreStage = ({ open, handleClose }) => {
             </Grid>
             {/* Closing Date Field */}
             <Grid item xs={12} sm={6}>
-              <StyledTextField
-                label="Date de clôture"
-                type="date"
-                fullWidth
-                variant="outlined"
-                InputLabelProps={{ shrink: true }}
-                {...register("date_limite", {
-                  required: "La date de clôture est requise",
-                  validate: (value) =>
-                    value >= new Date().toISOString().split("T")[0] ||
-                    "La date doit être aujourd'hui ou dans le futur",
-                })}
-                error={!!errors.date_limite}
-                helperText={errors.date_limite?.message}
-              />
-            </Grid>
+  <StyledTextField
+    label="Date de clôture"
+    type="date"
+    fullWidth
+    variant="outlined"
+    InputLabelProps={{ shrink: true }}
+    InputProps={{
+      inputProps: {
+        min: new Date().toISOString().split("T")[0], // Restricts to today or future dates
+      },
+    }}
+    {...register("date_limite", {
+      required: "La date de clôture est requise",
+      validate: (value) =>
+        value >= new Date().toISOString().split("T")[0] ||
+        "La date doit être aujourd'hui ou dans le futur",
+    })}
+    error={!!errors.date_limite}
+    helperText={errors.date_limite?.message}
+  />
+</Grid>
             {/* Department Field */}
             <Grid item xs={12} sm={6}>
               <StyledFormControl

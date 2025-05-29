@@ -150,7 +150,7 @@ function AllTeam() {
       background: "#EDE9FE",
       customClass: {
         confirmButton: "swal-confirm-button",
-        cancelButton: "swal-cancel-button",
+        
       },
     }).then(async (result) => {
       if (result.isConfirmed) {

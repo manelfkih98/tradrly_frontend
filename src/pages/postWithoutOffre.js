@@ -8,8 +8,8 @@ const PostWithoutOffre = () => {
     <Box sx={{ margin:"auto",mt:8,px:2,  minHeight: "100vh"}}>
       {/* Header */}
       <Box display="flex" alignItems="center" mb={4}>
-        <WorkOutlineIcon sx={{ fontSize: 30, color: "#1976d2", mr: 1 }} />
-        <Typography variant="h5" fontWeight="bold">
+        <WorkOutlineIcon sx={{ fontSize: 30, color: "#914091", mr: 1 }} />
+        <Typography variant="h5" fontWeight="bold" color="#1E3A8A">
           Candidatures Spontanées
         </Typography>
       </Box>

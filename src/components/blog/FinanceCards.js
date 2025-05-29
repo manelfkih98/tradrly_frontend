@@ -27,7 +27,7 @@ const FinanceCards = () => {
       <Container maxWidth="lg">
         <Box sx={{ flexGrow: 1, py: 4 }}>
           <Grid container spacing={2} justifyContent="center">
-            {/* Left column with image8 and Value-Driven Spending */}
+            {/* Colonne gauche : image8 + Dépenses guidées par vos valeurs */}
             <Grid item xs={12} md={4}>
               <Stack spacing={2}>
                 <Card sx={{ borderRadius: 3 }}>
@@ -35,7 +35,7 @@ const FinanceCards = () => {
                     component="img"
                     height="300"
                     image={image8}
-                    alt="Group looking at laptop"
+                    alt="Groupe regardant un ordinateur portable"
                   />
                 </Card>
 
@@ -49,18 +49,18 @@ const FinanceCards = () => {
                 >
                   <CardContent>
                     <Typography variant="h6" fontWeight="bold" gutterBottom>
-                      Value-Driven Spending
+                      Dépenses axées sur vos valeurs
                     </Typography>
                     <Typography variant="body2">
-                      Focus your spending on what truly aligns with your
-                      priorities and long-term goals.
+                      Concentrez vos dépenses sur ce qui correspond réellement à
+                      vos priorités et à vos objectifs à long terme.
                     </Typography>
                   </CardContent>
                 </Card>
               </Stack>
             </Grid>
 
-            {/* Center image with text */}
+            {/* Colonne centrale : image7 avec texte */}
             <Grid item xs={12} md={4}>
               <Box
                 sx={{
@@ -77,17 +77,17 @@ const FinanceCards = () => {
                 }}
               >
                 <Typography variant="h5" fontWeight="bold">
-                  Set aside 35% of your income.
+                  Mettez de côté 35 % de vos revenus
                 </Typography>
                 <Typography variant="body2">
-                  Save 35% of your income to build financial security and{" "}
-                  <strong>develop strong money habits</strong> for future needs
-                  and opportunities.
+                  Épargnez 35 % de vos revenus pour renforcer votre sécurité
+                  financière et <strong>adopter de bonnes habitudes</strong> de
+                  gestion pour l’avenir.
                 </Typography>
               </Box>
             </Grid>
 
-           
+            {/* Colonne droite : Financial Control + image6 */}
             <Grid item xs={12} md={4}>
               <Stack spacing={2}>
                 <Card
@@ -99,11 +99,11 @@ const FinanceCards = () => {
                 >
                   <CardContent>
                     <Typography variant="h6" fontWeight="bold">
-                      Financial Control
+                      Maîtrise financière
                     </Typography>
                     <Typography variant="body2">
-                      Thoughtful spending helps reduce waste and strengthens
-                      control over your financial future.
+                      Dépenser de manière réfléchie permet de réduire le gaspillage
+                      et de renforcer votre contrôle sur l’avenir financier.
                     </Typography>
                   </CardContent>
                 </Card>
@@ -113,7 +113,7 @@ const FinanceCards = () => {
                     component="img"
                     height="300"
                     image={image6}
-                    alt="Smiling man with coffee"
+                    alt="Homme souriant avec un café"
                   />
                 </Card>
               </Stack>

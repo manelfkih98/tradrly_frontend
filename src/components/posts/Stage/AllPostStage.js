@@ -3,7 +3,7 @@ import {
   fetchPostsStage,
   refuserStage,
 } from "../../../store/services/postsService";
-import { fetchOffresStage } from "../../../store/services/offreService"; // Nouveau service pour récupérer les offres
+import { fetchOffresStage } from "../../../store/services/offreService";
 import { passerTest } from "../../../store/services/QcmService";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -26,11 +26,13 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  Typography,
 } from "@mui/material";
 import DownloadIcon from "@mui/icons-material/Download";
 import DeleteIcon from "@mui/icons-material/Delete";
 import QuizIcon from "@mui/icons-material/Quiz";
 
+// Styled Chip for status
 const StatusChip = styled(Chip)(({ theme, status }) => ({
   fontWeight: 500,
   textTransform: "capitalize",
@@ -54,87 +56,127 @@ const StatusChip = styled(Chip)(({ theme, status }) => ({
   }),
 }));
 
+// Custom CircularProgress with label for score
+const CustomCircularProgressWithLabel = styled(({ value, ...props }) => (
+  <Box sx={{ position: "relative", display: "inline-flex" }}>
+    <CircularProgress
+      variant="determinate"
+      value={value}
+      size={50}
+      thickness={5}
+      {...props}
+    />
+    <Box
+      sx={{
+        top: 0,
+        left: 0,
+        bottom: 0,
+        right: 0,
+        position: "absolute",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <Typography
+        variant="caption"
+        component="div"
+        color="text.primary"
+        fontWeight="bold"
+      >
+        {`${Math.round(value)}%`}
+      </Typography>
+    </Box>
+  </Box>
+))(({ theme, value }) => ({
+  color:
+    value >= 80
+      ? theme.palette.success.main
+      : value >= 50
+      ? theme.palette.warning.main
+      : theme.palette.error.main,
+}));
+
 const AllPostStage = () => {
   const dispatch = useDispatch();
   const posts = useSelector((state) => state.posts.posts_stage) || [];
-  const offres = useSelector((state) => state.offres?.offres?.offreByStage ) || []; // Récupérer les offres depuis le store
+  const offres = useSelector((state) => state.offres?.offres?.offreByStage) || [];
   const loadingPosts = useSelector((state) => state.posts.loading);
   const loadingOffres = useSelector((state) => state.offres?.loading);
   const [resultats, setResultats] = useState([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [rowsPerPage] = useState(4);
-  const [selectedOffre, setSelectedOffre] = useState(""); // État pour le filtre par offre
+  const [selectedOffre, setSelectedOffre] = useState("");
 
-  // Charger les candidatures et les offres
   useEffect(() => {
     dispatch(fetchPostsStage());
-    dispatch(fetchOffresStage()); // Charger les offres
+    dispatch(fetchOffresStage());
   }, [dispatch]);
-    useEffect(() => {
-      if (posts.length > 0) {
-        analyserCandidatures();
-      }
-    }, [posts]);
-  
-    const analyserCandidatures = async () => {
-      const data = posts.map((post) => ({
-        cv_filename: post.fileName,
-        description: post.jobId?.description || "Aucune description",
-        requirements: post.jobId?.requirements || [],
-      }));
-  
-      setLoading(true);
-  
-      try {
-        const response = await fetch("https://7cdf-35-236-168-12.ngrok-free.app/analyser", {
+
+  useEffect(() => {
+    if (posts.length > 0) {
+      console.log("Posts:", posts.map((post) => ({ id: post._id, fileName: post.fileName })));
+      analyserCandidatures();
+    }
+  }, [posts]);
+
+  const analyserCandidatures = async () => {
+    const data = posts.map((post) => ({
+      cv_filename: post.fileName,
+      description: post.jobId?.description || "Aucune description",
+      requirements: post.jobId?.requirements || [],
+    }));
+
+    setLoading(true);
+
+    try {
+      const response = await fetch(
+        " https://9d3f-34-125-39-67.ngrok-free.app/analyser",
+        {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(data),
-        });
-  
-        if (!response.ok) {
-          throw new Error("Erreur lors de l'appel à l'API Flask");
         }
-  
-        const json = await response.json();
-        setResultats(json);
-      } catch (error) {
-        console.error("Erreur lors de la requête :", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+      );
 
-  // Gérer le refus d'une candidature
+      if (!response.ok) {
+        throw new Error("Erreur lors de l'appel à l'API Flask");
+      }
+
+      const json = await response.json();
+      console.log("API Response:", json);
+      setResultats(json);
+    } catch (error) {
+      console.error("Erreur lors de la requête :", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleRefuser = (id) => {
     dispatch(refuserStage(id));
   };
 
-  // Gérer le passage au test
   const handlePasseTest = (id) => {
     dispatch(passerTest(id));
   };
 
-  // Gérer le changement de page
   const handlePageChange = (event, value) => {
     setPage(value);
   };
 
-  // Gérer le changement de filtre par offre
   const handleOffreChange = (event) => {
     setSelectedOffre(event.target.value);
-    setPage(1); // Réinitialiser la page à 1 lors du changement de filtre
+    setPage(1);
   };
 
-  // Filtrer les candidatures en fonction de l'offre sélectionnée
   const filteredPosts = selectedOffre
     ? posts.filter((post) => post.jobId?._id === selectedOffre)
     : posts;
 
-  // Calculer les candidatures à afficher pour la page actuelle
   const paginatedPosts = filteredPosts.slice(
     (page - 1) * rowsPerPage,
     page * rowsPerPage
@@ -142,7 +184,6 @@ const AllPostStage = () => {
 
   return (
     <Box sx={{ p: 3, maxWidth: 1400, mx: "auto" }}>
-      {/* Filtre par offre */}
       <Box sx={{ mb: 3, maxWidth: 300 }}>
         <FormControl fullWidth>
           <InputLabel id="offre-filter-label">Filtrer par offre</InputLabel>
@@ -194,73 +235,104 @@ const AllPostStage = () => {
           <Table>
             <TableHead>
               <TableRow sx={{ backgroundColor: "#EDE9FE" }}>
-                <TableCell align="center"  sx={{
-                      color: "#1E3A8A",
-                      fontWeight: 700,
-                      fontSize: "1rem",
-                      py: 3,
-                    }}>
+                <TableCell
+                  align="center"
+                  sx={{
+                    color: "#1E3A8A",
+                    fontWeight: 700,
+                    fontSize: "1rem",
+                    py: 3,
+                  }}
+                >
                   Candidat
                 </TableCell>
-                <TableCell align="center"  sx={{
-                      color: "#1E3A8A",
-                      fontWeight: 700,
-                      fontSize: "1rem",
-                      py: 3,
-                    }}>
+                <TableCell
+                  align="center"
+                  sx={{
+                    color: "#1E3A8A",
+                    fontWeight: 700,
+                    fontSize: "1rem",
+                    py: 3,
+                  }}
+                >
                   Email
                 </TableCell>
-                <TableCell align="center"  sx={{
-                      color: "#1E3A8A",
-                      fontWeight: 700,
-                      fontSize: "1rem",
-                      py: 3,
-                    }}>
+                <TableCell
+                  align="center"
+                  sx={{
+                    color: "#1E3A8A",
+                    fontWeight: 700,
+                    fontSize: "1rem",
+                    py: 3,
+                  }}
+                >
                   Téléphone
                 </TableCell>
-              
-                <TableCell align="center"  sx={{
-                      color: "#1E3A8A",
-                      fontWeight: 700,
-                      fontSize: "1rem",
-                      py: 3,
-                    }}>
+                <TableCell
+                  align="center"
+                  sx={{
+                    color: "#1E3A8A",
+                    fontWeight: 700,
+                    fontSize: "1rem",
+                    py: 3,
+                  }}
+                >
                   Offre
                 </TableCell>
-                <TableCell align="center"  sx={{
-                      color: "#1E3A8A",
-                      fontWeight: 700,
-                      fontSize: "1rem",
-                      py: 3,
-                    }}>
+                <TableCell
+                  align="center"
+                  sx={{
+                    color: "#1E3A8A",
+                    fontWeight: 700,
+                    fontSize: "1rem",
+                    py: 3,
+                  }}
+                >
                   CV
                 </TableCell>
-                <TableCell align="center"  sx={{
-                      color: "#1E3A8A",
-                      fontWeight: 700,
-                      fontSize: "1rem",
-                      py: 3,
-                    }}>
+                <TableCell
+                  align="center"
+                  sx={{
+                    color: "#1E3A8A",
+                    fontWeight: 700,
+                    fontSize: "1rem",
+                    py: 3,
+                  }}
+                >
                   Statut
                 </TableCell>
-                <TableCell align="center"  sx={{
-                      color: "#1E3A8A",
-                      fontWeight: 700,
-                      fontSize: "1rem",
-                      py: 3,
-                    }}>
+                <TableCell
+                  align="center"
+                  sx={{
+                    color: "#1E3A8A",
+                    fontWeight: 700,
+                    fontSize: "1rem",
+                    py: 3,
+                  }}
+                >
+                  Score de correspondance
+                </TableCell>
+                <TableCell
+                  align="center"
+                  sx={{
+                    color: "#1E3A8A",
+                    fontWeight: 700,
+                    fontSize: "1rem",
+                    py: 3,
+                  }}
+                >
                   Actions
                 </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {paginatedPosts.length > 0 ? (
-                paginatedPosts.map((post,index) => {
-                  const isFinalized =
-                    post.status === "refused" || post.status === "testPassed";
-                    const matchScore = resultats[index]?.score;
+                paginatedPosts.map((post) => {
+                  const result = resultats.find((res) => res.cv === post.fileName);
+                  const matchScore = result?.score ? result.score * 100 : undefined;
+                  const isFinalized = post.status === "refused" || post.status === "testPassed";
 
-                    return (
+                  return (
                     <TableRow
                       key={post._id}
                       hover
@@ -270,9 +342,9 @@ const AllPostStage = () => {
                         },
                       }}
                     >
-                      <TableCell>{post.nom} {post.prenom}</TableCell>
+                      <TableCell>{`${post.nom} ${post.prenom}`}</TableCell>
                       <TableCell>{post.email}</TableCell>
-                      <TableCell>{post.number}</TableCell>
+                      <TableCell>{post.telephone}</TableCell>
                       <TableCell>{post.jobId?.titre}</TableCell>
                       <TableCell>
                         <Button
@@ -287,10 +359,6 @@ const AllPostStage = () => {
                             textTransform: "none",
                             borderColor: "#1e3a8a",
                             color: "#1e3a8a",
-                            "&:hover": {
-                              borderColor: "#d4af37",
-                              color: "#d4af37",
-                            },
                           }}
                         >
                           CV
@@ -309,21 +377,21 @@ const AllPostStage = () => {
                           }
                           status={post.status || "pending"}
                         />
-                           {matchScore !== undefined && (
-                                                      <Chip
-                                                        label={`Match : ${matchScore}%`}
-                                                        color="success"
-                                                        size="small"
-                                                      />
-                                                    )}
+                      </TableCell>
+                      <TableCell align="center">
+                        {matchScore !== undefined && matchScore > 0 ? (
+                          <Tooltip title={`Score de correspondance: ${Math.round(matchScore)}%`}>
+                            <CustomCircularProgressWithLabel value={matchScore} />
+                          </Tooltip>
+                        ) : (
+                          <Typography variant="caption" color="text.secondary">
+                            Non calculé
+                          </Typography>
+                        )}
                       </TableCell>
                       <TableCell align="center">
                         {!isFinalized ? (
-                          <Stack
-                            direction="row"
-                            spacing={1}
-                            justifyContent="center"
-                          >
+                          <Stack direction="row" spacing={1} justifyContent="center">
                             <Tooltip title="Refuser la candidature">
                               <Button
                                 variant="outlined"
@@ -349,10 +417,6 @@ const AllPostStage = () => {
                                   borderRadius: "12px",
                                   textTransform: "none",
                                   bgcolor: "#1e3a8a",
-                                  "&:hover": {
-                                    bgcolor: "#d4af37",
-                                    color: "#1e3a8a",
-                                  },
                                 }}
                               >
                                 Envoyer un test
@@ -378,7 +442,6 @@ const AllPostStage = () => {
         )}
       </TableContainer>
 
-      {/* Pagination */}
       {filteredPosts.length > rowsPerPage && (
         <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
           <Pagination

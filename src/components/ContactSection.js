@@ -4,6 +4,8 @@ import { Email, Phone, LocationOn } from '@mui/icons-material';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import { useDispatch } from 'react-redux';
 import { createContact } from '../store/services/contactService';
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const mapContainerStyle = {
   width: '100%',
@@ -11,8 +13,8 @@ const mapContainerStyle = {
 };
 
 const center = {
-  lat: 35.502445,
-  lng: 11.045721,
+  lat: 35.52363962761327,
+  lng: 11.031091393848422,
 };
 
 const ContactSection = () => {
@@ -32,30 +34,27 @@ const ContactSection = () => {
 
   const validateForm = () => {
     const errors = {};
-  
-    
-    const emailRegex = /^[ a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
     if (!formData.email) {
       errors.email = 'Email is required';
     } else if (!emailRegex.test(formData.email)) {
       errors.email = 'Email is invalid';
     }
-  
+
     if (!formData.object) {
       errors.object = 'Object is required';
     }
-  
+
     if (!formData.subject) {
       errors.subject = 'Subject is required';
     }
-  
+
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
-  
 
- const handleSubmit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     if (validateForm()) {
       const contactData = {
@@ -64,16 +63,16 @@ const ContactSection = () => {
         subject: formData.subject,
       };
 
-      console.log('Contact data:', formData); // Check the data before sending
-      dispatch(createContact(formData)); // This sends the data to your backend
-      console.log('Form submitted:', contactData); // Check the data being submitted
+      dispatch(createContact(contactData));
+      toast.success("Message sent successfully!", {
+        position: "top-right",
+        autoClose: 3000,
+      });
 
-      // Reset the form and errors
       setFormData({ email: '', object: '', subject: '' });
       setFormErrors({});
     }
-};
-
+  };
 
   return (
     <Box
@@ -103,10 +102,10 @@ const ContactSection = () => {
         }}
       >
         <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
-          Needs help?
+          Besoin d'aide ?
         </Typography>
 
-        {/* Contact info icons */}
+        {/* Infos de contact */}
         <Box
           sx={{
             display: 'flex',
@@ -146,7 +145,7 @@ const ContactSection = () => {
             >
               <Phone />
             </IconButton>
-            <Typography variant="body2">+1 010 110 101</Typography>
+            <Typography variant="body2">+216 28163524</Typography>
           </Box>
 
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -162,7 +161,7 @@ const ContactSection = () => {
             >
               <LocationOn />
             </IconButton>
-            <Typography variant="body2">Mahdia</Typography>
+            <Typography variant="body2">pépiniere d'entreprises APII Mahdia</Typography>
           </Box>
         </Box>
 
@@ -223,7 +222,7 @@ const ContactSection = () => {
         </Button>
       </Box>
 
-      {/* Carte Google Map */}
+      {/* Google Map */}
       <Box
         sx={{
           flex: 1,
@@ -255,9 +254,12 @@ const ContactSection = () => {
             borderRadius: '8px',
           }}
         >
-          <Typography variant="body2">Mahdia, Tunisia</Typography>
+          <Typography variant="body2">pépiniere d'entreprises APII Mahdia</Typography>
         </Box>
       </Box>
+
+   
+      <ToastContainer />
     </Box>
   );
 };

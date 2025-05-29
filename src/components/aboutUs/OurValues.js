@@ -13,24 +13,25 @@ const OurValues = () => {
   // Données pour chaque colonne
   const values = [
     {
-      title: 'This is a value',
+      title: 'Excellence',
       description:
-        'Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Elementum felis, sed ullamcorper tempus faucibus in imperdiet. Semper justo mauris sed fusce erat aenean tristique. In imperdiet. Semper justo mauris sed fusce erat aenean tristique.',
+        "Nous nous engageons à maintenir des standards élevés dans toutes nos activités. Notre objectif est de garantir une qualité irréprochable, en mettant l'accent sur la rigueur et la précision. Chaque détail compte pour offrir des résultats optimaux et dépasser les attentes de nos clients.",
       image: hashtagPerson,
     },
     {
-      title: 'This is a value',
+      title: 'Innovation',
       description:
-        'Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Elementum felis, sed ullamcorper tempus faucibus in imperdiet. Semper j.',
+        "L'innovation est au cœur de notre stratégie. Nous favorisons la créativité et l'adoption de nouvelles technologies pour anticiper les besoins futurs. Cette démarche proactive nous permet de proposer des solutions novatrices et adaptées à un environnement en constante évolution.",
       image: rocketPerson,
     },
     {
-      title: 'This is a value',
+      title: 'Engagement',
       description:
-        'Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Elementum felis, sed ullamcorper tempus faucibus in imperdiet. Semper justo mauris sed fusce erat aenean tristique. In imperdiet. Semper justo mauris sed fusce erat aenean tristique.',
+        "Nous plaçons l'engagement au centre de notre culture d’entreprise. La collaboration, l’écoute active et la responsabilité sociale sont les piliers qui renforcent la confiance avec nos partenaires et collaborateurs. Notre approche vise à construire des relations durables et mutuellement bénéfiques.",
       image: atPerson,
     },
   ];
+  
 
   return (
     <Box 
@@ -51,8 +52,8 @@ const OurValues = () => {
           color: '#000',
         }}
       >
-        Our Values
-      </Typography>
+Nos valeurs
+</Typography>
 
       {/* Grille pour les colonnes */}
       <Grid container spacing={isMobile ? 2 : 4} justifyContent="center">

@@ -3,78 +3,88 @@ import { Box, Typography, Grid, Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
-import personImage from '../../image/person.png'; 
+import personImage from '../../image/person.png';
 
-// Style personnalisé pour le conteneur
+// Conteneur principal stylisé
 const CareersSection = styled(Box)(({ theme }) => ({
-  padding: theme.spacing(2), // Réduit de 4 à 2 pour moins de padding
-  py: 5,
-  backgroundColor: '#F3EBFF', // Fond violet clair
-  borderRadius: theme.spacing(2),
+  padding: theme.spacing(4),
+  backgroundColor: '#F3EBFF',
+  borderRadius: theme.spacing(3),
   display: 'flex',
   alignItems: 'center',
-  minHeight: '200px', // Réduit de 300px à 200px
+  minHeight: '220px',
 }));
 
-// Style pour le bouton rempli
+// Bouton rempli (violet)
 const FilledButton = styled(Button)(({ theme }) => ({
-  backgroundColor: '#333', // Couleur sombre pour le bouton rempli
+  backgroundColor: '#7B3FE4',
   color: '#fff',
-  padding: theme.spacing(1, 2), // Réduit légèrement le padding des boutons
-  marginRight: theme.spacing(1), // Réduit l'espacement entre les boutons
+  padding: theme.spacing(1.5, 3),
+  marginRight: theme.spacing(2),
+  textTransform: 'none',
+  borderRadius: 12,
+  fontWeight: 500,
   '&:hover': {
-    backgroundColor: '#555',
+    backgroundColor: '#6931d4',
   },
 }));
 
-// Style pour le bouton en contour
+// Bouton outline
 const OutlinedButton = styled(Button)(({ theme }) => ({
-  borderColor: '#333',
-  color: '#333',
-  padding: theme.spacing(1, 2), // Réduit légèrement le padding des boutons
+  borderColor: '#7B3FE4',
+  color: '#7B3FE4',
+  padding: theme.spacing(1.5, 3),
+  textTransform: 'none',
+  borderRadius: 12,
+  fontWeight: 500,
   '&:hover': {
-    borderColor: '#555',
-    color: '#555',
+    borderColor: '#6931d4',
+    color: '#6931d4',
   },
 }));
 
 const Careers = () => {
   return (
     <CareersSection>
-      <Grid container spacing={2} alignItems="center"> {/* Réduit l'espacement de 4 à 2 */}
+      <Grid container spacing={2} alignItems="center">
+        {/* Texte à gauche */}
         <Grid item xs={12} md={6}>
-          <Typography variant="h4" mb={2}> {/* Réduit la marge de 3 à 2 */}
-            Discover careers in <strong>Tradly Now!</strong>
+          <Typography variant="h3" fontWeight="bold" mb={2} color="#1C1C1E">
+            Découvrez les opportunités chez <span style={{ color: '#7B3FE4' }}>Tradly !</span>
+          </Typography>
+          <Typography variant="body1" color="text.secondary" mb={3}>
+            Rejoignez une équipe passionnée qui construit l’avenir du digital.
           </Typography>
           <Box>
-            <FilledButton
-              variant="contained"
-              endIcon={<ArrowForwardIcon />}
-            >
-              Wanna know more
+            <FilledButton variant="contained" endIcon={<ArrowForwardIcon />} href='/careers'>
+              En savoir plus
             </FilledButton>
-            <OutlinedButton variant="outlined">
-              Our cool work
+            <OutlinedButton variant="outlined" href='/home#work'>
+              Nos projets
             </OutlinedButton>
           </Box>
         </Grid>
 
-        {/* Partie droite - Image */}
+        {/* Image à droite */}
         <Grid item xs={12} md={6}>
           <Box
             sx={{
               display: 'flex',
               justifyContent: 'flex-end',
+              transition: 'transform 0.3s ease',
+              '&:hover': {
+                transform: 'scale(1.05)',
+              },
             }}
           >
             <img
               src={personImage}
-              alt="Person"
+              alt="Illustration d'une personne"
               style={{
                 maxWidth: '100%',
                 height: 'auto',
-                borderRadius: '8px',
-                maxHeight: '200px', // Limite la hauteur de l'image
+                borderRadius: '12px',
+                maxHeight: '200px',
               }}
             />
           </Box>

@@ -9,6 +9,8 @@ import testsSlice from "./slices/testSlice"
 import teamsSlice from "./slices/teamSlice"
 import contactSlice from "./slices/contactSlice";
 import dashboardSlice from "./slices/dashboardSlice";
+import questionPsysSlice from "./slices/questionPsySlice";
+ import entretienSlice from "./slices/entretientSlice"; 
 const store = configureStore({
   reducer: {
     departments: departmentsReducer,
@@ -21,6 +23,8 @@ const store = configureStore({
     teams:teamsSlice,
     contacts: contactSlice,
     dashboard:dashboardSlice,
+    questionsPsy: questionPsysSlice, 
+    entretiens: entretienSlice,
     
     
    

@@ -3,21 +3,20 @@ import { Box, Typography, Button } from '@mui/material';
 
 const BlogSection = () => {
   return (
-<Box
-  sx={{
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    minHeight: '50vh',
-    background: 'linear-gradient(180deg, rgba(235, 225, 255, 0.9), rgba(255, 255, 255, 0.9))', // Corrected: Linear gradient as a string
-    boxShadow: 'inset 0 0 50px rgba(101, 131, 176, 0.2)', // Subtle reflective blue glow
-    textAlign: 'center',
-    padding: '2rem',
-  }}
->
-    
-      {/* Heading */}
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        minHeight: '50vh',
+        background: 'linear-gradient(180deg, rgba(235, 225, 255, 0.9), rgba(255, 255, 255, 0.9))',
+        boxShadow: 'inset 0 0 50px rgba(101, 131, 176, 0.2)',
+        textAlign: 'center',
+        padding: '2rem',
+      }}
+    >
+      {/* Titre principal */}
       <Typography
         variant="h2"
         sx={{
@@ -26,10 +25,10 @@ const BlogSection = () => {
           color: '#333',
         }}
       >
-        Our Blog
+        Notre Blog
       </Typography>
 
-      {/* Placeholder Text */}
+      {/* Texte descriptif */}
       <Typography
         variant="body1"
         sx={{
@@ -38,16 +37,16 @@ const BlogSection = () => {
           color: '#555',
         }}
       >
-        Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-        Elementum felis, sed ullamcorper tempus faucibus in imperdiet. Semper justo mauris sed
-        fusce erat aenean tristique.
+        Découvrez nos articles, nos conseils et notre actualité. Nous partageons ici nos idées, nos
+        projets, et tout ce qui nous passionne dans le monde du digital et de l'innovation.
       </Typography>
 
-      {/* Buttons */}
+      {/* Boutons */}
       <Box sx={{ display: 'flex', gap: '1rem' }}>
-        {/* "Who are we?" Button */}
+        {/* Bouton "Qui sommes-nous ?" */}
         <Button
           variant="contained"
+          href="/about"
           sx={{
             backgroundColor: '#1976d2',
             color: '#fff',
@@ -60,12 +59,13 @@ const BlogSection = () => {
             },
           }}
         >
-          Who are we?
+          Qui sommes-nous ?
         </Button>
 
-        {/* "Our cool work" Button */}
+        {/* Bouton "Nos réalisations" */}
         <Button
           variant="outlined"
+          href="/home#work"
           sx={{
             borderColor: '#555',
             color: '#555',
@@ -79,7 +79,7 @@ const BlogSection = () => {
             },
           }}
         >
-          Our cool work
+          Nos réalisations
         </Button>
       </Box>
     </Box>

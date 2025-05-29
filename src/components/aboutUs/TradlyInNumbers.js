@@ -11,7 +11,7 @@ const NumbersSection = styled(Box)(({ theme }) => ({
 
 // Style pour le texte des nombres
 const NumberText = styled(Typography)(({ theme }) => ({
-  fontSize: '3rem', // Taille des grands nombres
+  fontSize: '3rem',
   fontWeight: 'bold',
   color: theme.palette.text.primary,
 }));
@@ -26,53 +26,55 @@ const DescriptionText = styled(Typography)(({ theme }) => ({
 const TradlyInNumbers = () => {
   // Données des statistiques
   const stats = [
-    { value: 20, suffix: '', description: 'Hours (avg.) of manual work saved each month' },
-    { value: 100, suffix: '%', description: 'Hours (avg.) of manual work saved each month' },
-    { value: 95, suffix: '%', description: 'Hours (avg.) of manual work saved each month' },
-    { value: 20, suffix: '', description: 'Hours (avg.) of manual work saved each month' },
+    { value: 20, suffix: '', description: 'Heures moyennes de travail manuel économisées chaque mois' },
+    { value: 100, suffix: '%', description: "Taux de satisfaction client garanti" },
+    { value: 95, suffix: '%', description: "Taux d'efficacité opérationnelle atteint" },
+    { value: 20, suffix: '', description: "Nouveaux projets lancés chaque trimestre" },
   ];
 
   return (
     <NumbersSection>
       {/* Titre */}
       <Typography variant="h3" fontWeight="bold" mb={4}>
-        Tradly in,{' '}
-        <span style={{ color: '#1976d2' }}>Numbers</span> {/* "Numbers" en bleu */}
+        Tradly en{' '}
+        <span style={{ color: '#1976d2' }}>chiffres</span>
       </Typography>
 
-      {/* Grille des statistiques */}
-      <Grid container spacing={2} justifyContent="center" wrap="nowrap">
-        {stats.map((stat, index) => (
-          <React.Fragment key={index}>
-            <Grid item xs={3} sx={{ minWidth: '150px' }}>
-              <NumberText>
-                <CountUp
-                  end={stat.value} // Valeur finale
-                  duration={2.5} // Durée de l'animation
-                  suffix={stat.suffix} // Ajouter un suffixe comme "%"
-                  enableScrollSpy // Lancer l'animation quand l'élément est visible
-                  scrollSpyDelay={200} // Délai avant le début de l'animation
+      {/* Wrapper pour forcer le non-wrap horizontal */}
+      <Box sx={{ display: 'flex', justifyContent: 'center', flexWrap: 'nowrap' }}>
+        <Grid container spacing={2} justifyContent="center" wrap="nowrap" sx={{ maxWidth: 900 }}>
+          {stats.map((stat, index) => (
+            <React.Fragment key={index}>
+              <Grid item xs={3} sx={{ minWidth: 150 }}>
+                <NumberText>
+                  <CountUp
+                    end={stat.value}
+                    duration={2.5}
+                    suffix={stat.suffix}
+                    enableScrollSpy
+                    scrollSpyDelay={200}
+                  />
+                </NumberText>
+                <DescriptionText>{stat.description}</DescriptionText>
+              </Grid>
+              {/* Divider vertical entre les stats sauf après la dernière */}
+              {index < stats.length - 1 && (
+                <Divider
+                  orientation="vertical"
+                  flexItem
+                  sx={{
+                    height: 60,
+                    width: 4,
+                    backgroundColor: (theme) => theme.palette.divider,
+                    alignSelf: 'center',
+                    margin: '0 16px',
+                  }}
                 />
-              </NumberText>
-              <DescriptionText>{stat.description}</DescriptionText>
-            </Grid>
-            {/* Ajouter un Divider vertical entre les statistiques, sauf pour le dernier élément */}
-            {index < stats.length - 1 && (
-              <Divider
-                orientation="vertical"
-                flexItem
-                sx={{
-                  height: '60px', // Hauteur de la barre
-                  width: '4px', // Épaisseur de la barre
-                  backgroundColor: theme => theme.palette.divider, // Couleur gris clair
-                  alignSelf: 'center',
-                  margin: '0 16px', // Espacement autour de la barre
-                }}
-              />
-            )}
-          </React.Fragment>
-        ))}
-      </Grid>
+              )}
+            </React.Fragment>
+          ))}
+        </Grid>
+      </Box>
     </NumbersSection>
   );
 };

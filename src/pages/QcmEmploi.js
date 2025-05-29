@@ -1,9 +1,9 @@
 import React from "react";
-import AllQcm from "../components/QCM/allQcm";
+import AllQcmJob from "../components/QCM/AllQcmJob";
 import { Box, Typography, Card, CardContent, Divider } from "@mui/material";
 import FactCheckIcon from "@mui/icons-material/FactCheck";
 
-const Qcm = () => {
+const QcmEmploi = () => {
   return (
     <Box sx={{ margin: "auto", mt: 8, px: 2, minHeight: "100vh" }}>
       {/* En-tête de la page */}
@@ -31,11 +31,11 @@ const Qcm = () => {
         }}
       >
         <CardContent>
-          <AllQcm />
+          <AllQcmJob />
         </CardContent>
       </Card>
     </Box>
   );
 };
 
-export default Qcm;
+export default QcmEmploi;

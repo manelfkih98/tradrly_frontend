@@ -37,7 +37,7 @@ const WorkShowcase = () => {
   return (
     <Container sx={{ py: 5 }}>
       <Typography variant="h4" align="center" gutterBottom sx={{ mb: 5 }}>
-        OUR WORK IS BASED ON
+      NOTRE TRAVAIL EST BASÉ SUR
       </Typography>
 
       {loading ? (

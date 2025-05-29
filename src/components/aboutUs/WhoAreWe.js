@@ -274,7 +274,7 @@ const WhoAreWe = () => {
           color: '#000',
         }}
       >
-        Who are we?
+          Qui sommes-nous ?
       </Typography>
       <Typography
         variant={isMobile ? 'body2' : 'body1'}
@@ -284,8 +284,9 @@ const WhoAreWe = () => {
           color: '#666',
         }}
       >
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Elementum felis, sed ullamcorper tempus faucibus in imperdiet. Semper justo mauris elit.
-      </Typography>
+Fondée sur des valeurs d’innovation, d’excellence et de responsabilité, notre entreprise s’engage à fournir des solutions de qualité supérieure répondant aux besoins spécifiques de nos clients.  
+        Notre équipe expérimentée et dynamique travaille avec rigueur pour garantir performance, fiabilité et satisfaction.  
+        Ensemble, nous construisons un avenir durable et créons des partenariats solides basés sur la confiance et le respect mutuel.      </Typography>
       <Box
         sx={{
           display: 'flex',
@@ -303,10 +304,10 @@ const WhoAreWe = () => {
             fontSize: isMobile ? '14px' : '16px',
           }}
         >
-          Who are we?
-        </Button>
+  En savoir plus        </Button>
         <Button
           variant="outlined"
+          href="home#work"
           sx={{
             borderColor: '#000',
             color: '#000',
@@ -316,7 +317,8 @@ const WhoAreWe = () => {
             fontSize: isMobile ? '14px' : '16px',
           }}
         >
-          Our cool work
+                    Nos réalisations
+
         </Button>
       </Box>
     </Box>

@@ -55,8 +55,17 @@ QUESTION:{
   UPDATE_QUESTION:`${BASE_URL}/question/updateQuestion`
 
 },
+QUESTIONPSY:{
+  ALL_QUESTION:`${BASE_URL}/questionPsy/getAllQuestion`,
+  ADD_QUESTION:`${BASE_URL}/questionPsy/addQuestion`,
+  DELETE_QUESTION:`${BASE_URL}/questionPsy/deleteQuestion`,
+  UPDATE_QUESTION:`${BASE_URL}/questionPsy/updateQuestion`
+
+},
 QCM:{
-  ALL_QCM:`${BASE_URL}/qcm/allQcm`,
+  ALL_QCM_Stage:`${BASE_URL}/qcm/allQcmStage`,
+  ALL_QCM_JOB:`${BASE_URL}/qcm/allQcmEmploi`,
+
   PASSER_TEST:`${BASE_URL}/qcm/generatQcm`,
   TEST:`${BASE_URL}/qcm/getQuestionByPost`,
   UPDATERESULTAT:`${BASE_URL}/qcm/updateResultat`
@@ -82,12 +91,17 @@ DASHBOARD:{
  
 
 },
+ENTRETIEN: {
+    ALL_ENTRETIEN: `${BASE_URL}/entretien/all`,
+    ADD_ENTRETIEN: `${BASE_URL}/entretien/add`,
+REFURE_ENTRETIEN: `${BASE_URL}/entretien/refuser`,
+ENTRETIENT_DAYS: `${BASE_URL}/entretien/parday`,
 
 
   
 
 
 
-}
+}}
 
 export default PATHS

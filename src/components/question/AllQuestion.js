@@ -245,11 +245,11 @@ const AllQuestion = () => {
           onClick={() => setOpenAddQuestion(true)}
           variant="contained"
           sx={{
-            backgroundColor: "#914091",
+            backgroundColor: "#304e8a",
             color: "#fff",
             borderRadius: "20px",
             px: 3,
-            "&:hover": { backgroundColor: "#7a347a" },
+            
           }}
         >
           Ajouter une question
@@ -314,14 +314,22 @@ const AllQuestion = () => {
                                 m: 0.5,
                                 backgroundColor:
                                   (typeof prop === "string" ? prop : prop.text) === ques.reponse
-                                    ? "#4CAF50" // Vert pour la bonne réponse
-                                    : "#914091", // Couleur par défaut
-                                color: "#fff",
+                                    ? "#E8F5E9" :"transparent",
+                                    
+                                color: (typeof prop === "string" ? prop : prop.text) === ques.reponse
+                                ? "#4CAF50" : "#1F2937",
+                                fontWeight:
+                                  (typeof prop === "string" ? prop : prop.text) === ques.reponse
+                                    ? "bold"
+                                    : "normal",
+                                
                               }}
                             />
                           ))
                         ) : (
-                          "—"
+                          <Typography  sx={{   fontWeight: "bold",color:"#4CAF50",backgroundColor:"#E8F5E9"}}>
+                           {ques.reponse}
+                          </Typography>
                         )}
                       </TableCell>
                       <TableCell align="center">

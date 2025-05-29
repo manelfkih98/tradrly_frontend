@@ -35,6 +35,8 @@ import {
 } from "../../store/services/solutionService";
 import AddSolution from "./AddSolution";
 import { styled } from "@mui/material/styles";
+import { ToastContainer, toast } from 'react-toastify';
+
 
 const AnimatedIconButton = styled(IconButton)(({ theme }) => ({
   transition: "transform 0.2s ease-in-out, color 0.3s ease, background-color 0.3s ease",
@@ -72,13 +74,16 @@ function ListesSolution() {
     }).then((result) => {
       if (result.isConfirmed) {
         dispatch(deleteSolutions(id));
-        Swal.fire({
-          position: "top-end",
-          icon: "success",
-          title: "Projet supprimé avec succès",
-          showConfirmButton: false,
-          timer: 1000,
+        toast.success("Projet supprimé avec succès !", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
         });
+       
       }
     });
   };

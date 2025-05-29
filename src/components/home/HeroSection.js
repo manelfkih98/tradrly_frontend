@@ -7,15 +7,14 @@ const HeroSection = () => {
   return (
     <Box
       sx={{
-        
-        position: "relative", // Corrigé "flex" en "relative" (valeur non valide pour position)
+        position: "relative",
         display: "flex",
         color: "#ffffff",
         boxSizing: "border-box",
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        minHeight: "100vh", // Hauteur pleine page pour une section héroïque
+        minHeight: "100vh",
         overflow: "hidden",
       }}
     >
@@ -23,14 +22,13 @@ const HeroSection = () => {
       <Box
         component="img"
         src={backgroundImage}
-        alt="AI Cube Background"
+        alt="Arrière-plan AI Cube"
         sx={{
           position: "absolute",
           width: "100%",
           height: "100%",
           objectFit: "cover",
           zIndex: 0,
-        
           animation: "float 3s ease-in-out infinite",
           "@keyframes float": {
             "0%": { transform: "translateY(0)" },
@@ -44,13 +42,13 @@ const HeroSection = () => {
       <Box
         component="img"
         src={tradifyLogo}
-        alt="Tradify Logo"
+        alt="Logo Tradify"
         sx={{
           position: "absolute",
-          top: { xs: "15px", md: "20px" }, // Ajustement responsif
+          top: { xs: "15px", md: "20px" },
           left: "50%",
           transform: "translateX(-50%)",
-          width: { xs: "120px", md: "150px" }, // Taille responsif
+          width: { xs: "120px", md: "150px" },
           zIndex: 2,
         }}
       />
@@ -61,22 +59,22 @@ const HeroSection = () => {
           position: "relative",
           zIndex: 1,
           textAlign: "center",
-          px: { xs: 2, md: 4 }, // Padding responsif
-          maxWidth: "800px", // Limite la largeur du contenu
+          px: { xs: 2, md: 4 },
+          maxWidth: "800px",
         }}
       >
         {/* Titre principal */}
         <Typography
           variant="h1"
           sx={{
-            fontSize: { xs: "2rem", sm: "3rem", md: "4rem" }, // Taille responsif
+            fontSize: { xs: "2rem", sm: "3rem", md: "4rem" },
             fontWeight: 700,
             lineHeight: 1.2,
             mb: 2,
-            textShadow: "0 2px 4px rgba(0, 0, 0, 0.3)", // Ombre légère pour lisibilité
+            textShadow: "0 2px 4px rgba(0, 0, 0, 0.3)",
           }}
         >
-          Beyond Code, Into the Future
+          Au-delà du code, vers le futur
         </Typography>
 
         {/* Sous-titre */}
@@ -92,27 +90,27 @@ const HeroSection = () => {
             lineHeight: 1.5,
           }}
         >
-          Blending innovation with intuitive design to create web and mobile
-          solutions that learn, adapt, and grow with you
+          Allier l’innovation à un design intuitif pour créer des solutions web
+          et mobiles qui apprennent, s’adaptent et évoluent avec vous
         </Typography>
       </Box>
 
       {/* Boutons */}
       <Stack
-        direction={{ xs: "column", sm: "row" }} // Colonne sur mobile, ligne sur desktop
+        direction={{ xs: "column", sm: "row" }}
         spacing={2}
         sx={{
-          position: { xs: "relative", sm: "absolute" }, // Relatif sur mobile pour éviter le chevauchement
+          position: { xs: "relative", sm: "absolute" },
           bottom: { sm: "20px" },
           right: { sm: "20px" },
           zIndex: 2,
           alignItems: { xs: "center", sm: "flex-end" },
-          mt: { xs: 2, sm: 0 }, // Marge sur mobile
+          mt: { xs: 2, sm: 0 },
         }}
       >
         <Button
           variant="outlined"
-          href="#about" // Ajout d'un lien pour la navigation
+          href="/about"
           sx={{
             borderColor: "#ffffff",
             color: "#ffffff",
@@ -120,18 +118,18 @@ const HeroSection = () => {
             padding: { xs: "8px 16px", md: "10px 20px" },
             textTransform: "none",
             fontSize: "1rem",
-            backgroundColor: "rgba(0, 0, 0, 0.5)", // Fond semi-transparent
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
             "&:hover": {
               backgroundColor: "rgba(255, 255, 255, 0.1)",
               borderColor: "#ffffff",
             },
           }}
         >
-          Who we are? →
+          Qui sommes-nous ? →
         </Button>
         <Button
           variant="outlined"
-          href="#work" // Ajout d'un lien pour la navigation
+          href="#work"
           sx={{
             borderColor: "#ffffff",
             color: "#ffffff",
@@ -147,7 +145,7 @@ const HeroSection = () => {
             },
           }}
         >
-          Our cool work →
+          Nos réalisations →
         </Button>
       </Stack>
     </Box>

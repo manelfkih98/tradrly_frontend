@@ -16,7 +16,7 @@ import {
   Menu as MenuIcon,
   Notifications as NotificationsIcon,
   Mail as MailIcon,
-  HelpOutline,
+  Event as EventIcon,
   AccountCircle,
   Close as CloseIcon,
 } from "@mui/icons-material";
@@ -24,25 +24,30 @@ import { Link, useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchEntretienByDay } from "../store/services/entretienService";
 
 const socket = io("http://localhost:5000");
 
 const NavbarDash = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = useState(null);
   const [notifAnchor, setNotifAnchor] = useState(null);
   const [messageAnchor, setMessageAnchor] = useState(null);
-  const [requestAnchor, setRequestAnchor] = useState(null);
-
+  const [entretienAnchor, setEntretienAnchor] = useState(null);
   const [messageNotifications, setMessageNotifications] = useState([]);
   const [applicationNotifications, setApplicationNotifications] = useState([]);
   const [requestNotifications, setRequestNotifications] = useState([]);
   const [userName, setUserName] = useState("");
 
+  const entretienByDay = useSelector((state) => state.entretiens?.entretienByDay || []);
+  const entretienLoading = useSelector((state) => state.entretien?.loading ?? false);
+
   const openProfile = Boolean(anchorEl);
   const openNotif = Boolean(notifAnchor);
   const openMessage = Boolean(messageAnchor);
-  const openRequest = Boolean(requestAnchor);
+  const openEntretien = Boolean(entretienAnchor);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -119,6 +124,12 @@ const NavbarDash = () => {
     saveNotificationsToLocalStorage();
   }, [messageNotifications, applicationNotifications, requestNotifications]);
 
+  const handleEntretienClick = (event) => {
+    setEntretienAnchor(event.currentTarget);
+    const today = new Date().toISOString().split("T")[0];
+    dispatch(fetchEntretienByDay(today));
+  };
+
   const iconButtonStyle = {
     color: "#1E3A8A",
     "&:hover": {
@@ -158,7 +169,6 @@ const NavbarDash = () => {
           </Link>
         </Typography>
 
-        {/* Notifications */}
         <IconButton sx={{ ...iconButtonStyle, ml: 1 }} onClick={(e) => setNotifAnchor(e.currentTarget)}>
           <Badge badgeContent={applicationNotifications.length} color="error">
             <NotificationsIcon />
@@ -210,7 +220,6 @@ const NavbarDash = () => {
           )}
         </Menu>
 
-        {/* Messages */}
         <IconButton sx={{ ...iconButtonStyle, ml: 1 }} onClick={(e) => setMessageAnchor(e.currentTarget)}>
           <Badge badgeContent={messageNotifications.length} color="error">
             <MailIcon />
@@ -266,16 +275,15 @@ const NavbarDash = () => {
           )}
         </Menu>
 
-        {/* Demandes */}
-        <IconButton sx={{ ...iconButtonStyle, ml: 1 }} onClick={(e) => setRequestAnchor(e.currentTarget)}>
-          <Badge badgeContent={requestNotifications.length} color="error">
-            <HelpOutline />
+        <IconButton sx={{ ...iconButtonStyle, ml: 1 }} onClick={handleEntretienClick}>
+          <Badge badgeContent={entretienByDay.length} color="error">
+            <EventIcon />
           </Badge>
         </IconButton>
         <Menu
-          anchorEl={requestAnchor}
-          open={openRequest}
-          onClose={() => setRequestAnchor(null)}
+          anchorEl={entretienAnchor}
+          open={openEntretien}
+          onClose={() => setEntretienAnchor(null)}
           PaperProps={{
             sx: {
               bgcolor: "#F8FAFC",
@@ -286,27 +294,37 @@ const NavbarDash = () => {
             },
           }}
         >
-          {requestNotifications.length === 0 ? (
+          {entretienLoading ? (
             <MenuItem disabled sx={menuItemStyle}>
-              Aucune nouvelle demande
+              Chargement...
+            </MenuItem>
+          ) : entretienByDay.length === 0 ? (
+            <MenuItem disabled sx={menuItemStyle}>
+              Aucun entretien aujourd'hui
             </MenuItem>
           ) : (
             <List dense>
-              {requestNotifications.map((notif, idx) => (
-                <ListItem key={idx} divider alignItems="flex-start">
+              {entretienByDay.map((entretien, idx) => (
+                <ListItem key={entretien._id || idx} divider alignItems="flex-start">
                   <ListItemText
-                    primary={`📨 Demande de ${notif.nom}`}
+                    primary={`${entretien.postId?.nom || "Inconnu"} ${entretien.postId?.prenom || ""}`}
                     secondary={
-                      <span style={{ fontSize: "0.75rem", color: "#6B7280" }}>
-                        {new Date(notif.date).toLocaleString()}
-                      </span>
+                      <>
+                        <span style={{ color: "#914091" }}>
+                          {entretien.postId?.jobId?.titre || "Poste inconnu"} - {entretien.heure} ({entretien.mode})
+                        </span>
+                        <br />
+                        <span style={{ fontSize: "0.75rem", color: "#6B7280" }}>
+                          {new Date(entretien.date).toLocaleTimeString()}
+                        </span>
+                      </>
                     }
                   />
                   <IconButton
                     size="small"
                     onClick={() => {
-                      toast.info(`Demande de ${notif.nom} traitée`, { autoClose: 2000 });
-                      setRequestNotifications((prev) => prev.filter((_, i) => i !== idx));
+                      toast.info(`Entretien avec ${entretien.postId?.nom || "Inconnu"} marqué comme vu`, { autoClose: 2000 });
+                      dispatch(fetchEntretienByDay(new Date().toISOString().split("T")[0]));
                     }}
                     sx={{ color: "#1E3A8A" }}
                   >
@@ -318,7 +336,6 @@ const NavbarDash = () => {
           )}
         </Menu>
 
-        {/* Profil */}
         <IconButton sx={{ ...iconButtonStyle, ml: 2 }} onClick={handleMenu}>
           <Avatar sx={{ bgcolor: "#914091", fontSize: "1rem" }}>{userName}</Avatar>
         </IconButton>

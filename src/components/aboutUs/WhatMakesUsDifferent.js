@@ -34,49 +34,54 @@ const WhatMakesUsDifferent = () => {
   // Données des sections
   const sections = [
     {
-        title: 'What Makes Us Different',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Elementum felis, sed ullamcorper tempus faucibus in imperdiet. Elementum felis, sed ullamcorper tempus faucibus in imperdiet.',
-        points: [
-          { primary: 'He takes less', secondary: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.' },
-          { primary: 'No maintenance', secondary: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.' },
-          { primary: 'Winchout hidden and integrated', secondary: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.' },
-        ],
-        image: illustrationImage,
-        imageFirst: true, // Texte à gauche, image à droite
-      },
-    {
-      title: 'What Makes Us Different',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Elementum felis, sed ullamcorper tempus faucibus in imperdiet. Elementum felis, sed ullamcorper tempus faucibus in imperdiet.',
+      title: 'Ce qui nous distingue',
+      description:
+        "Nous offrons des solutions innovantes qui optimisent votre temps et améliorent vos résultats, tout en réduisant la maintenance.",
       points: [
-        { primary: 'He takes less', secondary: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.' },
-        { primary: 'No maintenance', secondary: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.' },
-        { primary: 'Winchout hidden and integrated', secondary: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.' },
+        { primary: 'Gain de temps', secondary: 'Nos outils vous permettent de réduire considérablement vos tâches manuelles.' },
+        { primary: 'Maintenance réduite', secondary: "Nos systèmes sont conçus pour nécessiter un minimum d'entretien." },
+        { primary: 'Intégration invisible', secondary: "Nos solutions s'intègrent parfaitement sans perturber votre environnement." },
+      ],
+      image: illustrationImage,
+      imageFirst: true,
+    },
+    {
+      title: 'Notre approche unique',
+      description:
+        "Nous mettons l'accent sur la simplicité d'utilisation et la fiabilité, pour garantir une expérience utilisateur optimale.",
+      points: [
+        { primary: 'Facilité d’utilisation', secondary: 'Une interface intuitive accessible à tous.' },
+        { primary: 'Fiabilité éprouvée', secondary: 'Des solutions robustes testées dans des conditions réelles.' },
+        { primary: 'Support dédié', secondary: "Une équipe disponible pour vous accompagner à chaque étape." },
       ],
       image: teamImage1,
-      imageFirst: false, // Texte à gauche, image à droite
+      imageFirst: false,
     },
     {
-      title: 'What Makes Us Different',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Elementum felis, sed ullamcorper tempus faucibus in imperdiet. Elementum felis, sed ullamcorper tempus faucibus in imperdiet.',
+      title: 'Notre engagement',
+      description:
+        "Nous sommes engagés à vous fournir des services de qualité qui dépassent vos attentes et favorisent votre succès.",
       points: [
-        { primary: 'He takes less', secondary: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.' },
-        { primary: 'No maintenance', secondary: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.' },
-        { primary: 'Winchout hidden and integrated', secondary: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.' },
+        { primary: 'Qualité garantie', secondary: "Des standards élevés pour un service irréprochable." },
+        { primary: 'Innovation constante', secondary: 'Nous améliorons continuellement nos produits.' },
+        { primary: 'Satisfaction client', secondary: 'Votre succès est notre priorité absolue.' },
       ],
       image: teamImage2,
-      imageFirst: true, // Image à gauche, texte à droite
+      imageFirst: true,
     },
   ];
+
 
   return (
     <DifferentSection>
       {/* Titre et sous-titre */}
       <Typography variant="h3" fontWeight="bold" mb={2}>
-        What Makes Us Different
+        Ce qui nous distingue
       </Typography>
       <SubtitleText variant="body1">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Elementum felis, sed ullamcorper tempus faucibus in imperdiet.
+        Découvrez pourquoi nos clients nous font confiance et ce qui rend nos solutions uniques sur le marché.
       </SubtitleText>
+
 
       {/* Illustration */}
       

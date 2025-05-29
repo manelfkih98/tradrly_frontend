@@ -17,7 +17,7 @@ const HowWeHelp = () => {
     <Box sx={{ px: 4, py: 8 }}>
       {/* Titre principal */}
       <Typography variant="h4" align="center" fontWeight="bold" gutterBottom>
-        How we help ?
+        Comment nous aidons ?
       </Typography>
 
       {/* Description */}
@@ -28,9 +28,7 @@ const HowWeHelp = () => {
         margin="0 auto"
         color="text.secondary"
       >
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Elementum
-        felis, sed ullamcorper tempus faucibus in imperdiet. Semper justo
-        mauris sed fusce erat aenean tristique.
+        Nous mettons à disposition notre expertise pour accompagner nos clients dans l’atteinte de leurs objectifs. Grâce à des solutions personnalisées et innovantes, nous assurons un impact durable et une croissance optimale.
       </Typography>
 
       {/* Première rangée de cartes */}
@@ -55,7 +53,7 @@ const HowWeHelp = () => {
             <Box
               component="img"
               src={teamImage}
-              alt="testimonial"
+              alt="Équipe professionnelle"
               sx={{
                 width: "100%",
                 height: "100%",
@@ -66,7 +64,7 @@ const HowWeHelp = () => {
               sx={{ position: "absolute", color: "#fff", top: 30, left: 30 }}
             >
               <Typography>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Une équipe dévouée et expérimentée au service de vos ambitions.
               </Typography>
             </CardContent>
           </Card>
@@ -88,14 +86,14 @@ const HowWeHelp = () => {
             <Box textAlign="center">
               <Typography variant="h3" fontWeight="bold">
                 <CountUp
-                  end={89} // Valeur finale
-                  duration={5} // Durée de l'animation
-                  suffix=" %" // Suffixe
-                  enableScrollSpy // Lancer l'animation quand l'élément est visible
-                  scrollSpyDelay={200} // Délai avant le début de l'animation
+                  end={89}
+                  duration={5}
+                  suffix=" %"
+                  enableScrollSpy
+                  scrollSpyDelay={200}
                 />
               </Typography>
-              <Typography>Of Customers Recommend Our Services</Typography>
+              <Typography>de nos clients recommandent nos services</Typography>
             </Box>
           </Card>
         </Grid>
@@ -104,7 +102,7 @@ const HowWeHelp = () => {
       {/* Deuxième rangée de cartes */}
       <Box sx={{ mt: 4, maxWidth: 1200, mx: "auto" }}>
         <Grid container spacing={4} justifyContent="center" alignItems="stretch">
-          {/* Carte mobile app */}
+          {/* Carte application mobile */}
           <Grid item xs={12} md={4} sx={{ display: "flex", flexDirection: "column" }}>
             <Card
               sx={{
@@ -115,11 +113,11 @@ const HowWeHelp = () => {
                 p: 2,
               }}
             >
-              <Typography fontWeight="bold">#Mobile App Name</Typography>
+              <Typography fontWeight="bold">#Nom de l’application mobile</Typography>
               <Box
                 component="img"
                 src={mobileAppImage}
-                alt="Mobile App"
+                alt="Application mobile"
                 sx={{ mt: 2, width: "100%", borderRadius: 2 }}
               />
             </Card>
@@ -139,9 +137,7 @@ const HowWeHelp = () => {
               }}
             >
               <Typography fontStyle="italic" mb={2}>
-                “ Grabbing and holding your audience's attention: This is
-                crucial in a world filled with distractions. It's about creating
-                content that immediately captures ”
+                « Captiver et retenir l’attention de votre audience : un enjeu essentiel dans un monde rempli de distractions. Il s'agit de créer un contenu qui saisit immédiatement. »
               </Typography>
               <Box display="flex" alignItems="center">
                 <Avatar
@@ -152,7 +148,7 @@ const HowWeHelp = () => {
                 <Box>
                   <Typography fontWeight="bold">Alex Smith</Typography>
                   <Typography variant="body2" color="text.secondary">
-                    CEO & Founder
+                    CEO & Fondateur
                   </Typography>
                 </Box>
               </Box>

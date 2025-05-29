@@ -203,7 +203,7 @@ const AllEmploi = () => {
   };
 
   return (
-    <Box sx={{ p: 3, maxWidth: 1200, mx: "auto", backgroundColor: "#F8FAFC" }}>
+    <Box sx={{ p: 3, maxWidth: 1200, mx: "auto",  }}>
       <style>
         {`
           .swal-confirm-button {

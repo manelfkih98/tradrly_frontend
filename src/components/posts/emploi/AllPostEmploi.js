@@ -6,7 +6,6 @@ import {
   passerTestJob,
 } from "../../../store/services/postsService";
 import { fetchOffresEmploi } from "../../../store/services/offreService";
-
 import {
   Table,
   TableHead,
@@ -33,6 +32,7 @@ import DownloadIcon from "@mui/icons-material/Download";
 import DeleteIcon from "@mui/icons-material/Delete";
 import QuizIcon from "@mui/icons-material/Quiz";
 
+// Styled Chip for status
 const StatusChip = styled(Chip)(({ theme, status }) => ({
   fontWeight: 500,
   textTransform: "capitalize",
@@ -56,13 +56,53 @@ const StatusChip = styled(Chip)(({ theme, status }) => ({
   }),
 }));
 
+// Custom CircularProgress with label for score
+const CustomCircularProgressWithLabel = styled(({ value, ...props }) => (
+  <Box sx={{ position: "relative", display: "inline-flex" }}>
+    <CircularProgress
+      variant="determinate"
+      value={value}
+      size={50}
+      thickness={5}
+      {...props}
+    />
+    <Box
+      sx={{
+        top: 0,
+        left: 0,
+        bottom: 0,
+        right: 0,
+        position: "absolute",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <Typography
+        variant="caption"
+        component="div"
+        color="text.primary"
+        fontWeight="bold"
+      >
+        {`${Math.round(value)}%`}
+      </Typography>
+    </Box>
+  </Box>
+))(({ theme, value }) => ({
+  color:
+    value >= 80
+      ? theme.palette.success.main
+      : value >= 50
+      ? theme.palette.warning.main
+      : theme.palette.error.main,
+}));
+
 const AllPostEmploi = () => {
   const dispatch = useDispatch();
   const posts = useSelector((state) => state.posts.posts_job) || [];
-  const offres = useSelector((state) => state.offres?.offres.offreByJob) || [];
+  const offres = useSelector((state) => state.offres?.offres?.offreByJob) || [];
   const loadingPosts = useSelector((state) => state.posts.loading);
   const loadingOffres = useSelector((state) => state.offres?.loading);
-
   const [page, setPage] = useState(1);
   const [rowsPerPage] = useState(5);
   const [selectedOffre, setSelectedOffre] = useState("");
@@ -76,6 +116,7 @@ const AllPostEmploi = () => {
 
   useEffect(() => {
     if (posts.length > 0) {
+      console.log("Posts:", posts.map((post) => ({ id: post._id, fileName: post.fileName })));
       analyserCandidatures();
     }
   }, [posts]);
@@ -90,19 +131,23 @@ const AllPostEmploi = () => {
     setLoading(true);
 
     try {
-      const response = await fetch("https://7cdf-35-236-168-12.ngrok-free.app/analyser", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
+      const response = await fetch(
+        " https://9d3f-34-125-39-67.ngrok-free.app/analyser",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Erreur lors de l'appel à l'API Flask");
       }
 
       const json = await response.json();
+      console.log("API Response:", json);
       setResultats(json);
     } catch (error) {
       console.error("Erreur lors de la requête :", error);
@@ -190,36 +235,103 @@ const AllPostEmploi = () => {
           <>
             <Table>
               <TableHead>
-                <TableRow sx={{ backgroundColor: "#1e3a8a" }}>
-                  <TableCell align="center" sx={{ fontWeight: "bold", color: "white" }}>
+                <TableRow sx={{ backgroundColor: "#EDE9FE" }}>
+                  <TableCell
+                    align="center"
+                    sx={{
+                      color: "#1E3A8A",
+                      fontWeight: 700,
+                      fontSize: "1rem",
+                      py: 3,
+                    }}
+                  >
                     Candidat
                   </TableCell>
-                  <TableCell align="center" sx={{ fontWeight: "bold", color: "white" }}>
+                  <TableCell
+                    align="center"
+                    sx={{
+                      color: "#1E3A8A",
+                      fontWeight: 700,
+                      fontSize: "1rem",
+                      py: 3,
+                    }}
+                  >
                     Email
                   </TableCell>
-                  <TableCell align="center" sx={{ fontWeight: "bold", color: "white" }}>
+                  <TableCell
+                    align="center"
+                    sx={{
+                      color: "#1E3A8A",
+                      fontWeight: 700,
+                      fontSize: "1rem",
+                      py: 3,
+                    }}
+                  >
                     Téléphone
                   </TableCell>
-                  <TableCell align="center" sx={{ fontWeight: "bold", color: "white" }}>
+                  <TableCell
+                    align="center"
+                    sx={{
+                      color: "#1E3A8A",
+                      fontWeight: 700,
+                      fontSize: "1rem",
+                      py: 3,
+                    }}
+                  >
                     Offre
                   </TableCell>
-                  <TableCell align="center" sx={{ fontWeight: "bold", color: "white" }}>
+                  <TableCell
+                    align="center"
+                    sx={{
+                      color: "#1E3A8A",
+                      fontWeight: 700,
+                      fontSize: "1rem",
+                      py: 3,
+                    }}
+                  >
                     CV
                   </TableCell>
-                  <TableCell align="center" sx={{ fontWeight: "bold", color: "white" }}>
+                  <TableCell
+                    align="center"
+                    sx={{
+                      color: "#1E3A8A",
+                      fontWeight: 700,
+                      fontSize: "1rem",
+                      py: 3,
+                    }}
+                  >
                     Statut
                   </TableCell>
-                  <TableCell align="center" sx={{ fontWeight: "bold", color: "white" }}>
+                  <TableCell
+                    align="center"
+                    sx={{
+                      color: "#1E3A8A",
+                      fontWeight: 700,
+                      fontSize: "1rem",
+                      py: 3,
+                    }}
+                  >
+                    Score de correspondance
+                  </TableCell>
+                  <TableCell
+                    align="center"
+                    sx={{
+                      color: "#1E3A8A",
+                      fontWeight: 700,
+                      fontSize: "1rem",
+                      py: 3,
+                    }}
+                  >
                     Actions
                   </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {paginatedPosts.length > 0 ? (
-                  paginatedPosts.map((post, index) => {
-                    const isFinalized =
-                      post.status === "refused" || post.status === "testPassed";
-                    const matchScore = resultats[index]?.score;
+                  paginatedPosts.map((post) => {
+                    const result = resultats.find((res) => res.cv === post.fileName);
+                    const matchScore = result?.score ? result.score * 100 : undefined;
+                    const isFinalized = post.status === "refused" || post.status === "testPassed";
 
                     return (
                       <TableRow
@@ -231,9 +343,9 @@ const AllPostEmploi = () => {
                           },
                         }}
                       >
-                        <TableCell>{post.nom} {post.prenom}</TableCell>
+                        <TableCell>{`${post.nom} ${post.prenom}`}</TableCell>
                         <TableCell>{post.email}</TableCell>
-                        <TableCell>{post.number}</TableCell>
+                        <TableCell>{post.telephone}</TableCell>
                         <TableCell>{post.jobId?.titre}</TableCell>
                         <TableCell align="center">
                           <Button
@@ -248,37 +360,35 @@ const AllPostEmploi = () => {
                               textTransform: "none",
                               borderColor: "#1e3a8a",
                               color: "#1e3a8a",
-                              "&:hover": {
-                                borderColor: "#d4af37",
-                                color: "#d4af37",
-                              },
                             }}
                           >
                             CV
                           </Button>
                         </TableCell>
                         <TableCell>
-                          <Stack spacing={0.5}>
-                            <StatusChip
-                              label={
-                                post.status === "pending"
-                                  ? "En attente"
-                                  : post.status === "refused"
-                                  ? "Refusé"
-                                  : post.status === "testPassed"
-                                  ? "Passe un test"
-                                  : "Statut inconnu"
-                              }
-                              status={post.status || "pending"}
-                            />
-                            {matchScore !== undefined && (
-                              <Chip
-                                label={`Match : ${matchScore}%`}
-                                color="success"
-                                size="small"
-                              />
-                            )}
-                          </Stack>
+                          <StatusChip
+                            label={
+                              post.status === "pending"
+                                ? "En attente"
+                                : post.status === "refused"
+                                ? "Refusé"
+                                : post.status === "testPassed"
+                                ? "Passe un test"
+                                : "Statut inconnu"
+                            }
+                            status={post.status || "pending"}
+                          />
+                        </TableCell>
+                        <TableCell align="center">
+                          {matchScore !== undefined && matchScore > 0 ? (
+                            <Tooltip title={`Score de correspondance: ${Math.round(matchScore)}%`}>
+                              <CustomCircularProgressWithLabel value={matchScore} />
+                            </Tooltip>
+                          ) : (
+                            <Typography variant="caption" color="text.secondary">
+                              Non calculé
+                            </Typography>
+                          )}
                         </TableCell>
                         <TableCell align="center">
                           {!isFinalized ? (
@@ -301,9 +411,13 @@ const AllPostEmploi = () => {
                                   size="small"
                                   startIcon={<QuizIcon />}
                                   onClick={() => handlePasseTest(post._id)}
-                                  sx={{ borderRadius: "12px", textTransform: "none" }}
+                                  sx={{
+                                    borderRadius: "12px",
+                                    textTransform: "none",
+                                    bgcolor: "#1e3a8a",
+                                  }}
                                 >
-                                  Test
+                                  Envoyer un test
                                 </Button>
                               </Tooltip>
                             </Stack>
@@ -318,7 +432,7 @@ const AllPostEmploi = () => {
                   })
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={7} align="center">
+                    <TableCell colSpan={8} align="center">
                       Aucune candidature trouvée.
                     </TableCell>
                   </TableRow>
